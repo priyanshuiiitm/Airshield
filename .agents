@@ -1,0 +1,36 @@
+# AirShield Strands Agent Configuration
+
+## Agent Role & Constraints
+- **Name**: AirShieldAgent
+- **Framework**: Strands + Amazon Bedrock
+- **Core Principle**: The agent orchestrates, but NEVER generates numerical facts (percentages, exposures, compensation, or route times).
+- **Fallback**: The environmental algorithm is never strictly dependent on the LLM. If Bedrock times out (e.g. > 6-8 seconds), returns malformed JSON, or fails validation, the system instantly falls back to a deterministic Python template.
+
+## Provided Tools (@tool)
+The agent is equipped with deterministic Python functions that return structured JSON.
+1. `get_routes()`: Interfaces with Amazon Location (CalculateRoutes, traffic-aware, scooter mode).
+2. `get_aqi()`: Fetches PM2.5 readings from DynamoDB/OpenAQ cache.
+3. `compute_exposure()`: Runs the Route Segmentation & IDW Interpolation math.
+4. `optimize_route()`: Filters by ETA buffer and finds the lowest-exposure route.
+
+## Agent Workflow
+1. **Receive Request**: Receives pickup/drop coordinates and buffer constraints.
+2. **Invoke Tools**: Calls the provided tools to gather routing and exposure math.
+3. **Reason & Format**: Produces a structured JSON response identifying the outcome state without altering the numerical math.
+
+### Expected Agent Output Format
+```json
+{
+  "fastest_route": "R1",
+  "best_feasible_route": "R2",
+  "exposure_reduction": 0.41,
+  "classification": "AVOIDABLE",
+  "reason": "meaningful_reduction",
+  "message_type": "SAFER_ROUTE",
+  "language": "en"
+}
+```
+
+## Validator & Safety Layer
+- **Validator**: Intercepts the agent's output. Checks if `exposure_reduction` and `classification` exactly match the deterministic optimizer's internal logs.
+- **Template Rendering**: The frontend text (e.g. "Safer route found, +2 min, ↓41% estimated exposure, Earn ₹3") is injected dynamically by the backend, NOT typed out by the LLM. This strictly prevents LLM hallucination of scientific/medical data or financial rewards.

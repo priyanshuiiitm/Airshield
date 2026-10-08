@@ -1,0 +1,62 @@
+# AirShield Build Plan
+Based on the final 50-point architecture specification.
+
+## Phase 0 — Go/no-go
+Run: T0 → T1 → T2 → T3 → T4 → T5
+- T0: AWS foundation (Location, Bedrock, DynamoDB, S3)
+- T1 & T2: Amazon Location Alternatives & Traffic
+- T3: OpenAQ Delhi coverage (Live PM2.5 data)
+- T4: Route separability (Mathematical proof that routes differ in exposure)
+- T5: Unavoidable case (Mathematical proof of exceeding buffer)
+*If T4 fails, stop and change the exposure model before building anything else.*
+
+## Phase 1 — Core engine
+Build pure Python deterministic engine:
+- `routes.py`: Fetch alternative routes
+- `aqi.py`: Fetch PM2.5 from OpenAQ
+- `exposure.py`: IDW interpolation over 200m route segments
+- `optimize.py`: Filter feasible routes (ETA ≤ fastest + B) and minimize exposure
+- `classify.py`: 4-state classification (LOW, AVOIDABLE, UNAVOIDABLE, INSUFFICIENT_DATA)
+*Test everything locally.*
+
+## Phase 2 — Scenario discovery
+Build `find_scenarios.py`:
+- Sample realistic Delhi NCR pickup/drop pairs
+- Find "Scenario A" (Avoidable: ≥15% reduction within +5 min)
+- Find "Scenario B" (Unavoidable: high exposure, safer route exists but outside +5 min)
+
+## Phase 3 — AWS backend
+Deploy infrastructure:
+- API Gateway (HTTP API + CORS)
+- Lambda (Input validation, Agent orchestration, Deterministic fallback)
+- DynamoDB (aqi_readings, trips, rewards)
+- S3 (raw AQI snapshots, features/grid, scenario snapshots)
+- EventBridge (Background AQI ingestion pipeline)
+
+## Phase 4 — Agent
+Build `AirShieldAgent`:
+- Strands + Bedrock integration
+- Provide custom tools: `get_routes()`, `get_aqi()`, `compute_exposure()`, `optimize_route()`
+- Agent orchestrates tools and returns structured JSON decision/reason code
+- Implements strict validator and deterministic fallback template for Bedrock timeouts
+
+## Phase 5 — Frontend
+Build Mobile-first React + MapLibre UI:
+- Visual Map with fastest and safer routes (color lines only)
+- Decision card (e.g., "+2 min, ↓41% estimated exposure, Earn ₹3")
+- "Take safer route" button
+- "How we estimated this" transparency disclaimer
+
+## Phase 6 — Analytics
+Run 100-trip batch and build tiny analytics page:
+- Outcome distribution pie chart
+- Median reduction & extra minutes
+- Buffer sensitivity table (3 min vs 5 min vs 10 min tradeoffs)
+
+## Phase 7 — Demo hardening
+- Turn off unnecessary live dependencies
+- Freeze demo snapshot, config, scenarios, and frontend state
+- Record final demo video
+
+## Architecture Freeze
+Delhi NCR + Track 01 Air + delivery worker + Amazon Location alternatives + OpenAQ PM2.5 + transparent route-segment exposure index + configurable time buffer + avoidable/unavoidable classification + simulated worker benefit + one Strands agent + AWS serverless backend.
