@@ -22,19 +22,6 @@ def test_engine():
         print("   ❌ No stations found. Please check your OPENAQ_API_KEY.")
         return
         
-    # --- HOTSPOT SIMULATION FOR DEMO ---
-    # To prove the logic works, we'll force stations near Route 1 (center) to be highly polluted,
-    # and stations near Route 2 to be much cleaner.
-    for st in stations:
-        # If closer to Route 1's center (28.615, 77.205) than Route 2 (28.595, 77.175)
-        dist_to_r1 = (st.lat - 28.615)**2 + (st.lon - 77.205)**2
-        dist_to_r2 = (st.lat - 28.595)**2 + (st.lon - 77.175)**2
-        if dist_to_r1 < dist_to_r2:
-            st.pm25 = 250.0 # High pollution hotspot
-        else:
-            st.pm25 = 60.0  # Much cleaner area
-    # -----------------------------------
-        
     # 3. Compute Exposure
     print("\n3. Computing exposure...")
     for route in routes:

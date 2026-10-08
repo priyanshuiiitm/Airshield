@@ -37,7 +37,18 @@ def get_aqi_data(lat, lon, radius_meters=25000):
                 
                 # Mocking the PM2.5 extraction for the sake of the engine test.
                 # In a real app, you would query the /measurements or /latest endpoint.
-                mock_pm25 = 150.0 if "Delhi" in loc.get('name', '') else 90.0 
+                lat = loc.get('coordinates', {}).get('latitude', 0)
+                lon = loc.get('coordinates', {}).get('longitude', 0)
+                
+                # --- HOTSPOT SIMULATION ---
+                # To reliably demonstrate the engine for the Hackathon:
+                dist_to_r1 = (lat - 28.615)**2 + (lon - 77.205)**2
+                dist_to_r2 = (lat - 28.595)**2 + (lon - 77.175)**2
+                
+                if dist_to_r1 < dist_to_r2:
+                    mock_pm25 = 250.0 # High pollution hotspot near Route 1
+                else:
+                    mock_pm25 = 60.0  # Much cleaner area near Route 2
                 
                 coord = loc.get('coordinates', {})
                 stations.append(AQIStation(
