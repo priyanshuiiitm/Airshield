@@ -1,132 +1,163 @@
-import React, { useState } from 'react';
-import Map, { Source, Layer, NavigationControl } from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import { Leaf, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
+/**
+ * Main AirShield Application (Phase 5).
+ * Mobile-first layout with MapLibre visualization and worker decision card.
+ */
 
-const MAPTILER_KEY = "get_your_own_Key"; // We can use a demo style URL
+import React, { useState, useEffect, useCallback } from "react";
+import { LanguageCode, DemoScenario } from "./api/types";
+import { translations } from "./utils/localization";
+import { useRecommendation } from "./hooks/useRecommendation";
+import { useTripChoice } from "./hooks/useTripChoice";
+import { Header } from "./components/Header";
+import { MapView } from "./components/MapView";
+import { DecisionCard } from "./components/DecisionCard";
+import { TransparencyPanel } from "./components/TransparencyPanel";
+import { DemoControls, DEMO_SCENARIOS } from "./components/DemoControls";
+import { DebugPanel } from "./components/DebugPanel";
 
-const App = () => {
-  // We'll mock the JSON payload we generated in the backend
-  const [activeRoute, setActiveRoute] = useState("R2_SAFER");
-  
-  const classification = "AVOIDABLE";
-  
-  const uiCard = {
-    title: "🫁 Safer route found",
-    message: "+2 min\n↓63.4% estimated exposure\nEarn ₹3",
-    action: "Take safer route",
-    route_id: "R2_SAFER"
+export const App: React.FC = () => {
+  const [language, setLanguage] = useState<LanguageCode>(() => {
+    return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
+  });
+  const [activeScenario, setActiveScenario] = useState<DemoScenario>(DEMO_SCENARIOS[0]);
+
+  const t = translations[language];
+  const { data: recommendation, isLoading, isError, error, fetchRecommendation } =
+    useRecommendation();
+  const { isSubmitting, choiceSubmitted, submitChoice, resetChoice } = useTripChoice();
+
+  const handleLanguageChange = (lang: LanguageCode) => {
+    setLanguage(lang);
+    localStorage.setItem("airshield_lang", lang);
   };
 
-  // Mock Route GeoJSONs
-  const route1GeoJSON = {
-    type: "Feature",
-    properties: { id: "R1_FAST" },
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [77.20, 28.61],
-        [77.21, 28.62],
-        [77.25, 28.63]
-      ]
+  const loadScenario = useCallback(
+    (scenario: DemoScenario) => {
+      setActiveScenario(scenario);
+      resetChoice();
+      fetchRecommendation({
+        pickup: scenario.pickup,
+        drop: scenario.drop,
+        buffer_min: scenario.buffer_min,
+        language,
+        mode: "snapshot",
+        snapshot_id: scenario.snapshot_id,
+        worker_id: "demo-worker-01",
+        debug: true
+      });
+    },
+    [fetchRecommendation, language, resetChoice]
+  );
+
+  // Initial load with Scenario A
+  useEffect(() => {
+    loadScenario(activeScenario);
+  }, []);
+
+  // Re-fetch if language changes
+  const handleLanguageSwitchAndReload = (lang: LanguageCode) => {
+    handleLanguageChange(lang);
+    resetChoice();
+    fetchRecommendation({
+      pickup: activeScenario.pickup,
+      drop: activeScenario.drop,
+      buffer_min: activeScenario.buffer_min,
+      language: lang,
+      mode: "snapshot",
+      snapshot_id: activeScenario.snapshot_id,
+      worker_id: "demo-worker-01",
+      debug: true
+    });
+  };
+
+  const handleChoice = (choice: "safer" | "fastest") => {
+    if (recommendation?.trip_id) {
+      submitChoice(recommendation.trip_id, choice);
     }
   };
 
-  const route2GeoJSON = {
-    type: "Feature",
-    properties: { id: "R2_SAFER" },
-    geometry: {
-      type: "LineString",
-      coordinates: [
-        [77.20, 28.61],
-        [77.18, 28.59],
-        [77.17, 28.60],
-        [77.25, 28.63]
-      ]
-    }
-  };
+  const routes = recommendation?.routes || [];
+  const fastestRouteId = recommendation?.decision?.fastest_route_id;
+  const selectedRouteId = recommendation?.recommendation?.route_id;
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-      <Map
-        initialViewState={{
-          longitude: 77.21,
-          latitude: 28.61,
-          zoom: 11
-        }}
-        mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-      >
-        <NavigationControl position="top-right" />
-        
-        {/* Route 1 (Fastest) */}
-        <Source id="route1" type="geojson" data={route1GeoJSON}>
-          <Layer 
-            id="route1-line" 
-            type="line" 
-            paint={{
-              'line-color': activeRoute === 'R1_FAST' ? '#3b82f6' : '#94a3b8',
-              'line-width': activeRoute === 'R1_FAST' ? 6 : 4
-            }} 
-          />
-        </Source>
+    <div className="app-layout">
+      {/* Top Header */}
+      <Header
+        language={language}
+        onLanguageChange={handleLanguageSwitchAndReload}
+        onRefresh={() => loadScenario(activeScenario)}
+        isLoading={isLoading}
+      />
 
-        {/* Route 2 (Safer) */}
-        <Source id="route2" type="geojson" data={route2GeoJSON}>
-          <Layer 
-            id="route2-line" 
-            type="line" 
-            paint={{
-              'line-color': activeRoute === 'R2_SAFER' ? '#10b981' : '#94a3b8',
-              'line-width': activeRoute === 'R2_SAFER' ? 6 : 4
-            }} 
-          />
-        </Source>
-      </Map>
+      {/* Main Content Area */}
+      <main className="main-content">
+        {/* Demo Scenario Selector */}
+        <DemoControls
+          activeScenarioId={activeScenario.id}
+          language={language}
+          isLoading={isLoading}
+          onSelectScenario={loadScenario}
+        />
 
-      {/* Decision Card */}
-      <div style={{
-        position: 'absolute',
-        bottom: '24px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '90%',
-        maxWidth: '400px',
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        padding: '20px',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-          <div style={{ padding: '8px', backgroundColor: '#ecfdf5', borderRadius: '50%' }}>
-            <Leaf color="#10b981" size={24} />
-          </div>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>{uiCard.title}</h2>
+        <div className="content-split-layout">
+          {/* Map Visualization */}
+          <section className="map-section" aria-label="Route Map">
+            <MapView
+              routes={routes}
+              fastestRouteId={fastestRouteId}
+              selectedRouteId={selectedRouteId}
+              pickup={activeScenario.pickup}
+              drop={activeScenario.drop}
+            />
+          </section>
+
+          {/* Decision & Action Area */}
+          <section className="decision-section" aria-label="Route Recommendation">
+            {/* Loading State */}
+            {isLoading && (
+              <div className="loading-card" role="status" aria-live="polite">
+                <div className="spinner"></div>
+                <h3 className="loading-title">{t.analyzingRoute}</h3>
+                <p className="loading-desc">{t.loadingSubtitle}</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {isError && !isLoading && (
+              <div className="error-card" role="alert">
+                <div className="error-icon">⚠️</div>
+                <h3 className="error-title">{t.errorTitle}</h3>
+                <p className="error-desc">{error}</p>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => loadScenario(activeScenario)}
+                >
+                  {t.errorRetry}
+                </button>
+              </div>
+            )}
+
+            {/* Recommendation Result */}
+            {recommendation && !isLoading && !isError && (
+              <>
+                <DecisionCard
+                  recommendation={recommendation}
+                  language={language}
+                  isSubmitting={isSubmitting}
+                  choiceSubmitted={choiceSubmitted}
+                  onSelectChoice={handleChoice}
+                />
+
+                <TransparencyPanel recommendation={recommendation} language={language} />
+
+                <DebugPanel recommendation={recommendation} />
+              </>
+            )}
+          </section>
         </div>
-        
-        <div style={{ marginBottom: '20px', color: '#4b5563', fontSize: '15px', lineHeight: '1.5' }}>
-          {uiCard.message.split('\n').map((line, i) => (
-            <div key={i}>{line}</div>
-          ))}
-        </div>
-
-        <button 
-          style={{
-            width: '100%',
-            backgroundColor: '#10b981',
-            color: 'white',
-            border: 'none',
-            padding: '12px',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: 600,
-            cursor: 'pointer'
-          }}
-          onClick={() => setActiveRoute(uiCard.route_id)}
-        >
-          {uiCard.action}
-        </button>
-      </div>
+      </main>
     </div>
   );
 };
