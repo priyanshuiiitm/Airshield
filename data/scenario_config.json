@@ -1,0 +1,16 @@
+{
+  "city": "Delhi NCR",
+  "min_trip_distance_km": 3.0,
+  "max_trip_distance_km": 12.0,
+  "max_detour_ratio": 2.5,
+  "sample_count": 100,
+  "random_seed": 42,
+  "buffer_minutes": 5.0,
+  "reduction_threshold": 0.15,
+  "low_pm25_threshold": 60.0,
+  "high_pm25_threshold": 90.0,
+  "minimum_confidence": "MEDIUM",
+  "max_attempts": 150,
+  "snapshot_id": "demo_v1",
+  "snapshot_timestamp": "2026-10-08T12:00:00Z"
+}

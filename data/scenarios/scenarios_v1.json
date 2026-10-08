@@ -1,0 +1,229 @@
+{
+  "version": "v1",
+  "city": "Delhi NCR",
+  "created_at": "2026-10-08T18:48:37.787653+00:00",
+  "random_seed": 42,
+  "snapshot_id": "demo_v1",
+  "config": {
+    "buffer_minutes": 5.0,
+    "reduction_threshold": 0.15
+  },
+  "scenario_a": {
+    "scenario_id": "A001",
+    "pickup": {
+      "lat": 28.5474,
+      "lng": 77.1959
+    },
+    "drop": {
+      "lat": 28.6515,
+      "lng": 77.1911
+    },
+    "fastest_route_id": "R1_FAST",
+    "selected_route_id": "R2_SAFER",
+    "fastest_duration_sec": 2297.0,
+    "selected_duration_sec": 2417.0,
+    "additional_time_sec": 120.0,
+    "additional_time_min": 2.0,
+    "fastest_exposure": 5285.0,
+    "selected_exposure": 4133.7,
+    "reduction_fraction": 0.2178,
+    "reduction_percent": 21.8,
+    "classification": "AVOIDABLE",
+    "confidence": "HIGH",
+    "is_robust": true,
+    "better_outside_buffer": true,
+    "extra_minutes_needed": 6.5,
+    "outside_buffer_reduction_percent": 15.7,
+    "reward_eligible": true,
+    "benefit_eligible": false,
+    "station_ids": [
+      "ST_STALE_AIRPORT",
+      "ST_SOUTH_RIDGE",
+      "ST_CENTRAL_DELHI",
+      "ST_VASANT_KUNJ"
+    ],
+    "snapshot_id": "demo_v1",
+    "modelled": true,
+    "candidate_routes": [
+      {
+        "route_id": "R1_FAST",
+        "duration_sec": 2297.0,
+        "duration_min": 38.3,
+        "distance_m": 13322.6,
+        "distance_km": 13.32,
+        "source": "synthetic_delhi",
+        "exposure_index": 100.0,
+        "estimated_integrated_pm25": 5285.0,
+        "average_pm25": 138.1,
+        "confidence": "HIGH",
+        "is_feasible": true,
+        "additional_time_vs_fastest_sec": 0.0,
+        "geometry": [
+          {
+            "lat": 28.5474,
+            "lng": 77.1959
+          },
+          {
+            "lat": 28.60014,
+            "lng": 77.20848
+          },
+          {
+            "lat": 28.6515,
+            "lng": 77.1911
+          }
+        ]
+      },
+      {
+        "route_id": "R2_SAFER",
+        "duration_sec": 2417.0,
+        "duration_min": 40.3,
+        "distance_m": 13973.3,
+        "distance_km": 13.97,
+        "source": "synthetic_delhi",
+        "exposure_index": 78.2,
+        "estimated_integrated_pm25": 4133.7,
+        "average_pm25": 102.6,
+        "confidence": "HIGH",
+        "is_feasible": true,
+        "additional_time_vs_fastest_sec": 120.0,
+        "geometry": [
+          {
+            "lat": 28.5474,
+            "lng": 77.1959
+          },
+          {
+            "lat": 28.59761,
+            "lng": 77.15354
+          },
+          {
+            "lat": 28.6515,
+            "lng": 77.1911
+          }
+        ]
+      },
+      {
+        "route_id": "R3_SLOW",
+        "duration_sec": 2687.0,
+        "duration_min": 44.8,
+        "distance_m": 17586.2,
+        "distance_km": 17.59,
+        "source": "synthetic_delhi",
+        "exposure_index": 84.3,
+        "estimated_integrated_pm25": 4454.2,
+        "average_pm25": 99.5,
+        "confidence": "HIGH",
+        "is_feasible": false,
+        "additional_time_vs_fastest_sec": 390.0,
+        "geometry": [
+          {
+            "lat": 28.5474,
+            "lng": 77.1959
+          },
+          {
+            "lat": 28.59633,
+            "lng": 77.12583
+          },
+          {
+            "lat": 28.6515,
+            "lng": 77.1911
+          }
+        ]
+      }
+    ]
+  },
+  "scenario_b": {
+    "scenario_id": "B001",
+    "pickup": {
+      "lat": 28.6508,
+      "lng": 77.1899
+    },
+    "drop": {
+      "lat": 28.5688,
+      "lng": 77.2424
+    },
+    "fastest_route_id": "R1_FAST",
+    "selected_route_id": "R1_FAST",
+    "fastest_duration_sec": 2073.9,
+    "selected_duration_sec": 2073.9,
+    "additional_time_sec": 0.0,
+    "additional_time_min": 0.0,
+    "fastest_exposure": 5696.4,
+    "selected_exposure": 5696.4,
+    "reduction_fraction": 0.0,
+    "reduction_percent": 0.0,
+    "classification": "UNAVOIDABLE",
+    "confidence": "HIGH",
+    "is_robust": true,
+    "better_outside_buffer": true,
+    "extra_minutes_needed": 6.5,
+    "outside_buffer_reduction_percent": 20.3,
+    "reward_eligible": false,
+    "benefit_eligible": true,
+    "station_ids": [
+      "ST_SOUTH_RIDGE",
+      "ST_VASANT_KUNJ",
+      "ST_CONNAUGHT_PLACE",
+      "ST_CENTRAL_DELHI"
+    ],
+    "snapshot_id": "demo_v1",
+    "modelled": true,
+    "candidate_routes": [
+      {
+        "route_id": "R1_FAST",
+        "duration_sec": 2073.9,
+        "duration_min": 34.6,
+        "distance_m": 12028.5,
+        "distance_km": 12.03,
+        "source": "synthetic_delhi",
+        "exposure_index": 100.0,
+        "estimated_integrated_pm25": 5696.4,
+        "average_pm25": 164.8,
+        "confidence": "HIGH",
+        "is_feasible": true,
+        "additional_time_vs_fastest_sec": 0.0,
+        "geometry": [
+          {
+            "lat": 28.6508,
+            "lng": 77.1899
+          },
+          {
+            "lat": 28.61789,
+            "lng": 77.22878
+          },
+          {
+            "lat": 28.5688,
+            "lng": 77.2424
+          }
+        ]
+      },
+      {
+        "route_id": "R3_SLOW",
+        "duration_sec": 2463.9,
+        "duration_min": 41.1,
+        "distance_m": 16567.2,
+        "distance_km": 16.57,
+        "source": "synthetic_delhi",
+        "exposure_index": 79.7,
+        "estimated_integrated_pm25": 4539.0,
+        "average_pm25": 110.5,
+        "confidence": "HIGH",
+        "is_feasible": false,
+        "additional_time_vs_fastest_sec": 390.0,
+        "geometry": [
+          {
+            "lat": 28.6508,
+            "lng": 77.1899
+          },
+          {
+            "lat": 28.57567,
+            "lng": 77.16285
+          },
+          {
+            "lat": 28.5688,
+            "lng": 77.2424
+          }
+        ]
+      }
+    ]
+  }
+}
