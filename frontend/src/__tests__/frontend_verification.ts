@@ -1,11 +1,7 @@
-/**
- * AirShield Frontend Core Logic & Contracts Verification Test
- */
-
 import { backendRouteToGeoJSON, calculateBounds } from '../map/routeUtils.ts';
 import { getTranslation, translations } from '../utils/localization.ts';
 import { formatCurrency, formatMinutes, formatPercentage, formatDistance } from '../utils/formatting.ts';
-import type { RecommendResponse, RouteDetail } from '../api/types.ts';
+import type { RecommendationResponse, RouteDetail } from '../api/types.ts';
 
 let passed = 0;
 let failed = 0;
@@ -49,10 +45,15 @@ assert(formatDistance(5.23) === '5.2 km', 'formatDistance 5.23 -> 5.2 km');
 console.log('\n=== 3. GeoJSON & Map Utils Verification ===');
 const dummyRoute: RouteDetail = {
   route_id: 'route_safe_1',
-  summary: 'Green Corridor Route',
-  distance_km: 5.6,
   duration_minutes: 15.0,
+  duration_sec: 900,
+  distance_km: 5.6,
+  distance_m: 5600,
   exposure_index: 126.0,
+  average_pm25: 84.0,
+  estimated_integrated_pm25: 1260.0,
+  feasible: true,
+  confidence: 'HIGH',
   geometry: [
     { lat: 28.6139, lng: 77.2090 },
     { lat: 28.6145, lng: 77.2100 },
