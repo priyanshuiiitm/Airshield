@@ -1,59 +1,130 @@
-# AirShield
+# AirShield: Pollution-Aware Route Decision System
 
-AirShield is a pollution-aware route decision system for delivery workers. It evaluates alternative delivery routes, calculates absolute pollution exposure (PM2.5) using Inverse-Distance Weighting from live OpenAQ sensors, and finds the lowest-exposure route that is *actually feasible* within the delivery platform's acceptable time buffer.
-
----
-
-## 🏗️ How We Built It (Methodology)
-
-1. **Strict Architecture Boundaries**: We did not build a generic "Google Maps". We built an optimizer that sits *on top* of existing routing data (mocked locally for now, designed for Amazon Location Service).
-2. **Deterministic Core Math Engine**: 
-   - We calculate route exposure using Inverse-Distance Weighting (IDW) interpolation from live AQI stations.
-   - The engine strictly filters out routes that exceed a configured time buffer (e.g., +5 minutes).
-   - The model mathematically guarantees the LLM cannot hallucinate arbitrary numbers.
-3. **Four-State Classification**: 
-   The core classifies every trip into one of four states based on the feasible route matrix:
-   - 🟢 `LOW` (No meaningful difference)
-   - 🟠 `AVOIDABLE` (We found a significantly safer route within the time buffer)
-   - 🔴 `UNAVOIDABLE_WITHIN_POLICY` (There is a safer route, but it makes the delivery too late)
-   - ⚪ `INSUFFICIENT_DATA` (Not enough sensors nearby to make a claim)
-4. **Agentic Orchestration (Strands/Bedrock)**: We abstracted the Python math into a tool callable by an LLM agent, complete with fallback templates and hallucination validators to guarantee UI safety.
-5. **Frontend (React + MapLibre)**: We translate the raw backend JSON output into a clean, actionable "Decision Card" UI designed specifically for a delivery worker's mobile interface.
+> **Track 01 — Air | WeMakeDevs Environmental Hacks**  
+> A deterministic, pollution-aware routing decision engine for outdoor delivery workers in Delhi NCR.
 
 ---
 
-## 🔍 Note to Judges / How to Cross-Verify Results
+## 1. What Phase 1 Does
 
-You can cross-verify that the mathematical exposure logic and the classification matrix actually work exactly as described by running our automated test suites. We have mapped the logic rigorously to ensure zero AI hallucinations in the final numbers.
+Phase 1 provides the **pure Python deterministic engine** for AirShield. Given a pickup and drop coordinate pair, a delivery time buffer, and ambient PM2.5 monitoring observations, it:
+1. Deduplicates candidate routes and identifies the fastest route.
+2. Segments each route into ~200m spatial chunks.
+3. Estimates PM2.5 along each segment using **Inverse-Distance Weighting (IDW)** from fresh monitoring stations ($\le 25\text{ km}$).
+4. Applies transparent spatial context modifiers (road proximity and green canopy coverage).
+5. Integrates total route exposure ($E = \sum C_i^* \times t_i$ in $\mu\text{g}\cdot\text{min}/\text{m}^3$).
+6. Performs **constrained optimization** to find the lowest-exposure route satisfying $t \le t_{\text{fastest}} + \text{buffer}$.
+7. Performs **sensitivity robustness checks** across $0.5\times$, $1.0\times$, and $1.5\times$ parameter configurations.
+8. Classifies the situation into exactly one of four operational states: `LOW`, `AVOIDABLE`, `UNAVOIDABLE`, `INSUFFICIENT_DATA`.
 
-### 1. Run the End-to-End Demo Script
-Run the core engine test which connects to **live OpenAQ v3 data** for Delhi and executes a simulated hotspot routing scenario:
+---
 
-```bash
-# Install dependencies using uv or pip
-uv pip install -r requirements.txt # (or just requests, python-dotenv, shapely)
+## 2. Mathematical Methodology & Formulas
 
-# Run the demo
-uv run test_core_engine.py
+### A. Route Segmentation & Temporal Allocation
+Every candidate route is segmented into $N$ segments of length $\Delta s_i \approx 200\text{ m}$. Duration is allocated proportionally to preserve total traffic-aware trip duration:
+$$t_i = T_{\text{route}} \times \frac{\Delta s_i}{S_{\text{total}}}$$
+
+### B. Inverse-Distance Weighting (IDW)
+For each segment midpoint, up to 4 nearest fresh monitoring stations ($\le 3\text{ hours old}$) within 25 km are selected:
+$$C_i = \frac{\sum_{j=1}^{K} \frac{C_j}{d_{ij}^2 + \epsilon}}{\sum_{j=1}^{K} \frac{1}{d_{ij}^2 + \epsilon}}$$
+* $C_j$: PM2.5 at station $j$ ($\mu\text{g}/\text{m}^3$)
+* $d_{ij}$: Geodesic (Haversine) distance from segment midpoint $i$ to station $j$ (km)
+* $\epsilon = 10^{-6}$: Prevents division by zero
+
+### C. Contextual Spatial Proxies
+To reflect micro-urban context without fabricating measurements:
+$$C_i^* = C_i \times M_{\text{road}} \times M_{\text{green}}$$
+* **Major Road Factor ($M_{\text{road}}$)**:
+  * $\le 50\text{ m}$: $1.25$
+  * $50 - 200\text{ m}$: $1.10$
+  * $> 200\text{ m}$: $1.00$
+* **Green Factor ($M_{\text{green}}$)**:
+  * $M_{\text{green}} = 1.0 - 0.15 \times \text{green\_fraction}$
+
+### D. Integrated Exposure Index
+Total route exposure:
+$$E_{\text{route}} = \sum_{i=1}^{N} C_i^* \times t_{i,\text{minutes}}$$
+
+### E. Relative Exposure Normalization
+To avoid scientific and medical over-claiming, exposure is reported as a relative decision-support index:
+$$\text{Exposure Index}_{\text{fastest}} = 100$$
+$$\text{Exposure Index}_{\text{alt}} = 100 \times \frac{E_{\text{alt}}}{E_{\text{fastest}}}$$
+$$\text{Reduction \%} = \frac{E_{\text{fastest}} - E_{\text{alt}}}{E_{\text{fastest}}} \times 100\%$$
+
+---
+
+## 3. Four-State Classification Matrix
+
+| State | Conditions | Worker Action | Financial Trigger |
+| :--- | :--- | :--- | :--- |
+| **`LOW`** | Baseline PM2.5 $< 60\,\mu\text{g}/\text{m}^3$ and reduction $< 15\%$ | Follow fastest route | None |
+| **`AVOIDABLE`** | Baseline elevated, cleaner feasible route exists ($\ge 15\%$ reduction), robust, confidence $\neq$ LOW | Take safer route | ₹3 Simulated Reward |
+| **`UNAVOIDABLE`** | Baseline elevated, no feasible route gives $\ge 15\%$ reduction within allowed buffer | Proceed on fastest route | ₹5 Health Benefit |
+| **`INSUFFICIENT_DATA`** | $< 2$ nearby stations (LOW confidence) | No claims made | None |
+
+---
+
+## 4. Sensitivity & Robustness Checks
+
+A route recommendation is labeled **Robust** only if the same route remains the minimum-exposure feasible option under three distinct modifier configurations:
+1. **Default** ($1.0\times$)
+2. **Half-Strength** ($0.5\times$)
+3. **High-Strength** ($1.5\times$)
+
+---
+
+## 5. Installation & Setup
+
+### Prerequisites
+* Python 3.10+
+* Git
+
+```powershell
+# Clone the repository
+git clone https://github.com/priyanshuiiitm/Airshield.git
+cd Airshield
+
+# Install dependencies
+pip install -r requirements.txt
 ```
-**What to verify:** Watch the console output calculate exact IDW exposure numbers, optimize the fastest route vs the safest route, and output a valid JSON UI Card.
 
-### 2. Run the Mathematical Test Suite (Pytest)
-We wrote 13 rigorous sanity and mathematical tests that verify the boundary conditions of the architecture.
-
-```bash
-# Run the test suite
-PYTHONPATH=. uv run pytest tests/core/
+### Environment Variables (`.env`)
+```env
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_DEFAULT_REGION=ap-south-1
+AWS_LOCATION_CALCULATOR_NAME=AirShieldRouteCalculator
+OPENAQ_API_KEY=your_openaq_api_key
 ```
-**What to verify:**
-- `test_t6_sanity.py`: Proves the model logic (e.g., doubling the duration exactly doubles exposure; identical routes yield 0% reduction).
-- `test_t7_t9.py`: Tests boundary conditions (e.g., changing the allowed ETA buffer changes the 'feasible' route winner).
-- `test_t8_classification.py`: Proves the four-state classification system (`LOW`, `AVOIDABLE`, `UNAVOIDABLE_WITHIN_POLICY`, `INSUFFICIENT_DATA`) activates exactly when mathematically required.
 
-### 3. Run the Frontend Visualization
-```bash
-cd frontend
-npm install
-npm run dev
+---
+
+## 6. Running Tests & Demo
+
+### Run Full Test Suite (100% Offline & Deterministic)
+```powershell
+pytest -v
 ```
-**What to verify:** Open the localhost link to see how the mathematical output JSON accurately controls the rendering of the React MapLibre lines and the dynamic Worker Decision Card.
+
+### Run Test Coverage
+```powershell
+pytest --cov=backend/core --cov-report=term-missing
+```
+
+### Run Local Interactive Demonstration
+```powershell
+python scripts/run_local_demo.py
+```
+
+---
+
+## 7. Limitations & Scientific Disclaimer
+
+> [!IMPORTANT]
+> **Scientific & Medical Disclaimer**  
+> This system produces a modeled relative pollution-exposure index for decision support. It is based on ambient monitoring observations and spatial proxies; it is not street-level pollution sensing and is not a medical measurement.
+
+* **Station Sparsity**: Estimates rely on statutory ambient monitoring stations (e.g. CPCB/DPCC via OpenAQ) interpolated across space.
+* **Traffic Integration**: Traffic-aware durations from Amazon Location Service are used directly to calculate time-in-transit. No secondary artificial congestion multipliers are applied to prevent double-counting.
+* **Operational Buffer**: Unavoidable exposure is defined *relative to operational constraints* (e.g., 5-minute delivery window), not absolute impossibility.

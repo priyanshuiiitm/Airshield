@@ -62,9 +62,9 @@ def test_separability():
         print(f"Exposure Reduction: {reduction*100:.1f}%")
         
         if reduction >= 0.15:
-            print("✅ T4 PASSED: Meaningful exposure reduction (>= 15%) is mathematically possible with IDW.")
+            print("[SUCCESS] T4 PASSED: Meaningful exposure reduction (>= 15%) is mathematically possible with IDW.")
         else:
-            print("❌ T4 FAILED: Reduction is not meaningful.")
+            print("[FAIL] T4 FAILED: Reduction is not meaningful.")
             
         # Test Unavoidable (T5)
         print("\nTesting Unavoidable scenario (T5):")
@@ -73,9 +73,9 @@ def test_separability():
         duration_b = sum(s[2] for s in route_b_segments)
         
         if duration_b > duration_a + buffer:
-            print("✅ T5 PASSED: Found a case where safer route exists but is outside the operational buffer.")
+            print("[SUCCESS] T5 PASSED: Found a case where safer route exists but is outside the operational buffer.")
         else:
-            print("⚠️ T5 condition not met in this mock scenario.")
+            print("[WARN] T5 condition not met in this mock scenario.")
 
 if __name__ == "__main__":
     test_separability()

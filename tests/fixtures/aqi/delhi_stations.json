@@ -1,0 +1,54 @@
+{
+  "description": "Delhi NCR fresh and stale PM2.5 monitoring stations",
+  "base_time": "2026-10-08T12:00:00Z",
+  "stations": [
+    {
+      "station_id": "ST_CENTRAL_DELHI",
+      "lat": 28.6300,
+      "lng": 77.2200,
+      "pm25": 185.0,
+      "timestamp": "2026-10-08T11:30:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_CONNAUGHT_PLACE",
+      "lat": 28.6320,
+      "lng": 77.2180,
+      "pm25": 175.0,
+      "timestamp": "2026-10-08T11:45:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_SOUTH_RIDGE",
+      "lat": 28.5800,
+      "lng": 77.1650,
+      "pm25": 65.0,
+      "timestamp": "2026-10-08T11:15:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_VASANT_KUNJ",
+      "lat": 28.5400,
+      "lng": 77.1500,
+      "pm25": 70.0,
+      "timestamp": "2026-10-08T11:00:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_DTU_DELHI",
+      "lat": 28.7500,
+      "lng": 77.1170,
+      "pm25": 120.0,
+      "timestamp": "2026-10-08T10:45:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_STALE_AIRPORT",
+      "lat": 28.5600,
+      "lng": 77.1000,
+      "pm25": 90.0,
+      "timestamp": "2026-10-08T06:00:00Z",
+      "source": "fixture"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "description": "Standard Delhi NCR test routes for AirShield",
+  "routes": [
+    {
+      "route_id": "R1_FAST",
+      "duration_sec": 1440.0,
+      "distance_m": 7200.0,
+      "source": "fixture",
+      "geometry": [
+        {"lat": 28.6139, "lng": 77.2090},
+        {"lat": 28.6250, "lng": 77.2180},
+        {"lat": 28.6350, "lng": 77.2250},
+        {"lat": 28.6450, "lng": 77.2350}
+      ]
+    },
+    {
+      "route_id": "R2_SAFER",
+      "duration_sec": 1560.0,
+      "distance_m": 7600.0,
+      "source": "fixture",
+      "geometry": [
+        {"lat": 28.6139, "lng": 77.2090},
+        {"lat": 28.5800, "lng": 77.1650},
+        {"lat": 28.5900, "lng": 77.1700},
+        {"lat": 28.6450, "lng": 77.2350}
+      ]
+    },
+    {
+      "route_id": "R3_SLOW",
+      "duration_sec": 1920.0,
+      "distance_m": 8800.0,
+      "source": "fixture",
+      "geometry": [
+        {"lat": 28.6139, "lng": 77.2090},
+        {"lat": 28.5500, "lng": 77.1550},
+        {"lat": 28.5600, "lng": 77.1500},
+        {"lat": 28.6450, "lng": 77.2350}
+      ]
+    },
+    {
+      "route_id": "R4_DUPLICATE_R1",
+      "duration_sec": 1450.0,
+      "distance_m": 7220.0,
+      "source": "fixture",
+      "geometry": [
+        {"lat": 28.6139, "lng": 77.2090},
+        {"lat": 28.6251, "lng": 77.2181},
+        {"lat": 28.6351, "lng": 77.2251},
+        {"lat": 28.6450, "lng": 77.2350}
+      ]
+    }
+  ]
+}

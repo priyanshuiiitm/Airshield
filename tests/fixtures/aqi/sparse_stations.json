@@ -1,0 +1,14 @@
+{
+  "description": "Sparse stations fixture with only 1 station to trigger low confidence",
+  "base_time": "2026-10-08T12:00:00Z",
+  "stations": [
+    {
+      "station_id": "ST_ONLY_ONE",
+      "lat": 28.6139,
+      "lng": 77.2090,
+      "pm25": 140.0,
+      "timestamp": "2026-10-08T11:30:00Z",
+      "source": "fixture"
+    }
+  ]
+}

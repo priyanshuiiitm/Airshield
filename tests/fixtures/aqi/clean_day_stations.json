@@ -1,0 +1,30 @@
+{
+  "description": "Clean air day fixture where ambient PM2.5 is low (<40 µg/m³)",
+  "base_time": "2026-10-08T12:00:00Z",
+  "stations": [
+    {
+      "station_id": "ST_CLEAN_CENTRAL",
+      "lat": 28.6300,
+      "lng": 77.2200,
+      "pm25": 35.0,
+      "timestamp": "2026-10-08T11:30:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_CLEAN_SOUTH",
+      "lat": 28.5800,
+      "lng": 77.1650,
+      "pm25": 28.0,
+      "timestamp": "2026-10-08T11:15:00Z",
+      "source": "fixture"
+    },
+    {
+      "station_id": "ST_CLEAN_WEST",
+      "lat": 28.6000,
+      "lng": 77.1500,
+      "pm25": 32.0,
+      "timestamp": "2026-10-08T11:00:00Z",
+      "source": "fixture"
+    }
+  ]
+}

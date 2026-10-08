@@ -1,0 +1,16 @@
+{
+  "description": "Single route case with no alternative",
+  "routes": [
+    {
+      "route_id": "R1_ONLY",
+      "duration_sec": 1200.0,
+      "distance_m": 6000.0,
+      "source": "fixture",
+      "geometry": [
+        {"lat": 28.6139, "lng": 77.2090},
+        {"lat": 28.6300, "lng": 77.2200},
+        {"lat": 28.6450, "lng": 77.2350}
+      ]
+    }
+  ]
+}

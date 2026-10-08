@@ -1,6 +1,9 @@
 import boto3
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def check_aws_credentials():
     print("Checking AWS credentials...")
@@ -65,8 +68,8 @@ if __name__ == "__main__":
             
     print("\n")
     if all_passed:
-        print("🎉 TEST 0 PASSED: All foundational AWS services are accessible.")
+        print("[SUCCESS] TEST 0 PASSED: All foundational AWS services are accessible.")
         sys.exit(0)
     else:
-        print("❌ TEST 0 FAILED: One or more services are not accessible.")
+        print("[FAIL] TEST 0 FAILED: One or more services are not accessible.")
         sys.exit(1)

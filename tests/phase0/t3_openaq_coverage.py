@@ -26,23 +26,23 @@ def check_openaq_coverage():
         if response.status_code == 200:
             data = response.json()
             locations = data.get('results', [])
-            print(f"✅ Found {len(locations)} active monitoring stations reporting PM2.5 within 25km of Central Delhi.")
+            print(f"[OK] Found {len(locations)} active monitoring stations reporting PM2.5 within 25km of Central Delhi.")
             
             if len(locations) >= 5:
                 print("Coverage is SUFFICIENT for the model (>= 5 stations).")
             else:
-                print("⚠️ Coverage is WEAK (< 5 stations). Interpolation may have low confidence.")
+                print("[WARN] Coverage is WEAK (< 5 stations). Interpolation may have low confidence.")
                 
             for loc in locations[:5]:
                 print(f" - Station: {loc.get('name')} (ID: {loc.get('id')})")
                 
         else:
-            print(f"❌ Failed to query OpenAQ. Status Code: {response.status_code}")
+            print(f"[FAIL] Failed to query OpenAQ. Status Code: {response.status_code}")
             print(response.text)
             sys.exit(1)
             
     except Exception as e:
-        print(f"❌ Exception querying OpenAQ: {e}")
+        print(f"[FAIL] Exception querying OpenAQ: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
