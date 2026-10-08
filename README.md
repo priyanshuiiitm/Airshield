@@ -119,7 +119,47 @@ python scripts/run_local_demo.py
 
 ---
 
-## 7. Limitations & Scientific Disclaimer
+## 7. Phase 3: AWS Serverless Backend Architecture
+
+AirShield Phase 3 packages the deterministic engine into a production-ready AWS Serverless architecture deployed in `ap-south-1` using AWS SAM.
+
+### Architecture Overview
+
+```
+[ Frontend / Client ]
+         │ (HTTPS JSON)
+         ▼
+[ Amazon API Gateway HTTP API ]
+         │
+         ├── POST /recommend ───────────────► [ AWS Lambda: recommend ]
+         ├── POST /trips/{trip_id}/choice ──►       │
+         ├── GET  /wallet/{worker_id} ──────►       ├──► [ DynamoDB: trips, rewards, aqi-readings ]
+         ├── GET  /analytics/summary ───────►       ├──► [ Amazon S3: scenarios, snapshots, grid ]
+         └── GET  /health ──────────────────►       └──► [ Amazon Location Service (Routes) ]
+                                                           ▲
+[ EventBridge Scheduler ] ────────────────► [ AWS Lambda: ingest_aqi ] ──► [ OpenAQ API ]
+(Every 20 minutes)
+```
+
+### Deployed API Endpoints
+
+* **Base URL**: `https://r2avtmy9q4.execute-api.ap-south-1.amazonaws.com`
+* `GET /health`: Subsystem health checks (Router, S3, DynamoDB, Cache).
+* `POST /recommend`: Evaluates routes, calculates exposures, and returns 4-state classification.
+* `POST /trips/{trip_id}/choice`: Records worker decision and awards idempotent ₹3 micro-reward.
+* `GET /wallet/{worker_id}`: Returns simulated worker reward balance and trip history.
+* `GET /analytics/summary`: Returns aggregate policy metrics and Delhi NCR exposure reduction statistics.
+
+### Run Live AWS Smoke Test
+
+Verify all 7 endpoints against the deployed AWS backend:
+```powershell
+python scripts/smoke_test.py --api-url https://r2avtmy9q4.execute-api.ap-south-1.amazonaws.com
+```
+
+---
+
+## 8. Limitations & Scientific Disclaimer
 
 > [!IMPORTANT]
 > **Scientific & Medical Disclaimer**  
@@ -128,3 +168,4 @@ python scripts/run_local_demo.py
 * **Station Sparsity**: Estimates rely on statutory ambient monitoring stations (e.g. CPCB/DPCC via OpenAQ) interpolated across space.
 * **Traffic Integration**: Traffic-aware durations from Amazon Location Service are used directly to calculate time-in-transit. No secondary artificial congestion multipliers are applied to prevent double-counting.
 * **Operational Buffer**: Unavoidable exposure is defined *relative to operational constraints* (e.g., 5-minute delivery window), not absolute impossibility.
+

@@ -1,0 +1,334 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AirShield Serverless Backend (Phase 3).
+  Provides pollution-aware route optimization, worker micro-rewards, and background AQI ingestion.
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, prod, staging]
+    Description: Deployment environment.
+
+  AllowedOrigin:
+    Type: String
+    Default: 'http://localhost:5173'
+    Description: Allowed CORS Origin for API Gateway (e.g. CloudFront domain or local frontend).
+
+  OpenAQSecretArn:
+    Type: String
+    Default: ''
+    Description: Optional Secrets Manager Secret ARN containing OpenAQ API key.
+
+  DefaultBufferMinutes:
+    Type: Number
+    Default: 5.0
+    Description: Default operational time buffer in minutes.
+
+  SnapshotId:
+    Type: String
+    Default: demo_v1
+    Description: Default snapshot ID for reproducible demonstration routing.
+
+  DefaultMode:
+    Type: String
+    Default: snapshot
+    AllowedValues: [snapshot, live]
+    Description: Default data mode for route recommendations.
+
+Globals:
+  Function:
+    Timeout: 29
+    MemorySize: 512
+    Runtime: python3.12
+    Architectures:
+      - x86_64
+    Tracing: Active
+    Tags:
+      Project: AirShield
+      Environment: !Ref Environment
+      ManagedBy: SAM
+
+Conditions:
+  HasOpenAQSecret: !Not [!Equals [!Ref OpenAQSecretArn, '']]
+
+Resources:
+  # ==================================================================
+  # API GATEWAY HTTP API (Payload v2.0 with Native CORS)
+  # ==================================================================
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AllowedOrigin
+          - 'http://127.0.0.1:5173'
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+          - X-Requested-With
+        MaxAge: 600
+      Tags:
+        Project: AirShield
+        Environment: !Ref Environment
+
+  # ==================================================================
+  # S3 PRIVATE DATA STORAGE
+  # ==================================================================
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "airshield-data-${AWS::AccountId}-${Environment}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Project
+          Value: AirShield
+        - Key: Environment
+          Value: !Ref Environment
+
+  # ==================================================================
+  # DYNAMODB TABLES (Pay-per-request, TTL enabled)
+  # ==================================================================
+  AQITable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "airshield-aqi-readings-${Environment}"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: station_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      KeySchema:
+        - AttributeName: station_id
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: ttl_epoch
+        Enabled: true
+      Tags:
+        - Key: Project
+          Value: AirShield
+        - Key: Environment
+          Value: !Ref Environment
+
+  TripsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "airshield-trips-${Environment}"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: trip_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: trip_id
+          KeyType: HASH
+      Tags:
+        - Key: Project
+          Value: AirShield
+        - Key: Environment
+          Value: !Ref Environment
+
+  RewardsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "airshield-rewards-${Environment}"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: worker_id
+          AttributeType: S
+        - AttributeName: trip_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: worker_id
+          KeyType: HASH
+        - AttributeName: trip_id
+          KeyType: RANGE
+      Tags:
+        - Key: Project
+          Value: AirShield
+        - Key: Environment
+          Value: !Ref Environment
+
+  # ==================================================================
+  # RECOMMENDATION LAMBDA FUNCTION
+  # ==================================================================
+  RecommendFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "airshield-recommend-${Environment}"
+      Handler: backend.handlers.recommend.lambda_handler
+      CodeUri: ../
+      Description: AirShield deterministic route optimization and trip audit handler.
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          AQI_TABLE: !Ref AQITable
+          TRIPS_TABLE: !Ref TripsTable
+          REWARDS_TABLE: !Ref RewardsTable
+          DEFAULT_BUFFER_MIN: !Ref DefaultBufferMinutes
+          SNAPSHOT_ID: !Ref SnapshotId
+          DEFAULT_MODE: !Ref DefaultMode
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AQITable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TripsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref RewardsTable
+        - S3CrudPolicy:
+            BucketName: !Ref DataBucket
+        - Statement:
+            - Effect: Allow
+              Action:
+                - geo:CalculateRoute
+              Resource: "*"
+      Events:
+        HealthCheck:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /health
+            Method: GET
+        Recommend:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /recommend
+            Method: POST
+        TripChoice:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /trips/{trip_id}/choice
+            Method: POST
+        Wallet:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /wallet/{worker_id}
+            Method: GET
+        Analytics:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /analytics/summary
+            Method: GET
+
+  # ==================================================================
+  # BACKGROUND AQI INGESTION LAMBDA FUNCTION
+  # ==================================================================
+  IngestAQIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "airshield-ingest-aqi-${Environment}"
+      Handler: backend.handlers.ingest_aqi.lambda_handler
+      CodeUri: ../
+      Description: Fetches OpenAQ observations and writes raw S3 snapshots + DynamoDB cache.
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          AQI_TABLE: !Ref AQITable
+          OPENAQ_SECRET_ARN: !Ref OpenAQSecretArn
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref AQITable
+        - S3WritePolicy:
+            BucketName: !Ref DataBucket
+        - !If
+          - HasOpenAQSecret
+          - Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref OpenAQSecretArn
+          - !Ref "AWS::NoValue"
+
+  # ==================================================================
+  # EVENTBRIDGE SCHEDULER (Recurring 20-minute ingestion)
+  # ==================================================================
+  SchedulerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "airshield-scheduler-role-${Environment}"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeIngestLambda
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt IngestAQIFunction.Arn
+
+  AQIIngestSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: !Sub "airshield-aqi-ingestion-${Environment}"
+      Description: Recurring 20-minute OpenAQ observation sync for Delhi NCR.
+      ScheduleExpression: "rate(20 minutes)"
+      FlexibleTimeWindow:
+        Mode: "OFF"
+      Target:
+        Arn: !GetAtt IngestAQIFunction.Arn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+        RetryPolicy:
+          MaximumRetryAttempts: 2
+          MaximumEventAgeInSeconds: 300
+
+Outputs:
+  ApiUrl:
+    Description: HTTP API Gateway base invocation URL
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Export:
+      Name: !Sub "AirShield-ApiUrl-${Environment}"
+
+  AQITableName:
+    Description: DynamoDB table name for AQI observations
+    Value: !Ref AQITable
+
+  TripsTableName:
+    Description: DynamoDB table name for trip audit records
+    Value: !Ref TripsTable
+
+  RewardsTableName:
+    Description: DynamoDB table name for worker micro-rewards
+    Value: !Ref RewardsTable
+
+  DataBucketName:
+    Description: Private S3 data bucket name
+    Value: !Ref DataBucket
+
+  RecommendFunctionName:
+    Description: Recommendation Lambda Function name
+    Value: !Ref RecommendFunction
+
+  IngestFunctionName:
+    Description: Ingestion Lambda Function name
+    Value: !Ref IngestAQIFunction
+
+  SchedulerName:
+    Description: EventBridge Recurring Ingestion Schedule name
+    Value: !Ref AQIIngestSchedule
