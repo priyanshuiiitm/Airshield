@@ -185,6 +185,9 @@ Resources:
           DEFAULT_BUFFER_MIN: !Ref DefaultBufferMinutes
           SNAPSHOT_ID: !Ref SnapshotId
           DEFAULT_MODE: !Ref DefaultMode
+          BEDROCK_MODEL_ID: "anthropic.claude-3-haiku-20240307-v1:0"
+          ENABLE_AGENT: "true"
+          AGENT_TIMEOUT_SECONDS: "8.0"
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref AQITable
@@ -198,6 +201,11 @@ Resources:
             - Effect: Allow
               Action:
                 - geo:CalculateRoute
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - bedrock:InvokeModelWithResponseStream
               Resource: "*"
       Events:
         HealthCheck:

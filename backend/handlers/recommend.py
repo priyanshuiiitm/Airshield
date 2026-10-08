@@ -19,6 +19,7 @@ from backend.api.validation import (
     ValidationError
 )
 from backend.service.orchestrator import DeterministicOrchestrator
+from backend.service.agent_orchestrator import AgentOrchestrator
 from backend.repository.dynamodb import DynamoDBRepository
 from backend.repository.s3 import S3Repository
 
@@ -26,17 +27,17 @@ logger = logging.getLogger("airshield.handler.recommend")
 logger.setLevel(logging.INFO)
 
 # Global lazy instances across warm Lambda invocations
-_orchestrator: Optional[DeterministicOrchestrator] = None
+_orchestrator: Optional[AgentOrchestrator] = None
 _dynamodb: Optional[DynamoDBRepository] = None
 _s3: Optional[S3Repository] = None
 
 
-def get_orchestrator() -> DeterministicOrchestrator:
+def get_orchestrator() -> AgentOrchestrator:
     global _orchestrator, _dynamodb, _s3
     if _orchestrator is None:
         _dynamodb = DynamoDBRepository()
         _s3 = S3Repository()
-        _orchestrator = DeterministicOrchestrator(dynamodb_repo=_dynamodb, s3_repo=_s3)
+        _orchestrator = AgentOrchestrator(dynamodb_repo=_dynamodb, s3_repo=_s3)
     return _orchestrator
 
 
