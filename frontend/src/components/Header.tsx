@@ -6,6 +6,7 @@ interface HeaderProps {
   language: LanguageCode;
   onLanguageChange: (lang: LanguageCode) => void;
   onRefresh: () => void;
+  onBackToLanding?: () => void;
   isLoading: boolean;
 }
 
@@ -13,11 +14,12 @@ export const Header: React.FC<HeaderProps> = ({
   language,
   onLanguageChange,
   onRefresh,
+  onBackToLanding,
   isLoading
 }) => {
   return (
     <header className="app-header" data-testid="header">
-      <div className="header-brand">
+      <div className="header-brand" onClick={onBackToLanding} style={{ cursor: onBackToLanding ? "pointer" : "default" }}>
         <div className="brand-shield-icon">
           <Shield size={22} className="shield-svg" />
         </div>
@@ -31,6 +33,17 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="header-actions">
+        {onBackToLanding && (
+          <button
+            type="button"
+            className="btn-back-overview"
+            onClick={onBackToLanding}
+            title="Return to AirShield intro & methodology story"
+          >
+            <span>← Story & Overview</span>
+          </button>
+        )}
+
         {/* Live Network Pulse Indicator */}
         <div className="live-status-pill" title="Live CPCB/DPCC Sensor Integration Active">
           <Activity size={13} className="text-emerald animate-pulse" />

@@ -8,9 +8,11 @@ import { LocationPicker } from "./components/LocationPicker";
 import { RouteComparison } from "./components/RouteComparison";
 import { DecisionCard } from "./components/DecisionCard";
 import { TransparencyPanel } from "./components/TransparencyPanel";
+import { LandingPage } from "./components/LandingPage";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 
 export const App: React.FC = () => {
+  const [viewMode, setViewMode] = useState<"landing" | "simulator">("landing");
   const [language, setLanguage] = useState<LanguageCode>(() => {
     return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
   });
@@ -139,6 +141,12 @@ export const App: React.FC = () => {
   const routes = currentRecommendation?.routes || [];
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
+  // Render Landing Page
+  if (viewMode === "landing") {
+    return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
+  }
+
+  // Render Live Simulator Workspace
   return (
     <div className="app-layout">
       {/* Header */}
@@ -146,6 +154,7 @@ export const App: React.FC = () => {
         language={language}
         onLanguageChange={handleLanguageChange}
         onRefresh={() => handleCalculateRoutes(pickup, drop, bufferMin)}
+        onBackToLanding={() => setViewMode("landing")}
         isLoading={isLoading}
       />
 
