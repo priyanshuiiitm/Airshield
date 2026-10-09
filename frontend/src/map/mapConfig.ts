@@ -1,39 +1,44 @@
 /**
  * MapLibre Configuration & Styles for AirShield.
- * Uses public Carto Light tiles to guarantee fast, reliable rendering without secret tokens.
+ * Uses Carto Dark Matter raster tiles for an ultra-premium obsidian dark-mode aesthetic.
  */
 
 export const ROUTE_COLORS = {
-  fastest: "#334155", // Slate 700 - Neutral dark
-  safer: "#059669",   // Emerald 600 - High contrast clean green
-  other: "#94a3b8",   // Slate 400 - Muted grey
-  pickup: "#2563eb",  // Blue 600
-  drop: "#dc2626"     // Red 600
+  fastest: "#38bdf8",     // Cyber Cyan - High visibility fastest route
+  safer: "#10b981",       // Neon Emerald - Clean/Safer route
+  other: "#64748b",       // Slate 500 - Muted candidate routes
+  selected: "#22d3ee",    // Active focus cyan
+  pickup: "#3b82f6",      // Neon Blue
+  drop: "#ef4444",        // Crimson / Red
+  station: "#f59e0b"      // Amber AQI station dot
 };
 
 export const ROUTE_WIDTHS = {
-  fastest: 4,
-  safer: 6,
-  other: 3
+  fastest: 4.5,
+  safer: 6.5,
+  other: 3.5
 };
 
 export const MAP_STYLE: any = {
   version: 8,
   sources: {
-    "osm-tiles": {
+    "carto-dark": {
       type: "raster",
       tiles: [
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+        "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"
       ],
       tileSize: 256,
-      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
     }
   },
   layers: [
     {
-      id: "osm-layer",
+      id: "carto-dark-layer",
       type: "raster",
-      source: "osm-tiles",
+      source: "carto-dark",
       minzoom: 0,
       maxzoom: 19
     }
@@ -45,3 +50,4 @@ export const DEFAULT_CENTER = {
   lng: 77.2090, // Connaught Place, Delhi
   zoom: 11
 };
+

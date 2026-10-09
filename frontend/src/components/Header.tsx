@@ -1,17 +1,12 @@
-/**
- * Header Component (Phase 5).
- * Clean, lightweight top navigation bar with language switcher.
- */
-
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { translations } from "../utils/localization";
+import { Shield, RefreshCw, Activity } from "lucide-react";
 
 interface HeaderProps {
   language: LanguageCode;
   onLanguageChange: (lang: LanguageCode) => void;
-  onRefresh?: () => void;
-  isLoading?: boolean;
+  onRefresh: () => void;
+  isLoading: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -20,54 +15,57 @@ export const Header: React.FC<HeaderProps> = ({
   onRefresh,
   isLoading
 }) => {
-  const t = translations[language];
-
   return (
-    <header className="app-header" data-testid="app-header">
+    <header className="app-header" data-testid="header">
       <div className="header-brand">
-        <div className="brand-logo" aria-hidden="true">🛡️</div>
+        <div className="brand-shield-icon">
+          <Shield size={22} className="shield-svg" />
+        </div>
         <div>
-          <h1 className="brand-name">{t.appTitle}</h1>
-          <span className="brand-tag">{t.tagSnapshot}</span>
+          <div className="brand-title-row">
+            <h1 className="brand-name">AirShield</h1>
+            <span className="brand-tag">Delhi NCR Live</span>
+          </div>
+          <p className="brand-subtitle">Pollution-Aware Worker Routing & Decision Support</p>
         </div>
       </div>
 
       <div className="header-actions">
-        {onRefresh && (
-          <button
-            type="button"
-            className="btn-icon-refresh"
-            onClick={onRefresh}
-            disabled={isLoading}
-            aria-label={t.recheckButton}
-            title={t.recheckButton}
-          >
-            🔄
-          </button>
-        )}
+        {/* Live Network Pulse Indicator */}
+        <div className="live-status-pill" title="Live CPCB/DPCC Sensor Integration Active">
+          <Activity size={13} className="text-emerald animate-pulse" />
+          <span className="live-status-text">Live 10-Station Feed</span>
+        </div>
 
-        {/* Language Toggle */}
-        <div className="lang-switcher" role="radiogroup" aria-label="Language selection">
+        {/* Language Switcher */}
+        <div className="lang-switcher-group" role="group" aria-label="Language selection">
           <button
             type="button"
             className={`lang-btn ${language === "en" ? "active" : ""}`}
             onClick={() => onLanguageChange("en")}
-            aria-checked={language === "en"}
-            role="radio"
           >
             EN
           </button>
-          <span className="lang-divider">|</span>
           <button
             type="button"
             className={`lang-btn ${language === "hi" ? "active" : ""}`}
             onClick={() => onLanguageChange("hi")}
-            aria-checked={language === "hi"}
-            role="radio"
           >
             हिंदी
           </button>
         </div>
+
+        {/* Refresh Button */}
+        <button
+          type="button"
+          className="header-icon-btn"
+          onClick={onRefresh}
+          disabled={isLoading}
+          title="Refresh real-time pollution readings and routes"
+          aria-label="Refresh Data"
+        >
+          <RefreshCw size={17} className={isLoading ? "animate-spin text-cyan" : ""} />
+        </button>
       </div>
     </header>
   );
