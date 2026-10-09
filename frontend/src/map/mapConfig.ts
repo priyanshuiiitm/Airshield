@@ -4,18 +4,19 @@
  */
 
 export const ROUTE_COLORS = {
-  fastest: "#0284c7",     // Sky Blue - High contrast fastest arterial route
-  safer: "#059669",       // Emerald 600 - High visibility clean green route
-  other: "#64748b",       // Slate 500 - Muted candidate routes
-  selected: "#0ea5e9",    // Active focus cyan
-  pickup: "#2563eb",      // Blue 600
-  drop: "#dc2626",        // Red 600
-  station: "#d97706"      // Amber AQI station dot
+  highAqi: "#dc2626",         // Crimson Red - High AQI / Heavy exposure corridor
+  lowAqi: "#2563eb",          // Royal Blue - Lower AQI / Cleaner air corridor
+  recommendedActive: "#10b981", // Neon Emerald - Active recommended guided path
+  other: "#64748b",           // Slate 500 - Muted candidate routes
+  pickup: "#3b82f6",          // Blue 600
+  drop: "#ef4444",            // Red 600
+  station: "#f59e0b"          // Amber AQI station dot
 };
 
 export const ROUTE_WIDTHS = {
-  fastest: 5,
-  safer: 7,
+  highAqi: 5.5,
+  lowAqi: 5.5,
+  recommendedActive: 7.5,
   other: 3.5
 };
 
@@ -47,4 +48,3 @@ export const DEFAULT_CENTER = {
   lng: 77.2090, // Connaught Place, Delhi
   zoom: 11
 };
-

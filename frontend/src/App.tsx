@@ -221,12 +221,18 @@ export const App: React.FC = () => {
                 routes={routes}
                 fastestRouteId={fastestRouteId}
                 selectedRouteId={selectedRouteId}
+                bufferMin={bufferMin}
                 pickup={pickup}
                 drop={drop}
                 isMapPickingOrigin={isMapPickingOrigin}
                 isMapPickingDestination={isMapPickingDestination}
                 onMapClick={handleMapClick}
                 onRouteClick={(rId) => setSelectedRouteId(rId)}
+                onSelectRecommended={() => {
+                  if (currentRecommendation?.recommendation?.route_id) {
+                    setSelectedRouteId(currentRecommendation.recommendation.route_id);
+                  }
+                }}
               />
             </section>
           </div>

@@ -1,43 +1,65 @@
+/**
+ * MapView Component for AirShield.
+ * Renders OpenStreetMap raster tiles, color-coded Red (High AQI) vs Blue (Lower AQI) routes,
+ * on-map midpoint labels, interactive recommendation prompt, and isolated Green recommended path.
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { RouteDetail, Coordinate } from "../api/types";
 import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
-import { backendRouteToGeoJSON, calculateBounds } from "../map/routeUtils";
+import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
-import { Radio } from "lucide-react";
+import { Radio, Sparkles, Check, Eye } from "lucide-react";
 
 interface MapViewProps {
   routes: RouteDetail[];
   fastestRouteId?: string;
   selectedRouteId?: string | null;
+  bufferMin?: number;
   pickup?: Coordinate;
   drop?: Coordinate;
   isMapPickingOrigin?: boolean;
   isMapPickingDestination?: boolean;
   onMapClick?: (coord: Coordinate) => void;
   onRouteClick?: (routeId: string) => void;
+  onSelectRecommended?: () => void;
 }
 
 export const MapView: React.FC<MapViewProps> = ({
   routes,
   fastestRouteId,
   selectedRouteId,
+  bufferMin = 5,
   pickup,
   drop,
   isMapPickingOrigin = false,
   isMapPickingDestination = false,
   onMapClick,
-  onRouteClick
+  onRouteClick,
+  onSelectRecommended
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const stationMarkersRef = useRef<maplibregl.Marker[]>([]);
+  const routeLabelMarkersRef = useRef<maplibregl.Marker[]>([]);
+
   const [showStations, setShowStations] = useState(true);
   const [mapError, setMapError] = useState<string | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  // Recommendation isolation state
+  const [isRecommendedApplied, setIsRecommendedApplied] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(true);
+
+  // Determine highest AQI route (Red) vs lower AQI route (Blue)
+  const sortedByAqi = [...routes].sort((a, b) => b.average_pm25 - a.average_pm25);
+  const highestAqiRouteId = sortedByAqi.length > 0 ? sortedByAqi[0].route_id : undefined;
+  const lowerAqiRouteId = sortedByAqi.length > 1 ? sortedByAqi[1].route_id : undefined;
+  const recommendedRoute = routes.find((r) => r.route_id === (selectedRouteId || fastestRouteId));
 
   // Initialize MapLibre
   useEffect(() => {
@@ -58,7 +80,6 @@ export const MapView: React.FC<MapViewProps> = ({
         setIsMapLoaded(true);
       });
 
-      // Map click handler for picking origin/destination
       map.on("click", (e) => {
         if (onMapClick) {
           onMapClick({ lat: e.lngLat.lat, lng: e.lngLat.lng });
@@ -141,16 +162,20 @@ export const MapView: React.FC<MapViewProps> = ({
     });
   }, [isMapLoaded, showStations]);
 
-  // Update routes & markers when props change
+  // Update routes & route labels
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !isMapLoaded) return;
 
-    // Clear old origin/destination markers
+    // Clear origin/destination markers
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
-    // Add Pickup Marker (Neon Blue)
+    // Clear route label markers
+    routeLabelMarkersRef.current.forEach((m) => m.remove());
+    routeLabelMarkersRef.current = [];
+
+    // Add Pickup Marker (Blue)
     if (pickup) {
       const el = document.createElement("div");
       el.className = "map-marker pickup-marker-glow";
@@ -167,7 +192,7 @@ export const MapView: React.FC<MapViewProps> = ({
       markersRef.current.push(marker);
     }
 
-    // Add Drop Marker (Neon Red)
+    // Add Drop Marker (Red)
     if (drop) {
       const el = document.createElement("div");
       el.className = "map-marker drop-marker-glow";
@@ -184,32 +209,19 @@ export const MapView: React.FC<MapViewProps> = ({
       markersRef.current.push(marker);
     }
 
-    // Categorize routes
-    const otherFeatures: any[] = [];
-    let fastestFeature: any = null;
-    let saferFeature: any = null;
-
-    routes.forEach((r) => {
-      if (r.route_id === selectedRouteId && selectedRouteId !== fastestRouteId) {
-        saferFeature = backendRouteToGeoJSON(r, "safer");
-      } else if (r.route_id === fastestRouteId) {
-        fastestFeature = backendRouteToGeoJSON(r, "fastest");
-      } else {
-        otherFeatures.push(backendRouteToGeoJSON(r, "other"));
-      }
-    });
-
+    // Helper to update GeoJSON layer
     const updateSourceAndLayer = (
       sourceId: string,
       layerId: string,
-      data: any,
+      features: any[],
       color: string,
       width: number
     ) => {
+      const data = { type: "FeatureCollection", features };
       if (map.getSource(sourceId)) {
-        (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData(data);
-      } else if (data.features && data.features.length > 0) {
-        map.addSource(sourceId, { type: "geojson", data });
+        (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData(data as any);
+      } else if (features.length > 0) {
+        map.addSource(sourceId, { type: "geojson", data: data as any });
         map.addLayer({
           id: layerId,
           type: "line",
@@ -234,43 +246,132 @@ export const MapView: React.FC<MapViewProps> = ({
       }
     };
 
-    // 1. Other routes layer
+    // Prepare features based on isRecommendedApplied
+    const greenFeatures: any[] = [];
+    const redFeatures: any[] = [];
+    const blueFeatures: any[] = [];
+
+    if (isRecommendedApplied && recommendedRoute) {
+      // ONLY show the single recommended route in Green
+      greenFeatures.push({
+        type: "Feature",
+        properties: { route_id: recommendedRoute.route_id },
+        geometry: {
+          type: "LineString",
+          coordinates: recommendedRoute.geometry.map((pt) => [pt.lng, pt.lat])
+        }
+      });
+
+      // Add single Green on-map midpoint badge
+      const midIdx = Math.floor(recommendedRoute.geometry.length / 2);
+      const midPt = recommendedRoute.geometry[midIdx];
+      if (midPt) {
+        const el = document.createElement("div");
+        el.className = "route-onmap-badge badge-green";
+        el.innerHTML = `<span>🟢 Recommended Path (${recommendedRoute.average_pm25} µg/m³ • ${recommendedRoute.duration_minutes}m)</span>`;
+        const m = new maplibregl.Marker({ element: el })
+          .setLngLat([midPt.lng, midPt.lat])
+          .addTo(map);
+        routeLabelMarkersRef.current.push(m);
+      }
+    } else {
+      // Show both routes: Higher AQI in RED, Lower AQI in BLUE
+      routes.forEach((r) => {
+        const isHighAqi = r.route_id === highestAqiRouteId;
+        const feature = {
+          type: "Feature",
+          properties: { route_id: r.route_id },
+          geometry: {
+            type: "LineString",
+            coordinates: r.geometry.map((pt) => [pt.lng, pt.lat])
+          }
+        };
+
+        if (isHighAqi) {
+          redFeatures.push(feature);
+        } else {
+          blueFeatures.push(feature);
+        }
+
+        // Add on-map midpoint badge
+        const midIdx = Math.floor(r.geometry.length / 2);
+        const midPt = r.geometry[midIdx];
+        if (midPt) {
+          const el = document.createElement("div");
+          el.className = `route-onmap-badge ${isHighAqi ? "badge-red" : "badge-blue"}`;
+          el.innerHTML = isHighAqi
+            ? `<span>🔴 High AQI Corridor (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`
+            : `<span>🔵 Lower AQI Path (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`;
+          el.onclick = () => onRouteClick && onRouteClick(r.route_id);
+          const m = new maplibregl.Marker({ element: el })
+            .setLngLat([midPt.lng, midPt.lat])
+            .addTo(map);
+          routeLabelMarkersRef.current.push(m);
+        }
+      });
+    }
+
+    // 1. Red Route Layer (High AQI)
     updateSourceAndLayer(
-      "source-routes-other",
-      "layer-routes-other",
-      { type: "FeatureCollection", features: otherFeatures },
-      ROUTE_COLORS.other,
-      ROUTE_WIDTHS.other
+      "source-routes-red",
+      "layer-routes-red",
+      redFeatures,
+      ROUTE_COLORS.highAqi,
+      ROUTE_WIDTHS.highAqi
     );
 
-    // 2. Fastest route layer
+    // 2. Blue Route Layer (Lower AQI)
     updateSourceAndLayer(
-      "source-routes-fastest",
-      "layer-routes-fastest",
-      { type: "FeatureCollection", features: fastestFeature ? [fastestFeature] : [] },
-      ROUTE_COLORS.fastest,
-      ROUTE_WIDTHS.fastest
+      "source-routes-blue",
+      "layer-routes-blue",
+      blueFeatures,
+      ROUTE_COLORS.lowAqi,
+      ROUTE_WIDTHS.lowAqi
     );
 
-    // 3. Safer route layer
+    // 3. Green Route Layer (Active Recommended)
     updateSourceAndLayer(
-      "source-routes-safer",
-      "layer-routes-safer",
-      { type: "FeatureCollection", features: saferFeature ? [saferFeature] : [] },
-      ROUTE_COLORS.safer,
-      ROUTE_WIDTHS.safer
+      "source-routes-green",
+      "layer-routes-green",
+      greenFeatures,
+      ROUTE_COLORS.recommendedActive,
+      ROUTE_WIDTHS.recommendedActive
     );
 
-    // Fit Bounds
+    // Auto-fit bounds
     const bounds = calculateBounds(routes, pickup, drop);
     if (bounds) {
       map.fitBounds(bounds, {
-        padding: { top: 60, bottom: 60, left: 60, right: 60 },
+        padding: { top: 70, bottom: 70, left: 70, right: 70 },
         duration: 900,
         maxZoom: 15
       });
     }
-  }, [routes, fastestRouteId, selectedRouteId, pickup, drop, isMapLoaded, onRouteClick]);
+  }, [
+    routes,
+    fastestRouteId,
+    selectedRouteId,
+    highestAqiRouteId,
+    lowerAqiRouteId,
+    isRecommendedApplied,
+    pickup,
+    drop,
+    isMapLoaded,
+    onRouteClick
+  ]);
+
+  const handleApplyRecommendation = () => {
+    setIsRecommendedApplied(true);
+    setShowPrompt(false);
+    if (onSelectRecommended) {
+      onSelectRecommended();
+    }
+  };
+
+  const handleShowBoth = () => {
+    setIsRecommendedApplied(false);
+    setShowPrompt(false);
+  };
 
   if (mapError) {
     return (
@@ -296,20 +397,74 @@ export const MapView: React.FC<MapViewProps> = ({
           <Radio size={14} className="text-amber" />
           <span>Live AQI Sensors</span>
         </button>
+
+        {isRecommendedApplied && (
+          <button
+            type="button"
+            className="map-pill-btn active-both-btn"
+            onClick={handleShowBoth}
+            title="View both High AQI (Red) and Lower AQI (Blue) paths"
+          >
+            <Eye size={14} className="text-cyan" />
+            <span>Show Both Routes (Red vs Blue)</span>
+          </button>
+        )}
       </div>
+
+      {/* Floating Interactive Recommendation Prompt Card */}
+      {showPrompt && !isRecommendedApplied && routes.length >= 2 && (
+        <div className="recommendation-prompt-card animate-slide-up">
+          <div className="prompt-header">
+            <div className="prompt-icon-badge">
+              <Sparkles size={16} className="text-emerald" />
+            </div>
+            <div className="prompt-text-group">
+              <span className="prompt-title">Route Recommendation Assistant</span>
+              <p className="prompt-question">
+                Do you need the recommended path with respect to your delivery constraint (+{bufferMin}m)?
+              </p>
+            </div>
+          </div>
+
+          <div className="prompt-action-row">
+            <button
+              type="button"
+              className="btn-apply-rec"
+              onClick={handleApplyRecommendation}
+            >
+              <Check size={14} />
+              <span>Apply Recommended Route (Turns Green)</span>
+            </button>
+            <button
+              type="button"
+              className="btn-dismiss-rec"
+              onClick={() => setShowPrompt(false)}
+            >
+              <span>Compare Both</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Route Legend */}
       {routes.length > 0 && (
         <div className="map-legend">
-          <div className="legend-item">
-            <span className="legend-line" style={{ backgroundColor: ROUTE_COLORS.fastest }}></span>
-            <span className="legend-label">Fastest (Direct Arterial)</span>
-          </div>
-          {selectedRouteId && selectedRouteId !== fastestRouteId && (
+          {isRecommendedApplied ? (
             <div className="legend-item">
-              <span className="legend-line line-glow-emerald" style={{ backgroundColor: ROUTE_COLORS.safer, height: 4.5 }}></span>
-              <span className="legend-label">Safer (Green Corridor)</span>
+              <span className="legend-line line-green" style={{ backgroundColor: ROUTE_COLORS.recommendedActive }}></span>
+              <span className="legend-label">🟢 Recommended Single Path</span>
             </div>
+          ) : (
+            <>
+              <div className="legend-item">
+                <span className="legend-line line-red" style={{ backgroundColor: ROUTE_COLORS.highAqi }}></span>
+                <span className="legend-label">🔴 High AQI Corridor (Red)</span>
+              </div>
+              <div className="legend-item">
+                <span className="legend-line line-blue" style={{ backgroundColor: ROUTE_COLORS.lowAqi }}></span>
+                <span className="legend-label">🔵 Lower AQI Path (Blue)</span>
+              </div>
+            </>
           )}
           <div className="legend-item">
             <span className="legend-dot dot-amber"></span>
