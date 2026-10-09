@@ -1,44 +1,41 @@
 /**
  * MapLibre Configuration & Styles for AirShield.
- * Uses Carto Dark Matter raster tiles for an ultra-premium obsidian dark-mode aesthetic.
+ * Uses public OpenStreetMap tiles to guarantee 100% reliable rendering without API keys or watermarks.
  */
 
 export const ROUTE_COLORS = {
-  fastest: "#38bdf8",     // Cyber Cyan - High visibility fastest route
-  safer: "#10b981",       // Neon Emerald - Clean/Safer route
+  fastest: "#0284c7",     // Sky Blue - High contrast fastest arterial route
+  safer: "#059669",       // Emerald 600 - High visibility clean green route
   other: "#64748b",       // Slate 500 - Muted candidate routes
-  selected: "#22d3ee",    // Active focus cyan
-  pickup: "#3b82f6",      // Neon Blue
-  drop: "#ef4444",        // Crimson / Red
-  station: "#f59e0b"      // Amber AQI station dot
+  selected: "#0ea5e9",    // Active focus cyan
+  pickup: "#2563eb",      // Blue 600
+  drop: "#dc2626",        // Red 600
+  station: "#d97706"      // Amber AQI station dot
 };
 
 export const ROUTE_WIDTHS = {
-  fastest: 4.5,
-  safer: 6.5,
+  fastest: 5,
+  safer: 7,
   other: 3.5
 };
 
 export const MAP_STYLE: any = {
   version: 8,
   sources: {
-    "carto-dark": {
+    "osm-tiles": {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       ],
       tileSize: 256,
-      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
+      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
     }
   },
   layers: [
     {
-      id: "carto-dark-layer",
+      id: "osm-tiles-layer",
       type: "raster",
-      source: "carto-dark",
+      source: "osm-tiles",
       minzoom: 0,
       maxzoom: 19
     }
