@@ -27,7 +27,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
   onSelectChoice
 }) => {
   const t = translations[language];
-  const { classification, recommendation: rec, benefit, agent, message } = recommendation;
+  const { classification, recommendation: rec, agent, message } = recommendation;
 
   // Use agent message or localization fallback
   const explanationText = agent?.explanation || message || "";
@@ -146,18 +146,20 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             </div>
           </div>
 
-          {/* Health Protection Benefit */}
-          {benefit?.eligible && (
-            <div className="reward-banner benefit-banner">
-              <Shield size={18} className="text-amber" />
-              <div className="reward-text-wrap">
-                <span className="reward-text">
-                  {t.protectionBenefit}: <strong>{formatCurrency(benefit.amount_inr || 5)}</strong>
-                </span>
-                <span className="reward-sub">Automatically awarded for high-exposure unavoidable shifts</span>
-              </div>
+          {/* Mathematical Dose Minimization Advisory */}
+          <div className="unavoidable-advisory-box">
+            <div className="advisory-top-row">
+              <Shield size={16} className="text-amber" />
+              <span className="advisory-heading">
+                {language === "hi" ? "न्यूनतम समय रणनीति (Time-in-Transit Minimization)" : "Dose Minimization Strategy"}
+              </span>
             </div>
-          )}
+            <p className="advisory-desc">
+              {language === "hi"
+                ? "सभी उपलब्ध गलियारों में प्रदूषण अधिक है। सड़क पर कुल समय न्यूनतम रखने के लिए सबसे तेज़ मार्ग चुनें ताकि समग्र पार्टिकुलेट एक्सपोज़र कम रहे।"
+                : "Background PM2.5 is uniformly elevated across all paths. The mathematical optimum is to follow the fastest route to minimize total time-in-transit outdoors."}
+            </p>
+          </div>
 
           {choiceSubmitted ? (
             <div className="choice-confirmation" role="status">

@@ -340,12 +340,12 @@ export function generateDynamicRoutes(
     });
   }
 
-  // 2. Safer / Green Ridge Corridor Route (Slightly longer, passes through green/park side)
+  // 2. Safer / Green Ridge Corridor Route (Detour through green canopy / ridge buffers)
   const waypointsSafer: Coordinate[] = [];
   const normalLat = -(drop.lng - pickup.lng);
   const normalLng = drop.lat - pickup.lat;
   const normLen = Math.sqrt(normalLat * normalLat + normalLng * normalLng) || 1;
-  const offsetScale = 0.018; // approx 1.8km detour through green ridge
+  const offsetScale = Math.max(0.025, Math.min(0.07, straightDist * 0.0035));
 
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
@@ -360,36 +360,36 @@ export function generateDynamicRoutes(
   const waypointsAlt: Coordinate[] = [];
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
-    const curve = -Math.sin(t * Math.PI) * (offsetScale * 0.75);
+    const curve = -Math.sin(t * Math.PI) * (offsetScale * 0.85);
     waypointsAlt.push({
       lat: pickup.lat + (drop.lat - pickup.lat) * t + (normalLat / normLen) * curve,
       lng: pickup.lng + (drop.lng - pickup.lng) * t + (normalLng / normLen) * curve
     });
   }
 
-  // Calculate IDW and exposure for Route 1 (Fastest)
+  // Calculate IDW and exposure for Route 1 (Fastest Arterial)
   let sumPmFastest = 0;
   waypointsFastest.forEach((pt) => {
     const { pm25 } = calculateIdwPm25(pt);
-    // Arterial Road factor 1.22x
-    sumPmFastest += pm25 * 1.22;
+    // Arterial Road factor 1.25x
+    sumPmFastest += pm25 * 1.25;
   });
-  const avgPmFastest = sumPmFastest / waypointsFastest.length;
+  const avgPmFastest = Math.round((sumPmFastest / waypointsFastest.length) * 10) / 10;
   const durationFastest = Math.round(baseDurationMin);
   const distFastest = Math.round(straightDist * 1.2 * 10) / 10;
   const rawExposureFastest = avgPmFastest * durationFastest;
 
-  // Calculate IDW and exposure for Route 2 (Safer)
+  // Calculate IDW and exposure for Route 2 (Safer Green Corridor)
   let sumPmSafer = 0;
   waypointsSafer.forEach((pt) => {
     const { pm25 } = calculateIdwPm25(pt);
-    // Green canopy buffer 0.82x
-    sumPmSafer += pm25 * 0.82;
+    // Green canopy buffer 0.78x
+    sumPmSafer += pm25 * 0.78;
   });
-  const avgPmSafer = sumPmSafer / waypointsSafer.length;
-  const extraMinutes = Math.min(bufferMin - 0.5, Math.max(1.5, Math.round(baseDurationMin * 0.12 * 10) / 10));
-  const durationSafer = Math.round(durationFastest + extraMinutes);
-  const distSafer = Math.round(straightDist * 1.38 * 10) / 10;
+  const avgPmSafer = Math.round((sumPmSafer / waypointsSafer.length) * 10) / 10;
+  const rawExtraMinutes = Math.max(1.5, Math.round(baseDurationMin * 0.08 * 10) / 10);
+  const durationSafer = Math.round(durationFastest + rawExtraMinutes);
+  const distSafer = Math.round(straightDist * 1.35 * 10) / 10;
   const rawExposureSafer = avgPmSafer * durationSafer;
 
   // Calculate IDW and exposure for Route 3 (Alt)
@@ -398,9 +398,9 @@ export function generateDynamicRoutes(
     const { pm25 } = calculateIdwPm25(pt);
     sumPmAlt += pm25 * 1.05;
   });
-  const avgPmAlt = sumPmAlt / waypointsAlt.length;
-  const durationAlt = Math.round(durationFastest + bufferMin + 3);
-  const distAlt = Math.round(straightDist * 1.5 * 10) / 10;
+  const avgPmAlt = Math.round((sumPmAlt / waypointsAlt.length) * 10) / 10;
+  const durationAlt = Math.round(durationFastest + bufferMin + 4);
+  const distAlt = Math.round(straightDist * 1.48 * 10) / 10;
   const rawExposureAlt = avgPmAlt * durationAlt;
 
   // Exposure normalization (Fastest = 100)
@@ -414,7 +414,7 @@ export function generateDynamicRoutes(
   let classification: ClassificationOutcome = "AVOIDABLE";
   if (avgPmFastest < 60) {
     classification = "LOW";
-  } else if (reductionPercent >= 15 && extraMinutes <= bufferMin) {
+  } else if (reductionPercent >= 15 && rawExtraMinutes <= bufferMin) {
     classification = "AVOIDABLE";
   } else {
     classification = "UNAVOIDABLE";
@@ -470,7 +470,7 @@ export function generateDynamicRoutes(
     recommendation: {
       route_id: isAvoidable ? "route_safer" : "route_fastest",
       action: isAvoidable ? "TAKE_SAFER_ROUTE" : "FOLLOW_FASTEST",
-      additional_minutes: isAvoidable ? extraMinutes : 0,
+      additional_minutes: isAvoidable ? rawExtraMinutes : 0,
       exposure_reduction_percent: isAvoidable ? reductionPercent : 0,
       reward_eligible: isAvoidable,
       reward_amount_inr: 3
@@ -483,9 +483,9 @@ export function generateDynamicRoutes(
       robust: true
     },
     benefit: {
-      type: classification === "UNAVOIDABLE" ? "HEALTH_PROTECTION" : "MICRO_REWARD",
-      amount_inr: classification === "UNAVOIDABLE" ? 5 : 3,
-      eligible: classification === "UNAVOIDABLE"
+      type: "EXPOSURE_MINIMIZATION",
+      amount_inr: 0,
+      eligible: false
     },
     metadata: {
       snapshot_id: "delhi_cpcb_live_v2",
@@ -495,7 +495,7 @@ export function generateDynamicRoutes(
       created_at: new Date().toISOString()
     },
     message: isAvoidable
-      ? `Safer route found via Ridge/Green Corridor. Adds ${extraMinutes} min but cuts cumulative PM2.5 exposure by ${reductionPercent}%.`
+      ? `Safer route found via Ridge/Green Corridor. Adds ${rawExtraMinutes} min but cuts cumulative PM2.5 exposure by ${reductionPercent}%.`
       : classification === "UNAVOIDABLE"
       ? `High background PM2.5 detected across all paths in Delhi NCR. No cleaner route is feasible within +${bufferMin} min buffer.`
       : `Ambient air quality is within safe limits (PM2.5 < 60 µg/m³). Proceed on fastest route.`,
@@ -505,7 +505,7 @@ export function generateDynamicRoutes(
       reason_code: isAvoidable ? "CLEANER_ROBUST_ROUTE_EXISTS" : "ELEVATED_UNAVOIDABLE_DELHI_SMOG",
       action: isAvoidable ? "RECOMMEND_CLEANER_PATH" : "RECOMMEND_FASTEST_WITH_PROTECTION",
       explanation: isAvoidable
-        ? `A cleaner feasible path was identified reducing estimated PM2.5 inhalation by ${reductionPercent}% with +${extraMinutes}m extra time.`
+        ? `A cleaner feasible path was identified reducing estimated PM2.5 inhalation by ${reductionPercent}% with +${rawExtraMinutes}m extra time.`
         : `All alternative routes exceed delivery time constraints or do not achieve the statutory 15% reduction threshold.`,
       validation_passed: true,
       fallback_used: false,

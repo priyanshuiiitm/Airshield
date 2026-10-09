@@ -55,6 +55,12 @@ export const MapView: React.FC<MapViewProps> = ({
   const [isRecommendedApplied, setIsRecommendedApplied] = useState(false);
   const [showPrompt, setShowPrompt] = useState(true);
 
+  // Re-trigger popup prompt whenever the trip origin, destination, or routes are recalculated
+  useEffect(() => {
+    setIsRecommendedApplied(false);
+    setShowPrompt(true);
+  }, [pickup?.lat, pickup?.lng, drop?.lat, drop?.lng, routes]);
+
   // Determine highest AQI route (Red) vs lower AQI route (Blue)
   const sortedByAqi = [...routes].sort((a, b) => b.average_pm25 - a.average_pm25);
   const highestAqiRouteId = sortedByAqi.length > 0 ? sortedByAqi[0].route_id : undefined;

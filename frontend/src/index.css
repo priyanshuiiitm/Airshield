@@ -829,6 +829,36 @@ button {
   margin-bottom: 14px;
 }
 
+/* Unavoidable Dose Minimization Advisory */
+.unavoidable-advisory-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+.advisory-top-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.advisory-heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.advisory-desc {
+  font-size: 11px;
+  color: #fde68a;
+  line-height: 1.5;
+}
+
 .benefit-banner {
   background: rgba(245, 158, 11, 0.1);
   border-color: rgba(245, 158, 11, 0.25);

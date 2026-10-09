@@ -16,7 +16,7 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
   language,
   onSelectRoute
 }) => {
-  const { routes, decision, recommendation: rec, classification, benefit } = recommendation;
+  const { routes, decision, recommendation: rec, classification } = recommendation;
   const fastestRouteId = decision?.fastest_route_id;
   const fastestRoute = routes.find((r) => r.route_id === fastestRouteId);
   const baselineExposure = fastestRoute?.estimated_integrated_pm25 || 1;
@@ -168,11 +168,11 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 </div>
               )}
 
-              {isFastest && isUnavoidable && benefit?.eligible && (
+              {isFastest && isUnavoidable && (
                 <div className="route-incentive-bar incentive-amber">
                   <Shield size={15} className="text-amber" />
                   <span>
-                    Smog Protection Benefit: <strong>{formatCurrency(benefit.amount_inr || 5)}</strong> triggered automatically
+                    Dose Optimum: Fastest transit minimizes total outdoor particulate inhalation.
                   </span>
                 </div>
               )}
