@@ -227,7 +227,10 @@ export const MapView: React.FC<MapViewProps> = ({
       if (map.getSource(sourceId)) {
         (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData(data as any);
       } else if (features.length > 0) {
-        map.addSource(sourceId, { type: "geojson", data: data as any });
+        map.addSource(sourceId, { type: "geojson", data: data as any, lineMetrics: true });
+        
+        const isRedRoute = sourceId === "source-routes-red";
+        
         map.addLayer({
           id: layerId,
           type: "line",
@@ -239,7 +242,18 @@ export const MapView: React.FC<MapViewProps> = ({
           paint: {
             "line-color": color,
             "line-width": width,
-            "line-opacity": 0.95
+            "line-opacity": 0.95,
+            // Apply a stunning gradient ONLY to the red route to simulate a pollution heatmap
+            ...(isRedRoute ? {
+              "line-gradient": [
+                "interpolate",
+                ["linear"],
+                ["line-progress"],
+                0, "#fbbf24", // Yellow (Moderate)
+                0.5, "#dc2626", // Red (Severe)
+                1, "#fbbf24"  // Yellow (Moderate)
+              ]
+            } : {})
           }
         });
 

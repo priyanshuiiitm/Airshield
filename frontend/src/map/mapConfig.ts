@@ -23,22 +23,22 @@ export const ROUTE_WIDTHS = {
 export const MAP_STYLE: any = {
   version: 8,
   sources: {
-    "osm-tiles": {
+    "carto-dark": {
       type: "raster",
       tiles: [
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
       ],
       tileSize: 256,
-      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
     }
   },
   layers: [
     {
-      id: "osm-tiles-layer",
+      id: "carto-dark-layer",
       type: "raster",
-      source: "osm-tiles",
+      source: "carto-dark",
       minzoom: 0,
-      maxzoom: 19
+      maxzoom: 20
     }
   ]
 };

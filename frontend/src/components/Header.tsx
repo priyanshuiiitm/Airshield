@@ -45,8 +45,8 @@ export const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Live Network Pulse Indicator */}
-        <div className="live-status-pill" title="Live CPCB/DPCC Sensor Integration Active">
-          <Activity size={13} className="text-emerald animate-pulse" />
+        <div className="live-status-pill" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} title="Live CPCB/DPCC Sensor Integration Active">
+          <div className="live-pulse-dot"></div>
           <span className="live-status-text">Live 10-Station Feed</span>
         </div>
 

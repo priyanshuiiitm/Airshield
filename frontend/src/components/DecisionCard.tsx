@@ -83,7 +83,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
               <Award size={18} className="text-emerald" />
               <div className="reward-text-wrap">
                 <span className="reward-text">
-                  Worker Incentive: <strong>{formatCurrency(rec.reward_amount_inr || 3)}</strong> credited to wallet
+                  Worker Incentive: <strong className="reward-glow">{formatCurrency(rec.reward_amount_inr || 3)}</strong> credited to wallet
                 </span>
                 <span className="reward-sub">Simulated carbon & health payout</span>
               </div>
