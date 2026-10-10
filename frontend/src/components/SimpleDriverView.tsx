@@ -229,9 +229,9 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
                     }}
                   >
                     <MapPin size={18} />
-                    <span style={{ textAlign: "left" }}>
-                      <strong style={{ display: "block", fontSize: 15 }}>{res.display_name.split(",")[0]}</strong>
-                      <small style={{ color: "#6b7280", fontSize: 12 }}>{res.display_name.split(",").slice(1,3).join(", ")}</small>
+                    <span style={{ textAlign: "left", flex: 1, minWidth: 0 }}>
+                      <strong style={{ display: "block", fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{res.display_name.split(",")[0]}</strong>
+                      <small style={{ color: "#6b7280", fontSize: 12, display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{res.display_name.split(",").slice(1,3).join(", ")}</small>
                     </span>
                   </button>
                 ))

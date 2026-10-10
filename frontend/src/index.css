@@ -5975,6 +5975,10 @@ button {
   font-weight: 500;
   color: #000;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .simple-divider {
