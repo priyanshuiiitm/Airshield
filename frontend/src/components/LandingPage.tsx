@@ -4,19 +4,15 @@
  * Features live radar simulation, interactive 4-act methodology story, and direct simulator launch.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer, hoverScale, tapScale } from "../animation/motion-config";
 import {
   Shield,
   ArrowRight,
   Activity,
-  CheckCircle2,
-  Volume2,
-  VolumeX
+  CheckCircle2
 } from "lucide-react";
-import { useVoice } from "../context/VoiceContext";
-import { voiceScripts } from "../services/voiceScripts";
 
 interface LandingPageProps {
   onLaunchSimulator: () => void;
@@ -24,13 +20,6 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) => {
   const [activeAct, setActiveAct] = useState<number>(1);
-  const { isVoiceEnabled, setVoiceEnabled, speak, stop, activeHighlightId, language, setLanguage } = useVoice();
-
-  useEffect(() => {
-    if (isVoiceEnabled) {
-      speak(voiceScripts.landingWelcome(language), "hero-actions-row");
-    }
-  }, [isVoiceEnabled, language, speak]);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -108,96 +97,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               constrained-optimal clean corridors.
             </motion.p>
 
-            {/* Frontpage Audio Guide Language Choice Bar */}
-            <div className="hero-voice-bar-wrapper">
-              <div className="hero-voice-bar">
-                <div className="hero-voice-bar-left">
-                  <Volume2 size={16} className="text-emerald animate-pulse" />
-                  <span className="hero-voice-bar-label">
-                    {language === "hi" ? "ऑडियो सहायता (महिला आवाज):" : "Voice Assistance (Female Voice):"}
-                  </span>
-                </div>
-                <div className="hero-voice-bar-actions">
-                  <button
-                    type="button"
-                    className={`hero-voice-choice-btn ${language === "hi" && isVoiceEnabled ? "active" : ""}`}
-                    onClick={() => {
-                      setLanguage("hi");
-                      localStorage.setItem("airshield_lang", "hi");
-                      setVoiceEnabled(true);
-                      speak(voiceScripts.landingWelcome("hi"), "hero-actions-row");
-                    }}
-                    title="हिंदी में महिला आवाज सहायता चालू करें"
-                  >
-                    <span>🇮🇳 हिंदी (Hindi)</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`hero-voice-choice-btn ${language === "en" && isVoiceEnabled ? "active" : ""}`}
-                    onClick={() => {
-                      setLanguage("en");
-                      localStorage.setItem("airshield_lang", "en");
-                      setVoiceEnabled(true);
-                      speak(voiceScripts.landingWelcome("en"), "hero-actions-row");
-                    }}
-                    title="Enable English female voice guide"
-                  >
-                    <span>🇬🇧 English</span>
-                  </button>
-
-                  {isVoiceEnabled && (
-                    <button
-                      type="button"
-                      className="hero-voice-mute-btn"
-                      onClick={() => {
-                        stop();
-                        setVoiceEnabled(false);
-                      }}
-                      title={language === "hi" ? "आवाज बंद करें" : "Mute voice"}
-                    >
-                      <VolumeX size={13} />
-                      <span>{language === "hi" ? "म्यूट" : "Mute"}</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <motion.div
-              id="hero-actions-row"
-              className={`hero-actions-row ${activeHighlightId === "hero-actions-row" ? "voice-spotlight-active" : ""}`}
-              variants={fadeInUp}
-            >
+            <motion.div className="hero-actions-row" variants={fadeInUp}>
               <motion.button
                 type="button"
                 className="btn-hero-primary"
-                onClick={() => {
-                  stop();
-                  onLaunchSimulator();
-                }}
+                onClick={onLaunchSimulator}
                 data-testid="btn-launch-hero"
                 whileHover={{ scale: 1.05, boxShadow: "var(--shadow-glow-violet)" }}
                 whileTap={tapScale}
                 style={{ background: "var(--gradient-aurora-primary)" }}
               >
-                <span>{language === "hi" ? "रूट इंजन शुरू करें" : "Launch route engine"}</span>
+                <span>Launch route engine</span>
                 <ArrowRight size={16} />
               </motion.button>
 
               <motion.button
                 type="button"
                 className="btn-hero-secondary"
-                onClick={() => {
-                  scrollToSection("methodology");
-                  if (isVoiceEnabled) {
-                    speak(voiceScripts.landingStory(language), "methodology");
-                  }
-                }}
+                onClick={() => scrollToSection("methodology")}
                 whileHover={hoverScale}
                 whileTap={tapScale}
               >
-                <span>{language === "hi" ? "रूटिंग की कहानी पढ़ें" : "Read the routing story"}</span>
+                <span>Read the routing story</span>
                 <span className="down-arrow">↓</span>
               </motion.button>
             </motion.div>
@@ -342,10 +263,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
 
                 {/* Radar Floating Badges */}
                 <div className="radar-floating-badge badge-top-right">
-                  <span className="dot-red"></span> High AQI Arterial (185 ┬╡g/m┬│)
+                  <span className="dot-red"></span> High AQI Arterial (185 µg/m³)
                 </div>
                 <div className="radar-floating-badge badge-bottom-left">
-                  <span className="dot-green"></span> Clean Ridge Corridor (82 ┬╡g/m┬│)
+                  <span className="dot-green"></span> Clean Ridge Corridor (82 µg/m³)
                 </div>
               </div>
             </div>
@@ -358,7 +279,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                   <span className="dp-label">LIVE ROUTE OPTIMIZATION ENGINE</span>
                 </div>
                 <div className="dp-scenario-tags">
-                  <span className="dp-tag active">Connaught Place ΓåÆ Karol Bagh</span>
+                  <span className="dp-tag active">Connaught Place → Karol Bagh</span>
                 </div>
               </div>
 
@@ -366,7 +287,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 <div className="dp-tradeoff-block">
                   <span className="dp-tradeoff-label">EXPOSURE REDUCTION</span>
                   <div className="dp-tradeoff-val-wrap">
-                    <span className="dp-val text-emerald">Γåô 24%</span>
+                    <span className="dp-val text-emerald">↓ 24%</span>
                     <span className="dp-sub">Saved Inhalation</span>
                   </div>
                   <span className="dp-detail-pill text-amber">+2.0m time buffer tradeoff</span>
@@ -388,11 +309,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 </div>
                 <div className="dp-feat-item">
                   <CheckCircle2 size={13} className="text-emerald" />
-                  <span>Roadside traffic factor 1.25├ù and Central Ridge green buffer 0.78├ù applied</span>
+                  <span>Roadside traffic factor 1.25× and Central Ridge green buffer 0.78× applied</span>
                 </div>
                 <div className="dp-feat-item">
                   <CheckCircle2 size={13} className="text-emerald" />
-                  <span>3-Point Sensitivity Robustness Check Verified (0.5├ù, 1.0├ù, 1.5├ù invariant)</span>
+                  <span>3-Point Sensitivity Robustness Check Verified (0.5×, 1.0×, 1.5× invariant)</span>
                 </div>
               </div>
 
@@ -402,7 +323,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                   <strong className="text-emerald">AVOIDABLE (Safer Route Available)</strong>
                 </div>
                 <button type="button" className="btn-dp-inspect" onClick={onLaunchSimulator}>
-                  <span>Simulate Live Γåù</span>
+                  <span>Simulate Live ↗</span>
                 </button>
               </div>
             </div>
@@ -415,7 +336,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
       {/* ---------------------------------------------------- */}
       <section id="methodology" className="methodology-story-section">
         <div className="section-header-block">
-          <span className="section-subtitle-tag">ΓèÖ ONE TRIP. FOUR ACTS.</span>
+          <span className="section-subtitle-tag">⊙ ONE TRIP. FOUR ACTS.</span>
           <h2 className="section-main-heading">Scroll through the Shield.</h2>
           <p className="section-description-text">
             Trace the end-to-end mathematical lifecycle of AirShield: from statutory sensor ingestion
@@ -434,10 +355,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
 
               <div className="chrono-timeline-steps">
                 {[
-                  { act: 1, title: "ACT 01 ΓÇó STATUTORY SENSING", desc: "DPCC & CPCB CAAQMS ingestion" },
-                  { act: 2, title: "ACT 02 ΓÇó SPATIAL CONTEXT MODIFIERS", desc: "Roadway vs Tree canopy proxies" },
-                  { act: 3, title: "ACT 03 ΓÇó CONSTRAINED OPTIMIZATION", desc: "Delivery buffer & sensitivity check" },
-                  { act: 4, title: "ACT 04 ΓÇó 4-STATE CLASSIFICATION", desc: "Worker guidance & carbon incentives" }
+                  { act: 1, title: "ACT 01 • STATUTORY SENSING", desc: "DPCC & CPCB CAAQMS ingestion" },
+                  { act: 2, title: "ACT 02 • SPATIAL CONTEXT MODIFIERS", desc: "Roadway vs Tree canopy proxies" },
+                  { act: 3, title: "ACT 03 • CONSTRAINED OPTIMIZATION", desc: "Delivery buffer & sensitivity check" },
+                  { act: 4, title: "ACT 04 • 4-STATE CLASSIFICATION", desc: "Worker guidance & carbon incentives" }
                 ].map((item) => (
                   <div
                     key={item.act}
@@ -486,7 +407,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               <div className="act-pills-row">
                 <span className="act-pill">DPCC CAAQMS</span>
                 <span className="act-pill">CPCB Network</span>
-                <span className="act-pill">Γëñ3h Freshness Verified</span>
+                <span className="act-pill">≤3h Freshness Verified</span>
                 <span className="act-pill">Zero Hallucination</span>
               </div>
             </div>
@@ -504,14 +425,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               <h3 className="act-headline">Micro-urban context modifiers along ~200m chunks.</h3>
               <p className="act-body">
                 Candidate routes are segmented into uniform ~200m spatial chunks with proportional transit
-                durations. Ambient PM2.5 is calculated using Inverse-Distance Weighting (1 / d_ij┬▓) and
-                refined by micro-urban context proxies: 1.25├ù for major road corridors and 0.78├ù
+                durations. Ambient PM2.5 is calculated using Inverse-Distance Weighting (1 / d_ij²) and
+                refined by micro-urban context proxies: 1.25× for major road corridors and 0.78×
                 for green canopy corridors.
               </p>
               <div className="act-pills-row">
                 <span className="act-pill">Inverse-Distance Weighting</span>
-                <span className="act-pill">Road Proximity Factor (1.25├ù)</span>
-                <span className="act-pill">Green Canopy Buffer (0.78├ù)</span>
+                <span className="act-pill">Road Proximity Factor (1.25×)</span>
+                <span className="act-pill">Green Canopy Buffer (0.78×)</span>
               </div>
             </div>
 
@@ -529,7 +450,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               <p className="act-body">
                 Cleaner routes are constrained by worker delivery windows (duration &le; fastest + buffer).
                 A recommendation is only labeled robust if it remains the minimum-exposure feasible option
-                across <strong>0.5├ù, 1.0├ù, and 1.5├ù</strong> modifier sensitivity configurations.
+                across <strong>0.5×, 1.0×, and 1.5×</strong> modifier sensitivity configurations.
               </p>
               <div className="act-pills-row">
                 <span className="act-pill">Constrained Optimization</span>
@@ -551,7 +472,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               <h3 className="act-headline">Four operational states with particulate exposure protection.</h3>
               <p className="act-body">
                 Every trip resolves to exactly one state: <strong>AVOIDABLE</strong> (cleaner corridor activated with verified &ge;15% PM2.5 reduction),
-                <strong>UNAVOIDABLE</strong> (transit time minimization strategy), <strong>LOW</strong> (baseline PM2.5 &lt; 60 ┬╡g/m┬│),
+                <strong>UNAVOIDABLE</strong> (transit time minimization strategy), <strong>LOW</strong> (baseline PM2.5 &lt; 60 µg/m³),
                 or <strong>INSUFFICIENT_DATA</strong>.
               </p>
               <div className="act-pills-row">
@@ -571,11 +492,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
       <section id="sensors" className="landing-sensors-section">
         <div className="sensors-header-row">
           <div>
-            <span className="section-subtitle-tag">ΓèÖ CONTINUOUS OBSERVATION</span>
+            <span className="section-subtitle-tag">⊙ CONTINUOUS OBSERVATION</span>
             <h2 className="section-main-heading">Delhi NCR Live Station Network</h2>
           </div>
           <button type="button" className="btn-sensors-launch" onClick={onLaunchSimulator}>
-            <span>Test on Map Γåù</span>
+            <span>Test on Map ↗</span>
           </button>
         </div>
 
@@ -591,7 +512,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
             <div key={i} className="sensor-stat-card">
               <div className="st-card-header">
                 <span className="st-op-badge">{st.op}</span>
-                <span className="st-pm-val">{st.pm} ┬╡g/m┬│</span>
+                <span className="st-pm-val">{st.pm} µg/m³</span>
               </div>
               <h4 className="st-name">{st.name}</h4>
               <span className="st-dist">{st.dist}</span>
@@ -633,7 +554,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
           <div className="footer-brand-title">AIRSHIELD</div>
           <p className="footer-desc">
             Deterministic pollution-aware routing and exposure decision support engine for outdoor delivery workers in Delhi NCR.
-            Track 01 ΓÇö Air | WeMakeDevs Environmental Hacks.
+            Track 01 — Air | WeMakeDevs Environmental Hacks.
           </p>
         </div>
 
