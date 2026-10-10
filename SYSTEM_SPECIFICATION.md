@@ -172,12 +172,12 @@ If the recommended route switches under perturbation, `is_robust` is set to `Fal
 ### 3.8 The Four-State Classification Matrix
 Every request is mapped into exactly one mutually exclusive operational state:
 
-| State | Primary Conditions | Recommended Worker Action | Financial / Inhalation Badge |
+| State | Primary Conditions | Recommended Worker Action | Protective Health Advisory |
 | :--- | :--- | :--- | :--- |
-| **`AVOIDABLE`** | Baseline $\overline{C} \ge 60\,\mu\text{g}/\text{m}^3$, feasible cleaner route exists with $\ge 15\%$ exposure reduction, route is `Robust`, and data confidence $\neq \text{LOW}$. | **Take Safer Route** (Follows green clean-air corridor). | Inhalation Protection: $\downarrow X\%$ PM2.5 Intake Avoided; Statutory CAAQMS-verified. |
+| **`AVOIDABLE`** | Baseline $\overline{C} \ge 60\,\mu\text{g}/\text{m}^3$, feasible cleaner route exists with $\ge 15\%$ exposure reduction, route is `Robust`, and data confidence $\neq \text{LOW}$. | **Take Safer Route** (Follows green clean-air corridor). | Inhalation Protection: $\downarrow X\%$ Estimated Exposure Avoided; Statutory CAAQMS-modeled. |
 | **`UNAVOIDABLE`** | Baseline $\overline{C} \ge 60\,\mu\text{g}/\text{m}^3$, but NO feasible route achieves $\ge 15\%$ reduction within delivery buffer $B$. | **Proceed on Fastest Route** (Minimizes total minutes spent outdoors in uniform smog). | Time-in-Transit Minimization Advisory. |
-| **`LOW`** | Baseline PM2.5 $< 60\,\mu\text{g}/\text{m}^3$ (acceptable ambient air per National Ambient Air Quality Standards) OR exposure reduction is negligible ($< 15\%$). | **Follow Fastest Route** (No significant smog hazard to circumvent). | Ambient Quality Normal. |
-| **`INSUFFICIENT_DATA`** | Fewer than 2 statutory stations within 25 km of the trip corridor. | **Follow Fastest Route** (System refrains from speculative routing). | Insufficient Station Coverage Advisory. |
+| **`LOW`** | Baseline $\overline{C} < 60\,\mu\text{g}/\text{m}^3$ (acceptable ambient air per National Ambient Air Quality Standards). | **Follow Fastest Route** (No significant smog hazard to circumvent). | Ambient Air Quality Normal. |
+| **`INSUFFICIENT_DATA`** | Fewer than 2 statutory stations within 25 km of the trip corridor (Confidence = `LOW`). | **Follow Fastest Route** (System refrains from speculative routing). | Insufficient Station Coverage Advisory. |
 
 ---
 
@@ -269,7 +269,7 @@ The AWS infrastructure is declared in `infra/template.yaml` (AWS SAM) and deploy
     "route_id": "route-ridge-corridor",
     "action": "RECOMMEND_SAFER",
     "additional_minutes": 2.0,
-    "exposure_reduction_percent": 20.3,
+    "exposure_reduction_percent": 22.3,
     "reward_eligible": true,
     "confidence": "HIGH",
     "is_robust": true
@@ -311,7 +311,7 @@ The AWS infrastructure is declared in `infra/template.yaml` (AWS SAM) and deploy
     }
   ],
   "agent": {
-    "explanation": "A safer route was found via Central Ridge. It adds 2.0 min and is estimated to reduce pollution exposure by 20.3%."
+    "explanation": "A safer route was found via Central Ridge. It adds 2.0 min and is estimated to reduce pollution exposure by 22.3%."
   }
 }
 ```

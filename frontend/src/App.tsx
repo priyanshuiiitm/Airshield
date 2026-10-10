@@ -9,12 +9,14 @@ import { RouteComparison } from "./components/RouteComparison";
 import { DecisionCard } from "./components/DecisionCard";
 import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
-import { AdminDashboard } from "./components/AdminDashboard";
+import { RiderMode } from "./components/RiderMode";
+import { BatchAnalytics } from "./components/BatchAnalytics";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 
 export const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "admin">("landing");
+  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics">("landing");
   const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
+  const [showEpisodeBanner, setShowEpisodeBanner] = useState<boolean>(true);
   const [language, setLanguage] = useState<LanguageCode>(() => {
     return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
   });
@@ -170,8 +172,30 @@ export const App: React.FC = () => {
     return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
   }
 
-  if (viewMode === "admin") {
-    return <AdminDashboard onBack={() => setViewMode("simulator")} />;
+  // Render Rider Sunlight Handlebar View
+  if (viewMode === "rider" && currentRecommendation) {
+    return (
+      <RiderMode
+        recommendation={currentRecommendation}
+        language={language}
+        pickupName={pickupName}
+        dropName={dropName}
+        bufferMin={bufferMin}
+        onExitRiderMode={() => setViewMode("simulator")}
+        onSelectChoice={handleChoice}
+        choiceSubmitted={choiceSubmitted}
+      />
+    );
+  }
+
+  // Render Batch Impact Evidence View
+  if (viewMode === "analytics") {
+    return (
+      <BatchAnalytics
+        language={language}
+        onBackToSimulator={() => setViewMode("simulator")}
+      />
+    );
   }
 
   // Render Live Simulator Workspace
@@ -183,6 +207,8 @@ export const App: React.FC = () => {
         onLanguageChange={handleLanguageChange}
         onRefresh={() => handleCalculateRoutes(pickup, drop, bufferMin)}
         onBackToLanding={() => setViewMode("landing")}
+        onOpenRiderMode={() => setViewMode("rider")}
+        onOpenAnalytics={() => setViewMode("analytics")}
         isLoading={isLoading}
       />
       
@@ -198,12 +224,35 @@ export const App: React.FC = () => {
               </label>
           </div>
           <button
-              onClick={() => setViewMode("admin")}
+              onClick={() => setViewMode("analytics")}
               style={{ backgroundColor: 'rgba(99,102,241,0.15)', color: 'var(--aurora-violet-300)', border: '1px solid rgba(99,102,241,0.3)', padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
           >
-              Fleet Admin Dashboard →
+              150-Trip Batch Impact Evidence →
           </button>
       </div>
+
+      {/* Seasonal Stubble Episode Banner */}
+      {showEpisodeBanner && (
+        <div className="seasonal-episode-banner animate-slide-up">
+          <div className="episode-banner-content">
+            <span className="episode-icon">🌾</span>
+            <div className="episode-text-group">
+              <span className="episode-badge">SEASONAL EPISODE ACTIVE</span>
+              <span className="episode-message">
+                North-Western transboundary crop stubble smoke & winter boundary inversion layer active over Delhi NCR. Clean corridor navigation active.
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn-close-episode"
+            onClick={() => setShowEpisodeBanner(false)}
+            title="Dismiss notification"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main className="main-content">
@@ -276,6 +325,32 @@ export const App: React.FC = () => {
                 onSelectRoute={(rId) => setSelectedRouteId(rId)}
               />
             )}
+
+            {/* Courier Shift Health Dosimetry (Non-Monetary) */}
+            <div className="shift-dosimetry-card">
+              <div className="dosimetry-header">
+                <span className="dosimetry-title">🛡️ Today's Shift Health Dosimetry</span>
+                <span className="dosimetry-tag">Statutory Modeled</span>
+              </div>
+              <div className="dosimetry-grid">
+                <div className="dosimetry-item">
+                  <span className="dosimetry-val text-emerald">4</span>
+                  <span className="dosimetry-lbl">Trips Completed</span>
+                </div>
+                <div className="dosimetry-item">
+                  <span className="dosimetry-val text-cyan">2h 15m</span>
+                  <span className="dosimetry-lbl">Transit Outdoors</span>
+                </div>
+                <div className="dosimetry-item">
+                  <span className="dosimetry-val text-emerald">↓ 1,840</span>
+                  <span className="dosimetry-lbl">Smog Avoided (µg·min)</span>
+                </div>
+                <div className="dosimetry-item">
+                  <span className="dosimetry-val text-amber">92%</span>
+                  <span className="dosimetry-lbl">Clean Air Adherence</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Dark Map Visualization */}

@@ -7,8 +7,8 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { translations } from "../utils/localization";
-import { formatCurrency, formatMinutes, formatPercentage } from "../utils/formatting";
-import { Shield, Sparkles, TrendingDown, Clock, Award, AlertTriangle, CheckCircle2, Navigation } from "lucide-react";
+import { formatMinutes, formatPercentage } from "../utils/formatting";
+import { Shield, Sparkles, TrendingDown, Clock, AlertTriangle, CheckCircle2, Navigation } from "lucide-react";
 import { fadeInUp, staggerContainer, hoverScale, tapScale } from "../animation/motion-config";
 
 interface DecisionCardProps {
@@ -86,6 +86,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
   const colors = stateColors[classification as keyof typeof stateColors] || stateColors.INSUFFICIENT_DATA;
   const explanationText = agent?.explanation || message || "";
 
+
+
   return (
     <motion.div
       className={`decision-card card-${classification.toLowerCase()}`}
@@ -144,35 +146,66 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             <ExposureBar pct={rec.exposure_reduction_percent} color="linear-gradient(90deg, var(--aurora-emerald-600), var(--aurora-teal-500))" />
           </motion.div>
 
-          {/* Reward Banner */}
-          {rec.reward_eligible && (
-            <motion.div
-              className="reward-banner"
-              variants={fadeInUp}
-              style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
-            >
-              <Award size={18} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
-              <div className="reward-text-wrap">
-                <span className="reward-text">Worker Incentive: <strong style={{ color: "var(--aurora-emerald-400)" }}>{formatCurrency(rec.reward_amount_inr || 3)}</strong> credited to wallet</span>
-                <span className="reward-sub" style={{ color: "var(--text-secondary)" }}>Simulated carbon &amp; health payout</span>
-              </div>
-            </motion.div>
-          )}
+          {/* Inhalation Health Shield Banner */}
+          <motion.div
+            className="reward-banner"
+            variants={fadeInUp}
+            style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+          >
+            <Shield size={18} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+            <div className="reward-text-wrap">
+              <span className="reward-text">
+                Inhalation Protection: <strong style={{ color: "var(--aurora-emerald-400)" }}>↓ {rec.exposure_reduction_percent}% Estimated Exposure Avoided</strong>
+              </span>
+              <span className="reward-sub" style={{ color: "var(--text-secondary)" }}>Statutory CAAQMS-modeled clean air corridor</span>
+            </div>
+          </motion.div>
 
-          {/* Actions */}
+          {/* N95 Respirator Advisory */}
+          <div className="mask-advisory-pill">
+            <span className="mask-icon">😷</span>
+            <span>N95 Mask Advised: Ambient PM2.5 exceeds 100 µg/m³ across Delhi NCR.</span>
+          </div>
+
+          {/* Confirmation or Action Buttons */}
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
-              <motion.div
-                key="confirmed"
-                className="choice-confirmation"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{ background: "rgba(16,185,129,0.15)", border: "1px solid var(--aurora-emerald-500)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
-                role="status"
-              >
-                <CheckCircle2 size={20} style={{ color: "var(--aurora-emerald-400)" }} />
-                <span>{choiceSubmitted === "safer" ? t.choiceConfirmedSafer.replace("{amount}", String(rec.reward_amount_inr || 3)) : t.choiceConfirmedFastest}</span>
-              </motion.div>
+              <div className="choice-confirmed-wrapper">
+                <motion.div
+                  key="confirmed"
+                  className={`choice-confirmation ${
+                    choiceSubmitted === "fastest" ? "confirmed-blue" : "confirmed-green"
+                  }`}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{ background: "rgba(16,185,129,0.15)", border: "1px solid var(--aurora-emerald-500)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+                  role="status"
+                >
+                  <CheckCircle2 size={20} style={{ color: "var(--aurora-emerald-400)" }} />
+                  <div className="choice-conf-text">
+                    <span className="choice-conf-title">
+                      {choiceSubmitted === "safer" ? t.choiceConfirmedSafer : t.choiceConfirmedFastest}
+                    </span>
+                    <span className="choice-conf-sub">
+                      {choiceSubmitted === "fastest"
+                        ? "Fastest direct path isolated on map in Royal Blue"
+                        : "Safer clean corridor isolated on map in Emerald Green"}
+                    </span>
+                  </div>
+                </motion.div>
+                <button
+                  type="button"
+                  className="btn-switch-choice"
+                  onClick={() => onSelectChoice(choiceSubmitted === "safer" ? "fastest" : "safer")}
+                  title="Switch route selection"
+                >
+                  <span>
+                    {choiceSubmitted === "safer"
+                      ? "⇄ Switch to Fastest Route (Blue)"
+                      : "⇄ Switch to Safer Route (Green)"}
+                  </span>
+                </button>
+              </div>
             ) : (
               <motion.div key="actions" className="action-button-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
                 <motion.button
