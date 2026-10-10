@@ -333,7 +333,6 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   whileTap={{ scale: 0.97 }}
                   className={`btn-rider-primary ${choiceSubmitted === "safer" ? "btn-selected-primary" : ""}`}
                   onClick={() => handleActionClick("safer")}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                     <Shield size={20} />
@@ -359,7 +358,6 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   whileTap={{ scale: 0.97 }}
                   className={`btn-rider-secondary ${choiceSubmitted === "fastest" ? "btn-selected-secondary" : ""}`}
                   onClick={() => handleActionClick("fastest")}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                     <Navigation size={18} />
@@ -403,7 +401,6 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                 whileTap={{ scale: 0.97 }}
                 className="btn-rider-primary"
                 onClick={() => handleActionClick("fastest")}
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                   <Navigation size={20} />

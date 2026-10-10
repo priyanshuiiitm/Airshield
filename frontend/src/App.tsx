@@ -214,19 +214,19 @@ export const App: React.FC = () => {
       />
       
       {/* Demo Controls Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 28px', backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)', alignItems: 'center', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <span style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Mode</span>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, backgroundColor: airshieldEnabled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)', padding: '6px 14px', borderRadius: 9999, border: `1px solid ${airshieldEnabled ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'}`, transition: 'all 0.2s' }}>
-                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} style={{ cursor: 'pointer', accentColor: '#ffffff' }} />
-                  <span style={{ color: airshieldEnabled ? '#ffffff' : 'var(--text-muted)', fontSize: 13, fontWeight: 600 }}>
+      <div className="demo-controls-bar">
+          <div className="demo-controls-left">
+              <span className="demo-mode-label">Mode</span>
+              <label className={`demo-toggle ${airshieldEnabled ? "active" : "inactive"}`}>
+                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} />
+                  <span>
                       {airshieldEnabled ? "AirShield Protection Active" : "Standard Direct Routing"}
                   </span>
               </label>
           </div>
           <button
+              className="btn-demo-analytics"
               onClick={() => setViewMode("analytics")}
-              style={{ backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', padding: '6px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
           >
               150-Trip Batch Analytics →
           </button>
