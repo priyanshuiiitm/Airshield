@@ -15,6 +15,7 @@ interface RouteComparisonProps {
   selectedRouteId: string | null;
   language: LanguageCode;
   onSelectRoute: (routeId: string) => void;
+  isLoading?: boolean;
 }
 
 // Animated fill bar for exposure
@@ -37,7 +38,30 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
   selectedRouteId,
   language,
   onSelectRoute,
+  isLoading
 }) => {
+  if (isLoading) {
+    return (
+      <div className="routes-list-wrapper">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "var(--space-4)" }}>
+          <div style={{ width: 140, height: 20, background: "rgba(255,255,255,0.05)", borderRadius: 4, animation: "pulse 1.5s infinite" }}></div>
+        </div>
+        <div className="routes-list-grid">
+          {[1, 2].map((i) => (
+            <div key={i} style={{ padding: 16, background: "rgba(12, 13, 17, 0.9)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)" }}>
+              <div style={{ width: "60%", height: 18, background: "rgba(255,255,255,0.05)", borderRadius: 4, marginBottom: 12, animation: "pulse 1.5s infinite" }}></div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                <div style={{ width: 60, height: 24, background: "rgba(255,255,255,0.05)", borderRadius: 4, animation: "pulse 1.5s infinite" }}></div>
+                <div style={{ width: 80, height: 24, background: "rgba(255,255,255,0.05)", borderRadius: 4, animation: "pulse 1.5s infinite" }}></div>
+              </div>
+              <div style={{ width: "100%", height: 40, background: "rgba(255,255,255,0.03)", borderRadius: 4, animation: "pulse 1.5s infinite" }}></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const { routes, decision, recommendation: rec, classification } = recommendation;
   const fastestRouteId = decision?.fastest_route_id;
   const fastestRoute = routes.find((r) => r.route_id === fastestRouteId);
@@ -241,8 +265,8 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               )}
 
               {isFastest && isUnavoidable && (
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.1)", fontSize: "var(--text-xs)", color: "#d4d4d8" }}>
-                  <Shield size={14} style={{ color: "#ffffff", flexShrink: 0 }} />
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "var(--bg-card)", border: "1px solid var(--border-subtle)", fontSize: "var(--text-xs)", color: "var(--text-secondary)" }}>
+                  <Shield size={14} style={{ color: "var(--text-primary)", flexShrink: 0 }} />
                   <span>Dose Optimum: Fastest transit minimizes total outdoor inhalation.</span>
                 </div>
               )}

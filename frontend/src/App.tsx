@@ -13,6 +13,8 @@ import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 import { Wind, Clock, Shield } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { staggerContainer } from "./animation/motion-config";
 
 export const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics">("landing");
@@ -39,6 +41,14 @@ export const App: React.FC = () => {
   // Recommendation & choice hooks
   const { isLoading, fetchRecommendation } = useRecommendation();
   const { isSubmitting, choiceSubmitted, submitChoice, resetChoice } = useTripChoice();
+
+  // Toast Notification state
+  const [toast, setToast] = useState<{message: string, type: 'success'|'error'} | null>(null);
+
+  const showToast = useCallback((message: string, type: 'success'|'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  }, []);
 
   // Local fallback recommendation state (for instant zero-latency math engine)
   const [currentRecommendation, setCurrentRecommendation] = useState<RecommendationResponse>(() =>
@@ -131,6 +141,7 @@ export const App: React.FC = () => {
         },
         (err) => {
           console.warn("Geolocation permission denied or error:", err);
+          showToast("Geolocation access denied. Using default location.", "error");
           // Fallback to Connaught Place
           const cp = DELHI_LOCATIONS[0];
           setPickup({ lat: cp.lat, lng: cp.lng });
@@ -160,6 +171,7 @@ export const App: React.FC = () => {
   const handleChoice = (choice: "safer" | "fastest") => {
     if (currentRecommendation?.trip_id) {
       submitChoice(currentRecommendation.trip_id, choice);
+      showToast(choice === "safer" ? "Cleaner route preference saved!" : "Fastest route preference saved!", "success");
     }
   };
 
@@ -259,7 +271,13 @@ export const App: React.FC = () => {
       <main className="main-content">
         <div className="content-split-layout">
           {/* Left Column: Location Controls & Decision */}
-          <div className="left-controls-column">
+          <motion.div 
+            className="left-controls-column"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <AnimatePresence mode="popLayout">
             {/* Origin & Destination Picker */}
             <LocationPicker
               pickup={pickup}
@@ -318,14 +336,15 @@ export const App: React.FC = () => {
             )}
 
             {/* Side-by-Side Route Exposure Comparison */}
-            {airshieldEnabled && currentRecommendation && (
+            {(airshieldEnabled && currentRecommendation) || isLoading ? (
               <RouteComparison
                 recommendation={currentRecommendation}
                 selectedRouteId={selectedRouteId}
                 language={language}
                 onSelectRoute={(rId) => setSelectedRouteId(rId)}
+                isLoading={isLoading}
               />
-            )}
+            ) : null}
 
             {/* Courier Shift Health Dosimetry (Non-Monetary) */}
             <div className="shift-dosimetry-card">
@@ -355,7 +374,8 @@ export const App: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+            </AnimatePresence>
+          </motion.div>
 
           {/* Right Column: Dark Map Visualization */}
           <div className="right-map-column">
@@ -388,6 +408,36 @@ export const App: React.FC = () => {
           </section>
         )}
       </main>
+
+      {/* Global Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: "-50%", scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={{ opacity: 0, y: 20, x: "-50%", scale: 0.9 }}
+            className={`toast-notification ${toast.type}`}
+            style={{
+              position: "fixed",
+              bottom: "24px",
+              left: "50%",
+              background: toast.type === "error" ? "#ef4444" : "#10b981",
+              color: "#ffffff",
+              padding: "12px 24px",
+              borderRadius: "var(--radius-full)",
+              fontWeight: 600,
+              fontSize: "14px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
+            }}
+          >
+            {toast.type === "error" ? "⚠️" : "✅"} {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

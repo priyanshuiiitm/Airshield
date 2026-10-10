@@ -52,7 +52,7 @@
   --indigo-bg: rgba(255, 255, 255, 0.06);
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.1);
   --border-medium: rgba(255, 255, 255, 0.14);
   --border-glow-emerald: rgba(16, 185, 129, 0.25);
   --border-glow-cyan: rgba(255, 255, 255, 0.2);
@@ -90,6 +90,14 @@ body {
   font-weight: 400;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
 }
 
 /* Custom Scrollbar */
