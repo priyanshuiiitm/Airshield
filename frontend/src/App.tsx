@@ -244,12 +244,13 @@ export const App: React.FC = () => {
           onUpdatePickup={(coord, name) => {
             setPickup(coord);
             setPickupName(name);
+            handleCalculateRoutes(coord, drop, bufferMin);
           }}
           onUpdateDrop={(coord, name) => {
             setDrop(coord);
             setDropName(name);
+            handleCalculateRoutes(pickup, coord, bufferMin);
           }}
-          onRecalculate={() => handleCalculateRoutes(pickup, drop, bufferMin)}
         />
       </div>
     );

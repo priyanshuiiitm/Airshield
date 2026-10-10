@@ -14,7 +14,6 @@ interface SimpleDriverViewProps {
   selectedRouteId: string | null;
   onUpdatePickup: (coord: Coordinate, name: string) => void;
   onUpdateDrop: (coord: Coordinate, name: string) => void;
-  onRecalculate: () => void;
 }
 
 export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
@@ -26,7 +25,6 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
   onSelectRoute,
   onUpdatePickup,
   onUpdateDrop,
-  onRecalculate,
 }) => {
   const [showPicker, setShowPicker] = useState<"pickup" | "drop" | null>(null);
   const [mapPicking, setMapPicking] = useState<"pickup" | "drop" | null>(null);
@@ -42,7 +40,6 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
             onUpdateDrop(coord, "My Location");
           }
           setShowPicker(null);
-          onRecalculate();
         },
         () => alert("Location access denied")
       );
@@ -57,7 +54,6 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
       onUpdateDrop(coord, location.name);
     }
     setShowPicker(null);
-    onRecalculate();
   };
 
   if (!recommendation) return null;
@@ -98,11 +94,9 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
             if (mapPicking === "pickup") {
               onUpdatePickup({ lat: lngLat[1], lng: lngLat[0] }, "Custom Pin");
               setMapPicking(null);
-              onRecalculate();
             } else if (mapPicking === "drop") {
               onUpdateDrop({ lat: lngLat[1], lng: lngLat[0] }, "Custom Pin");
               setMapPicking(null);
-              onRecalculate();
             }
           }}
           onRouteClick={() => {}}
@@ -110,27 +104,39 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
         />
       </div>
 
-      {mapPicking && (
-        <div style={{ position: "absolute", top: 120, left: 16, right: 16, background: "#10b981", color: "#fff", padding: "12px 16px", borderRadius: 12, textAlign: "center", zIndex: 10, fontWeight: 600, boxShadow: "0 4px 12px rgba(16, 185, 129, 0.4)" }}>
-          Tap anywhere on map to set {mapPicking === "pickup" ? "Pickup" : "Destination"}
+      {/* Top Card - Locations (Hide when picking) */}
+      {!mapPicking && (
+        <div className="simple-top-card">
+          <button className="simple-location-btn" onClick={() => setShowPicker("pickup")}>
+            <div className="simple-loc-icon pickup" />
+            <span className="simple-loc-text">{pickupName}</span>
+          </button>
+          <div className="simple-divider" />
+          <button className="simple-location-btn" onClick={() => setShowPicker("drop")}>
+            <div className="simple-loc-icon drop" />
+            <span className="simple-loc-text">{dropName}</span>
+          </button>
         </div>
       )}
 
-      {/* Top Card - Locations */}
-      <div className="simple-top-card">
-        <button className="simple-location-btn" onClick={() => setShowPicker("pickup")}>
-          <div className="simple-loc-icon pickup" />
-          <span className="simple-loc-text">{pickupName}</span>
-        </button>
-        <div className="simple-divider" />
-        <button className="simple-location-btn" onClick={() => setShowPicker("drop")}>
-          <div className="simple-loc-icon drop" />
-          <span className="simple-loc-text">{dropName}</span>
-        </button>
-      </div>
+      {/* Map Picking UI */}
+      {mapPicking && (
+        <div style={{ position: "absolute", bottom: 40, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, zIndex: 10 }}>
+          <div style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)", color: "#fff", padding: "12px 24px", borderRadius: 999, fontSize: 14, fontWeight: 600, whiteSpace: "nowrap", boxShadow: "0 4px 20px rgba(0,0,0,0.2)" }}>
+            Tap anywhere to set {mapPicking === "pickup" ? "Pickup" : "Destination"}
+          </div>
+          <button
+            onClick={() => setMapPicking(null)}
+            style={{ background: "#fff", color: "#000", border: "none", padding: "10px 20px", borderRadius: 999, fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
-      {/* Bottom Card - Routes */}
-      <div className="simple-bottom-card">
+      {/* Bottom Card - Routes (Hide when picking) */}
+      {!mapPicking && (
+        <div className="simple-bottom-card">
         {/* Cleaner Route */}
         {saferRoute && (
           <button
@@ -163,6 +169,7 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
           </button>
         )}
       </div>
+      )}
 
       {/* Location Picker Modal */}
       {showPicker && (
