@@ -82,17 +82,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
           {/* Left Column: Headline & Value Prop */}
           <motion.div className="hero-left-column" variants={fadeInUp}>
             <motion.div className="hero-badge-pill" variants={fadeInUp}>
-              <span className="badge-pulse-dot" style={{ background: "#ffffff" }}></span>
-              <span style={{ color: "var(--text-secondary)" }}>DETERMINISTIC ENVIRONMENTAL ROUTING ENGINE</span>
+              <span className="badge-pulse-dot"></span>
+              <span>LIVE ROUTING ENGINE</span>
             </motion.div>
 
             <motion.h1 className="hero-main-headline" variants={fadeInUp}>
               Pollution is dynamic. <br />
-              <span className="headline-gradient-sub" style={{ color: "#ffffff", fontWeight: 600 }}>So should the route.</span>
+              <span className="headline-gradient-sub">So should the route.</span>
             </motion.h1>
 
-            <motion.p className="hero-description" variants={fadeInUp} style={{ color: "var(--text-secondary)", fontWeight: 400 }}>
-              Real-time micro-urban PM2.5 routing for Delhi NCR. Interpolates statutory CAAQMS sensor networks into clean, constrained-optimal corridors for outdoor couriers.
+            <motion.p className="hero-description" variants={fadeInUp}>
+              Real-time micro-urban PM2.5 routing for Delhi NCR.
             </motion.p>
 
             <motion.div className="hero-actions-row" variants={fadeInUp}>
@@ -103,7 +103,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 data-testid="btn-launch-hero"
                 whileHover={{ scale: 1.02 }}
                 whileTap={tapScale}
-                style={{ background: "#ffffff", color: "#000000", fontWeight: 600, border: "none" }}
               >
                 <span>Launch route engine</span>
                 <ArrowRight size={16} />

@@ -79,6 +79,11 @@
   padding: 0;
 }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
@@ -90,6 +95,8 @@ body {
   font-weight: 400;
   min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -171,6 +178,8 @@ button {
   max-width: 1440px;
   margin: 0 auto;
   background-color: var(--bg-app);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Header */
@@ -2096,11 +2105,11 @@ button {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
 }
 
 .nav-brand-text {
@@ -2119,9 +2128,15 @@ button {
 .nav-brand-tag {
   font-size: 11px;
   font-weight: 500;
-  color: #f97316;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+@media (max-width: 768px) {
+  .nav-brand-tag {
+    display: none;
+  }
 }
 
 .nav-links {
@@ -2215,14 +2230,14 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(249, 115, 22, 0.1);
-  border: 1px solid rgba(249, 115, 22, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: #fb923c;
+  color: var(--text-primary);
   width: fit-content;
 }
 
@@ -2230,8 +2245,8 @@ button {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: #f97316;
-  box-shadow: 0 0 10px #f97316;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   animation: pulse 2s infinite;
 }
 
@@ -2279,19 +2294,18 @@ button {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: #ffffff;
+  background: #ffffff;
+  color: #000000;
   padding: 14px 28px;
   border-radius: var(--radius-sm);
   font-size: 15px;
   font-weight: 600;
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
   transition: all 0.2s;
 }
 
 .btn-hero-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(249, 115, 22, 0.6);
+  background: #f4f4f5;
 }
 
 .btn-hero-secondary {
@@ -4604,75 +4618,537 @@ button {
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    padding: 12px 16px;
-    gap: 16px;
+  /* App Layout & Header */
+  .app-header {
+    padding: 10px 12px;
+    gap: 8px;
   }
-  
+
+  .brand-shield-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .brand-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
   .header-actions span {
     display: none;
   }
-  
+
+  .live-status-pill {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .live-status-pill svg {
+    width: 6px;
+    height: 6px;
+  }
+
+  .lang-switcher-group {
+    display: none;
+  }
+
+  .header-icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-icon-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  /* Demo Controls */
   .demo-controls-bar {
     flex-direction: column;
     align-items: stretch;
-    padding: 12px 16px;
+    padding: 10px 12px;
+    gap: 10px;
   }
-  
+
   .demo-controls-left {
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  
+
+  .demo-mode-label {
+    font-size: 10px;
+  }
+
+  .demo-toggle {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .demo-toggle span {
+    font-size: 11px !important;
+  }
+
+  .btn-demo-analytics {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+
+  /* Seasonal Banner */
+  .seasonal-episode-banner {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .episode-banner-content {
+    gap: 6px;
+  }
+
+  .episode-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .episode-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+
+  .episode-message {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  /* Content Layout */
   .content-split-layout {
     display: flex;
     flex-direction: column-reverse;
-    gap: 16px;
+    gap: 12px;
   }
-  
+
+  /* Map */
   .right-map-column {
     position: static;
-    height: 350px;
-    min-height: 350px;
+    height: 400px;
+    min-height: 400px;
     border-radius: var(--radius-md);
     overflow: hidden;
   }
-  
+
+  .map-legend {
+    bottom: 10px;
+    left: 10px;
+    padding: 8px 10px;
+  }
+
+  .legend-item {
+    gap: 6px;
+  }
+
+  .legend-label {
+    font-size: 10px;
+  }
+
+  /* Location Picker */
   .location-picker-card {
     padding: 12px;
+    gap: 10px;
   }
-  
+
+  .picker-title {
+    font-size: 13px;
+  }
+
+  .custom-coords-toggle {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .input-label {
+    font-size: 10px;
+  }
+
+  .select-field {
+    font-size: 12px;
+  }
+
+  .quick-action-pill {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .buffer-label {
+    font-size: 11px;
+  }
+
+  .buffer-chip {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .btn-compute-routes {
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .preset-label {
+    font-size: 10px;
+  }
+
+  .preset-chip {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  /* Decision Card */
+  .decision-card {
+    padding: 14px;
+  }
+
+  .card-icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+
+  .card-icon-wrap svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card-title {
+    font-size: 15px;
+  }
+
+  .card-subtitle {
+    font-size: 11px;
+  }
+
+  .classification-pill {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .metric-box {
+    padding: 8px 10px;
+  }
+
+  .metric-val {
+    font-size: 14px;
+  }
+
+  .metric-lbl {
+    font-size: 10px;
+  }
+
+  .reward-banner,
+  .unavoidable-advisory-box {
+    padding: 8px 10px;
+  }
+
+  .advisory-heading {
+    font-size: 11px;
+  }
+
+  .advisory-desc {
+    font-size: 10px;
+  }
+
+  .action-button-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn {
+    height: 38px;
+    font-size: 12px;
+  }
+
+  /* Route Cards */
   .decision-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .routes-list-grid {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
-  
+
   .route-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .route-title {
+    font-size: 12px;
+  }
+
+  .route-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .route-metrics-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .metric-pill {
+    padding: 6px 8px;
+  }
+
+  .metric-num {
+    font-size: 14px;
+  }
+
+  .metric-label {
+    font-size: 9px;
+  }
+
+  .route-incentive-bar {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  /* Shift Dosimetry */
+  .shift-dosimetry-card {
     padding: 12px;
   }
-  
+
+  .dosimetry-title {
+    font-size: 12px;
+  }
+
+  .dosimetry-title svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .dosimetry-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .dosimetry-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dosimetry-val {
+    font-size: 16px;
+  }
+
+  .dosimetry-lbl {
+    font-size: 10px;
+  }
+
+  /* Transparency Panel */
+  .transparency-section {
+    margin-bottom: 20px;
+  }
+
+  .transparency-container {
+    border-radius: var(--radius-sm);
+  }
+
+  .transparency-header {
+    padding: 12px 14px;
+  }
+
+  .transparency-title {
+    font-size: 13px;
+  }
+
+  .transparency-subtitle {
+    font-size: 10px;
+    max-width: 200px;
+  }
+
+  .transparency-body {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .trans-tab-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .pane-intro {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .stations-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .station-citation-card {
+    padding: 10px;
+  }
+
+  /* Rider Mode */
   .rider-trip-summary {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
-  
+
   .trip-arrow {
     transform: rotate(90deg);
     margin: 4px 0 4px 8px;
   }
-  
+
   .rider-tradeoff-grid {
     grid-template-columns: 1fr;
   }
-  
-  .btn-rider-primary, .btn-rider-secondary {
+
+  .btn-rider-primary,
+  .btn-rider-secondary {
     flex-direction: column;
     align-items: flex-start;
+    padding: 12px;
   }
-  
+
   .rider-shift-tally .shift-stats-row {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* Landing Page Mobile Fixes */
+  .nav-cta {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .landing-hero-section {
+    padding: 30px 12px 40px 12px;
+  }
+
+  .hero-main-headline {
+    font-size: 24px !important;
+    line-height: 1.2;
+  }
+
+  .hero-description {
+    font-size: 13px !important;
+    line-height: 1.5;
+  }
+
+  .hero-badge-pill {
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+
+  .hero-actions-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    padding: 10px 16px;
+    font-size: 12px;
+    height: 42px;
+    width: 100%;
+  }
+
+  .hero-metrics-bar {
+    gap: 10px;
+    padding-top: 12px;
+  }
+
+  .h-metric-val {
+    font-size: 14px;
+  }
+
+  .h-metric-lbl {
+    font-size: 10px;
+  }
+}
+
+/* Extra Small Phones (up to 480px) */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 8px 10px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  .live-status-pill span {
+    display: none;
+  }
+
+  .demo-controls-bar {
+    padding: 8px 10px;
+  }
+
+  .demo-toggle span {
+    font-size: 10px !important;
+  }
+
+  .main-content {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .right-map-column {
+    height: 350px;
+    min-height: 350px;
+  }
+
+  .seasonal-episode-banner {
+    padding: 6px 10px;
+  }
+
+  .episode-message {
+    font-size: 9px;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .route-metrics-row {
+    gap: 4px;
+  }
+
+  .btn {
+    height: 36px;
+    font-size: 11px;
   }
 }
