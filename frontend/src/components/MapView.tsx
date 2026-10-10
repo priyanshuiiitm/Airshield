@@ -71,21 +71,28 @@ export const MapView: React.FC<MapViewProps> = ({
 
   const [showPrompt, setShowPrompt] = useState(true);
 
-  // Re-trigger popup prompt whenever the trip origin, destination, or routes are recalculated
+  const prevTripRef = useRef<string>("");
+  const tripKey = `${pickup?.lat},${pickup?.lng}-${drop?.lat},${drop?.lng}`;
+
+  // Re-trigger popup prompt whenever the trip origin or destination changes
   useEffect(() => {
-    setEffectiveViewMode("all");
-    setShowPrompt(true);
-  }, [pickup?.lat, pickup?.lng, drop?.lat, drop?.lng, routes]);
+    if (prevTripRef.current !== tripKey && prevTripRef.current !== "") {
+      setEffectiveViewMode("all");
+      setShowPrompt(true);
+    }
+    prevTripRef.current = tripKey;
+  }, [tripKey]);
 
   // Determine fastest route
   const fastestRoute =
     routes.find((r) => r.route_id === fastestRouteId) ||
+    routes.find((r) => r.route_id === "route_fastest") ||
     [...routes].sort((a, b) => a.duration_minutes - b.duration_minutes)[0];
 
   // Determine recommended (safer) route
   const recommendedRoute =
-    routes.find((r) => r.route_id === (selectedRouteId || fastestRouteId)) ||
-    routes.find((r) => r.route_id === fastestRouteId) ||
+    routes.find((r) => r.route_id !== fastestRouteId && r.route_id !== "route_fastest") ||
+    routes.find((r) => r.route_id === selectedRouteId) ||
     routes[0];
 
   // Determine highest AQI route (Red) vs lower AQI route (Blue)

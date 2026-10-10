@@ -37,6 +37,7 @@ export const App: React.FC = () => {
 
   // Route focus state
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+  const [routeViewMode, setRouteViewMode] = useState<"all" | "safer" | "fastest">("all");
 
   // Recommendation & choice hooks
   const { isLoading, fetchRecommendation } = useRecommendation();
@@ -59,6 +60,7 @@ export const App: React.FC = () => {
   const handleCalculateRoutes = useCallback(
     async (pCoord = pickup, dCoord = drop, buf = bufferMin) => {
       resetChoice();
+      setRouteViewMode("all");
 
       // Immediately generate real-time local mathematical route solution
       const localResult = generateDynamicRoutes(pCoord, dCoord, buf);
@@ -169,6 +171,21 @@ export const App: React.FC = () => {
   };
 
   const handleChoice = (choice: "safer" | "fastest") => {
+    if (choice === "fastest") {
+      const fId =
+        currentRecommendation?.decision?.fastest_route_id ||
+        currentRecommendation?.routes.find((r) => r.route_id === "route_fastest")?.route_id ||
+        currentRecommendation?.routes[0]?.route_id;
+      if (fId) setSelectedRouteId(fId);
+      setRouteViewMode("fastest");
+    } else {
+      const sId =
+        currentRecommendation?.recommendation?.route_id ||
+        currentRecommendation?.routes.find((r) => r.route_id !== "route_fastest")?.route_id ||
+        currentRecommendation?.routes[0]?.route_id;
+      if (sId) setSelectedRouteId(sId);
+      setRouteViewMode("safer");
+    }
     if (currentRecommendation?.trip_id) {
       submitChoice(currentRecommendation.trip_id, choice);
       showToast(choice === "safer" ? "Cleaner route preference saved!" : "Fastest route preference saved!", "success");
@@ -341,7 +358,14 @@ export const App: React.FC = () => {
                 recommendation={currentRecommendation}
                 selectedRouteId={selectedRouteId}
                 language={language}
-                onSelectRoute={(rId) => setSelectedRouteId(rId)}
+                onSelectRoute={(rId) => {
+                  setSelectedRouteId(rId);
+                  if (rId === fastestRouteId) {
+                    setRouteViewMode("fastest");
+                  } else {
+                    setRouteViewMode("safer");
+                  }
+                }}
                 isLoading={isLoading}
               />
             ) : null}
@@ -384,16 +408,32 @@ export const App: React.FC = () => {
                 routes={displayRoutes}
                 fastestRouteId={fastestRouteId}
                 selectedRouteId={selectedRouteId}
+                routeViewMode={routeViewMode}
+                onViewModeChange={setRouteViewMode}
                 bufferMin={bufferMin}
                 pickup={pickup}
                 drop={drop}
                 isMapPickingOrigin={isMapPickingOrigin}
                 isMapPickingDestination={isMapPickingDestination}
                 onMapClick={handleMapClick}
-                onRouteClick={(rId) => setSelectedRouteId(rId)}
+                onRouteClick={(rId) => {
+                  setSelectedRouteId(rId);
+                  if (rId === fastestRouteId) {
+                    setRouteViewMode("fastest");
+                  } else {
+                    setRouteViewMode("safer");
+                  }
+                }}
                 onSelectRecommended={() => {
+                  setRouteViewMode("safer");
                   if (currentRecommendation?.recommendation?.route_id) {
                     setSelectedRouteId(currentRecommendation.recommendation.route_id);
+                  }
+                }}
+                onSelectFastest={() => {
+                  setRouteViewMode("fastest");
+                  if (fastestRouteId) {
+                    setSelectedRouteId(fastestRouteId);
                   }
                 }}
               />

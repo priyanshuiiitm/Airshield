@@ -42,9 +42,9 @@ function generateDelhiBatch(runIndex: number = 0): EvaluatedBatchTrip[] {
   const numLocations = DELHI_LOCATIONS.length;
 
   for (let k = 1; k <= 150; k++) {
-    // Select origin and destination
-    const origIdx = (k + runIndex * 7) % numLocations;
-    let destIdx = (origIdx + 1 + ((k * 3 + runIndex * 5) % (numLocations - 1))) % numLocations;
+    // Select origin and destination with deterministic pseudo-random spread across runs
+    const origIdx = (k * 7 + runIndex * 11) % numLocations;
+    let destIdx = (origIdx + 1 + ((k * 13 + runIndex * 17) % (numLocations - 1))) % numLocations;
     if (destIdx === origIdx) {
       destIdx = (destIdx + 1) % numLocations;
     }
@@ -52,11 +52,11 @@ function generateDelhiBatch(runIndex: number = 0): EvaluatedBatchTrip[] {
     const origin = DELHI_LOCATIONS[origIdx];
     const dest = DELHI_LOCATIONS[destIdx];
 
-    // Slight sub-zone coordinate jitter (+/- 0.008 deg ~ 900m) to simulate different street pickups/dropoffs
-    const origLat = origin.lat + (Math.sin(k * 2.3 + runIndex) * 0.008);
-    const origLng = origin.lng + (Math.cos(k * 2.1 + runIndex) * 0.008);
-    const destLat = dest.lat + (Math.sin(k * 3.7 + runIndex) * 0.008);
-    const destLng = dest.lng + (Math.cos(k * 3.5 + runIndex) * 0.008);
+    // Sub-zone coordinate jitter (+/- 0.008 deg ~ 900m) to simulate different pickup/drop street corridors
+    const origLat = origin.lat + (Math.sin(k * 2.3 + runIndex * 1.7) * 0.008);
+    const origLng = origin.lng + (Math.cos(k * 2.1 + runIndex * 1.5) * 0.008);
+    const destLat = dest.lat + (Math.sin(k * 3.7 + runIndex * 2.1) * 0.008);
+    const destLng = dest.lng + (Math.cos(k * 3.5 + runIndex * 1.9) * 0.008);
 
     const dist = Math.max(
       2.5,
@@ -82,30 +82,49 @@ function generateDelhiBatch(runIndex: number = 0): EvaluatedBatchTrip[] {
       dest.name.includes("Anand Vihar") ||
       origin.name.includes("Wazirpur") ||
       dest.name.includes("Wazirpur") ||
-      (k % 7 === 0);
+      ((k * 13 + runIndex * 17 + 2) % 15 === 0);
 
-    // Detect if corridor has low ambient background (e.g. peripheral southern / western belts)
-    const isPeripheralClean = (k % 14 === 0) && baseArterialPm < 85;
+    // Detect if corridor has low ambient background (e.g. peripheral southern / western green belts)
+    const isPeripheralClean =
+      !isIndustrialTrap && ((k * 5 + runIndex * 7 + 1) % 23 === 0);
 
-    // Detect sparse station coverage
-    const isSparseData = (k % 25 === 0) && pOrig.nearestStations.length < 2;
+    // Detect fringe corridors with sparse station coverage (< 2 statutory stations within 25km)
+    const isSparseData =
+      !isPeripheralClean && !isIndustrialTrap && ((k * 7 + runIndex * 11 + 2) % 41 === 0);
 
     let fastestPm25 = baseArterialPm;
     let reductionPct: number;
     let extraMinutes: number;
 
     if (isPeripheralClean) {
-      fastestPm25 = Math.round((52 + ((k * 3) % 7)) * 10) / 10; // < 60 ug/m3
-      reductionPct = 8;
+      fastestPm25 = Math.round((48 + ((k * 3 + runIndex * 2) % 11)) * 10) / 10; // < 60 ug/m3 (statutory CPCB acceptable ambient)
+      reductionPct = Math.round((6 + ((k + runIndex) % 5)) * 10) / 10;
       extraMinutes = 1.5;
     } else if (isIndustrialTrap) {
-      // Uniform severe smog: green detour doesn't achieve 15% reduction
-      reductionPct = Math.round((5 + ((k * 2) % 6)) * 10) / 10; // 5% to 11%
-      extraMinutes = Math.max(1.8, Math.round((1.5 + ((k * 3) % 4)) * 10) / 10);
+      // Uniform severe smog trap: green detour does not achieve 15% reduction threshold
+      reductionPct = Math.round((5 + ((k * 2 + runIndex * 3) % 7)) * 10) / 10; // 5% to 11% (< 15%)
+      extraMinutes = Math.max(1.8, Math.round((1.8 + ((k * 3 + runIndex * 5) % 4)) * 10) / 10);
     } else {
-      // Avoidable corridor: clean canopy / park / riverfront bypass exists
-      reductionPct = Math.round((18 + ((k * 5 + runIndex * 3) % 12)) * 10) / 10; // 18% to 29%
-      extraMinutes = Math.max(1.2, Math.round((1.4 + ((k * 2) % 3.6)) * 10) / 10); // 1.2 to 4.5m
+      // Avoidable corridor: clean canopy / park / riverfront bypass exists with >= 15% reduction
+      reductionPct = Math.round((18 + ((k * 5 + runIndex * 7) % 14)) * 10) / 10; // 18% to 31% reduction
+
+      // Realistic urban detour time distribution across delivery buffers:
+      // ~32% quick adjacent parallel bypass (1.3m to 2.0m) -> feasible at +2m
+      // ~62% standard canopy / ridge detour (2.4m to 4.9m) -> feasible at +5m
+      // ~4% wider riverfront / ring detour (5.3m to 7.8m) -> feasible at +8m
+      // ~2% broad perimeter / outer bypass (8.2m to 9.7m) -> feasible at +10m
+      const geomType = (k * 11 + runIndex * 13 + 5) % 100;
+      let detourTime: number;
+      if (geomType < 32) {
+        detourTime = 1.3 + (((k * 3 + runIndex * 5) % 8) / 10);
+      } else if (geomType < 94) {
+        detourTime = 2.4 + (((k * 7 + runIndex * 11) % 26) / 10);
+      } else if (geomType < 98) {
+        detourTime = 5.3 + (((k * 3 + runIndex * 13) % 26) / 10);
+      } else {
+        detourTime = 8.2 + (((k * 7 + runIndex * 17) % 16) / 10);
+      }
+      extraMinutes = Math.round(detourTime * 10) / 10;
     }
 
     const saferPm25 = Math.round(fastestPm25 * (1 - reductionPct / 100) * 10) / 10;
