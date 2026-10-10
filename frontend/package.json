@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^14.1.0",
     "lucide-react": "^1.16.0",
     "maplibre-gl": "^5.1.1",
     "react": "^19.0.0",

@@ -10,54 +10,71 @@
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Obsidian Dark Palette */
-  --bg-app: #080b11;
-  --bg-surface: #0d121d;
-  --bg-card: rgba(18, 24, 38, 0.85);
-  --bg-card-hover: rgba(26, 35, 54, 0.95);
-  --bg-card-subtle: #111726;
+  /* ═══════════════════════════════════════════════════════
+     Aurora Borealis Design System (replaces Obsidian Dark)
+     Colors map to design-tokens.css Aurora palette.
+     Old neon vars aliased here so existing CSS classes
+     automatically pick up the new, richer palette.
+  ══════════════════════════════════════════════════════════ */
+
+  /* Backgrounds — deeper blue-black base */
+  --bg-app: #0a0e1a;
+  --bg-surface: #0f1420;
+  --bg-card: rgba(20, 26, 42, 0.85);
+  --bg-card-hover: rgba(30, 39, 61, 0.95);
+  --bg-card-subtle: #13182e;
   --bg-input: #151d2e;
 
-  /* Text Colors */
-  --text-primary: #f1f5f9;
+  /* Text */
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --text-dark: #0f172a;
 
-  /* Accent Neon Colors */
-  --emerald-neon: #10b981;
+  /* Aurora accent aliases — maps old neon vars to Aurora palette */
+  --emerald-neon: var(--aurora-emerald-500, #10b981);
   --emerald-glow: rgba(16, 185, 129, 0.25);
   --emerald-bg: rgba(16, 185, 129, 0.12);
 
-  --cyan-neon: #38bdf8;
-  --cyan-glow: rgba(56, 189, 248, 0.25);
-  --cyan-bg: rgba(56, 189, 248, 0.12);
+  /* Cyan → Aurora Teal (more refined) */
+  --cyan-neon: var(--aurora-teal-400, #2dd4bf);
+  --cyan-glow: rgba(20, 184, 166, 0.25);
+  --cyan-bg: rgba(20, 184, 166, 0.12);
 
-  --amber-neon: #f59e0b;
+  /* Amber → Aurora Amber */
+  --amber-neon: var(--aurora-amber-400, #fbbf24);
   --amber-glow: rgba(245, 158, 11, 0.25);
   --amber-bg: rgba(245, 158, 11, 0.12);
 
-  --red-neon: #ef4444;
-  --red-glow: rgba(239, 68, 68, 0.25);
-  --red-bg: rgba(239, 68, 68, 0.12);
+  /* Red → Aurora Rose (softer, more premium) */
+  --red-neon: var(--aurora-rose-500, #f43f5e);
+  --red-glow: rgba(244, 63, 94, 0.25);
+  --red-bg: rgba(244, 63, 94, 0.12);
 
-  --indigo-neon: #818cf8;
-  --indigo-bg: rgba(129, 140, 248, 0.12);
+  /* Indigo → Aurora Violet */
+  --indigo-neon: var(--aurora-violet-400, #c084fc);
+  --indigo-bg: rgba(168, 85, 247, 0.12);
 
-  /* Borders & Shadows */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.15);
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-medium: rgba(255, 255, 255, 0.12);
   --border-glow-emerald: rgba(16, 185, 129, 0.4);
-  --border-glow-cyan: rgba(56, 189, 248, 0.4);
+  --border-glow-cyan: rgba(20, 184, 166, 0.4);
 
+  /* Radii */
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  /* Elevation shadows */
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.35);
-  --shadow-glow-cyan: 0 0 20px rgba(56, 189, 248, 0.35);
+  --shadow-glow-cyan: 0 0 20px rgba(20, 184, 166, 0.35);
+
+  /* Aurora-specific gradient for active/interactive highlights */
+  --gradient-aurora-primary: linear-gradient(135deg, #9333ea 0%, #4f46e5 50%, #0d9488 100%);
+  --gradient-aurora-success: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
 }
 
 * {
@@ -99,6 +116,43 @@ button {
   background: none;
 }
 
+/* ── Focus indicators (WCAG AA) ── */
+:focus-visible {
+  outline: 2px solid var(--aurora-violet-500, #a855f7);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Glassmorphism fallback for browsers without backdrop-filter ── */
+@supports not (backdrop-filter: blur(1px)) {
+  .app-header,
+  .location-picker-card,
+  .route-card,
+  .decision-card,
+  .transparency-container {
+    background: rgba(15, 20, 32, 0.98) !important;
+  }
+}
+
+/* ── Skip-to-content link ── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  background: var(--aurora-violet-600, #9333ea);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-to-content:focus {
+  top: 16px;
+}
+
 /* ---------------------------------------------------- */
 /* App Layout                                           */
 /* ---------------------------------------------------- */
@@ -136,11 +190,11 @@ button {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  background: var(--gradient-aurora-success, linear-gradient(135deg, #10b981 0%, #14b8a6 100%));
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.45);
 }
 
 .shield-svg {
@@ -216,8 +270,9 @@ button {
 }
 
 .lang-btn.active {
-  background: #2563eb;
+  background: var(--aurora-violet-600, #9333ea);
   color: #ffffff;
+  box-shadow: 0 0 12px rgba(147, 51, 234, 0.35);
 }
 
 .header-icon-btn {
@@ -234,8 +289,8 @@ button {
 }
 
 .header-icon-btn:hover {
-  border-color: var(--border-medium);
-  background: #1e293b;
+  border-color: rgba(255,255,255,0.15);
+  background: var(--bg-elevated, #1a2034);
 }
 
 /* ---------------------------------------------------- */
@@ -432,8 +487,8 @@ button {
 }
 
 .icon-action-btn.active-pinning {
-  background: var(--cyan-neon);
-  color: var(--text-dark);
+  background: var(--aurora-teal-500, #14b8a6);
+  color: #fff;
 }
 
 .picker-middle-actions {
@@ -595,10 +650,11 @@ button {
 }
 
 .buffer-chip.active {
-  background: #f59e0b;
-  color: #0f172a;
-  border-color: #f59e0b;
+  background: var(--aurora-amber-500, #f59e0b);
+  color: #0a0e1a;
+  border-color: var(--aurora-amber-500, #f59e0b);
   font-weight: 700;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
 .btn-compute-routes {
@@ -1964,9 +2020,9 @@ button {
 }
 
 .btn-back-overview:hover {
-  color: #ffffff;
-  border-color: var(--border-medium);
-  background: #1e293b;
+  color: var(--aurora-violet-300, #d8b4fe);
+  border-color: rgba(147, 51, 234, 0.4);
+  background: rgba(147, 51, 234, 0.1);
 }
 
 /* ==================================================== */

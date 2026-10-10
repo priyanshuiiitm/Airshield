@@ -9,10 +9,12 @@ import { RouteComparison } from "./components/RouteComparison";
 import { DecisionCard } from "./components/DecisionCard";
 import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
+import { AdminDashboard } from "./components/AdminDashboard";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 
 export const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"landing" | "simulator">("landing");
+  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "admin">("landing");
+  const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
   const [language, setLanguage] = useState<LanguageCode>(() => {
     return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
   });
@@ -30,7 +32,6 @@ export const App: React.FC = () => {
 
   // Route focus state
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
-  const [routeViewMode, setRouteViewMode] = useState<"all" | "safer" | "fastest">("all");
 
   // Recommendation & choice hooks
   const { isLoading, fetchRecommendation } = useRecommendation();
@@ -45,7 +46,6 @@ export const App: React.FC = () => {
   const handleCalculateRoutes = useCallback(
     async (pCoord = pickup, dCoord = drop, buf = bufferMin) => {
       resetChoice();
-      setRouteViewMode("all");
 
       // Immediately generate real-time local mathematical route solution
       const localResult = generateDynamicRoutes(pCoord, dCoord, buf);
@@ -158,21 +158,20 @@ export const App: React.FC = () => {
     if (currentRecommendation?.trip_id) {
       submitChoice(currentRecommendation.trip_id, choice);
     }
-    setRouteViewMode(choice);
-    if (choice === "safer" && currentRecommendation?.recommendation?.route_id) {
-      setSelectedRouteId(currentRecommendation.recommendation.route_id);
-    } else if (choice === "fastest") {
-      const fRouteId = fastestRouteId || (routes.length > 0 ? routes[0].route_id : null);
-      if (fRouteId) setSelectedRouteId(fRouteId);
-    }
   };
 
+  // If AirShield is disabled, only show the fastest route
   const routes = currentRecommendation?.routes || [];
+  const displayRoutes = airshieldEnabled ? routes : routes.filter(r => r.route_id === "route_fastest");
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
   // Render Landing Page
   if (viewMode === "landing") {
     return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
+  }
+
+  if (viewMode === "admin") {
+    return <AdminDashboard onBack={() => setViewMode("simulator")} />;
   }
 
   // Render Live Simulator Workspace
@@ -186,6 +185,25 @@ export const App: React.FC = () => {
         onBackToLanding={() => setViewMode("landing")}
         isLoading={isLoading}
       />
+      
+      {/* Hackathon Demo Controls Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 24px', backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid rgba(255,255,255,0.06)', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Demo Toggles</span>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, backgroundColor: airshieldEnabled ? 'rgba(16,185,129,0.15)' : 'rgba(100,116,139,0.15)', padding: '6px 14px', borderRadius: 9999, border: `1px solid ${airshieldEnabled ? 'rgba(16,185,129,0.4)' : 'rgba(100,116,139,0.3)'}`, transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} style={{ cursor: 'pointer', accentColor: 'var(--aurora-emerald-500)' }} />
+                  <span style={{ color: airshieldEnabled ? 'var(--aurora-emerald-400)' : 'var(--text-muted)', fontSize: 13, fontWeight: 600 }}>
+                      {airshieldEnabled ? "AirShield Protection ON" : "Standard Delivery Mode (OFF)"}
+                  </span>
+              </label>
+          </div>
+          <button
+              onClick={() => setViewMode("admin")}
+              style={{ backgroundColor: 'rgba(99,102,241,0.15)', color: 'var(--aurora-violet-300)', border: '1px solid rgba(99,102,241,0.3)', padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+              Fleet Admin Dashboard →
+          </button>
+      </div>
 
       {/* Main Content Area */}
       <main className="main-content">
@@ -230,31 +248,32 @@ export const App: React.FC = () => {
               onCalculateRoutes={() => handleCalculateRoutes(pickup, drop, bufferMin)}
             />
 
-            {/* Decision & Action Card */}
-            {currentRecommendation && (
-              <DecisionCard
-                recommendation={currentRecommendation}
-                language={language}
-                isSubmitting={isSubmitting}
-                choiceSubmitted={choiceSubmitted}
-                onSelectChoice={handleChoice}
-              />
+            {/* Decision & Action Card - Only show if AirShield is enabled! */}
+            {airshieldEnabled ? (
+                currentRecommendation && (
+                <DecisionCard
+                    recommendation={currentRecommendation}
+                    language={language}
+                    isSubmitting={isSubmitting}
+                    choiceSubmitted={choiceSubmitted}
+                    onSelectChoice={handleChoice}
+                />
+                )
+            ) : (
+                <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center', backdropFilter: 'blur(12px)' }}>
+                    <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>⏱️</div>
+                    <h3 style={{ color: 'var(--text-primary)', margin: '0 0 0.5rem 0', fontWeight: 700 }}>Standard Delivery Mode</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Showing only the fastest route. Worker exposure is unmitigated and unmeasured.</p>
+                </div>
             )}
 
             {/* Side-by-Side Route Exposure Comparison */}
-            {currentRecommendation && (
+            {airshieldEnabled && currentRecommendation && (
               <RouteComparison
                 recommendation={currentRecommendation}
                 selectedRouteId={selectedRouteId}
                 language={language}
-                onSelectRoute={(rId) => {
-                  setSelectedRouteId(rId);
-                  if (rId === fastestRouteId) {
-                    setRouteViewMode("fastest");
-                  } else if (rId === currentRecommendation?.recommendation?.route_id) {
-                    setRouteViewMode("safer");
-                  }
-                }}
+                onSelectRoute={(rId) => setSelectedRouteId(rId)}
               />
             )}
           </div>
@@ -263,7 +282,7 @@ export const App: React.FC = () => {
           <div className="right-map-column">
             <section className="map-section" aria-label="Route Map">
               <MapView
-                routes={routes}
+                routes={displayRoutes}
                 fastestRouteId={fastestRouteId}
                 selectedRouteId={selectedRouteId}
                 bufferMin={bufferMin}
@@ -271,27 +290,12 @@ export const App: React.FC = () => {
                 drop={drop}
                 isMapPickingOrigin={isMapPickingOrigin}
                 isMapPickingDestination={isMapPickingDestination}
-                routeViewMode={routeViewMode}
-                onViewModeChange={(mode) => setRouteViewMode(mode)}
                 onMapClick={handleMapClick}
-                onRouteClick={(rId) => {
-                  setSelectedRouteId(rId);
-                  if (rId === fastestRouteId) {
-                    setRouteViewMode("fastest");
-                  } else if (rId === currentRecommendation?.recommendation?.route_id) {
-                    setRouteViewMode("safer");
-                  }
-                }}
+                onRouteClick={(rId) => setSelectedRouteId(rId)}
                 onSelectRecommended={() => {
-                  setRouteViewMode("safer");
                   if (currentRecommendation?.recommendation?.route_id) {
                     setSelectedRouteId(currentRecommendation.recommendation.route_id);
                   }
-                }}
-                onSelectFastest={() => {
-                  setRouteViewMode("fastest");
-                  const fRouteId = fastestRouteId || (routes.length > 0 ? routes[0].route_id : null);
-                  if (fRouteId) setSelectedRouteId(fRouteId);
                 }}
               />
             </section>
@@ -299,7 +303,7 @@ export const App: React.FC = () => {
         </div>
 
         {/* Bottom Section: Full "How We Got This" Mathematical & Citation Transparency */}
-        {currentRecommendation && (
+        {airshieldEnabled && currentRecommendation && (
           <section className="transparency-section">
             <TransparencyPanel recommendation={currentRecommendation} language={language} />
           </section>

@@ -5,6 +5,8 @@
  */
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer, hoverScale, tapScale } from "../animation/motion-config";
 import {
   Shield,
   ArrowRight,
@@ -68,48 +70,58 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
       {/* ---------------------------------------------------- */}
       {/* 2. HERO SECTION                                      */}
       {/* ---------------------------------------------------- */}
-      <section className="landing-hero-section">
-        <div className="hero-grid-bg"></div>
+      <motion.section 
+        className="landing-hero-section"
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+      >
+        <div className="hero-grid-bg gradient-mesh-aurora"></div>
 
         <div className="hero-content-wrapper">
           {/* Left Column: Headline & Value Prop */}
-          <div className="hero-left-column">
-            <div className="hero-badge-pill">
-              <span className="badge-pulse-dot"></span>
-              <span>DETERMINISTIC ENVIRONMENTAL ROUTING ENGINE</span>
-            </div>
+          <motion.div className="hero-left-column" variants={fadeInUp}>
+            <motion.div className="hero-badge-pill" variants={fadeInUp}>
+              <span className="badge-pulse-dot" style={{ background: "var(--aurora-emerald-500)" }}></span>
+              <span style={{ color: "var(--aurora-teal-400)" }}>DETERMINISTIC ENVIRONMENTAL ROUTING ENGINE</span>
+            </motion.div>
 
-            <h1 className="hero-main-headline">
+            <motion.h1 className="hero-main-headline" variants={fadeInUp}>
               Pollution is dynamic. <br />
-              <span className="headline-gradient-sub">So should the route.</span>
-            </h1>
+              <span className="headline-gradient-sub" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>So should the route.</span>
+            </motion.h1>
 
-            <p className="hero-description">
+            <motion.p className="hero-description" variants={fadeInUp} style={{ color: "var(--text-secondary)" }}>
               AirShield models real-time micro-urban PM2.5 exposure in Delhi NCR, interpolates
               statutory CAAQMS monitoring networks, and guides outdoor delivery workers through
               constrained-optimal clean corridors.
-            </p>
+            </motion.p>
 
-            <div className="hero-actions-row">
-              <button
+            <motion.div className="hero-actions-row" variants={fadeInUp}>
+              <motion.button
                 type="button"
                 className="btn-hero-primary"
                 onClick={onLaunchSimulator}
                 data-testid="btn-launch-hero"
+                whileHover={{ scale: 1.05, boxShadow: "var(--shadow-glow-violet)" }}
+                whileTap={tapScale}
+                style={{ background: "var(--gradient-aurora-primary)" }}
               >
                 <span>Launch route engine</span>
                 <ArrowRight size={16} />
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 type="button"
                 className="btn-hero-secondary"
                 onClick={() => scrollToSection("methodology")}
+                whileHover={hoverScale}
+                whileTap={tapScale}
               >
                 <span>Read the routing story</span>
                 <span className="down-arrow">↓</span>
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
             {/* Quick Metrics Bar */}
             <div className="hero-metrics-bar">
@@ -133,10 +145,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 <span className="h-metric-lbl">Sensitivity Check</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Live Interactive Simulation Preview */}
-          <div className="hero-right-column">
+          <motion.div 
+            className="hero-right-column"
+            variants={fadeInUp}
+            whileHover={{ y: -5 }}
+            transition={{ duration: 0.3 }}
+          >
             {/* Top Card: AirShield Environmental Radar Perimeter */}
             <div className="radar-preview-card">
               <div className="radar-card-header">
@@ -310,9 +327,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ---------------------------------------------------- */}
       {/* 3. METHODOLOGY & 4-ACTS CHRONOLOGY SECTION           */}

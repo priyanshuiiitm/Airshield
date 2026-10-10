@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { fadeInUp, tapScale } from "../animation/motion-config";
 import { Coordinate, LanguageCode } from "../api/types";
 import { DELHI_LOCATIONS } from "../utils/delhiData";
 import { MapPin, Navigation, ArrowUpDown, Clock, Crosshair, Sparkles, CheckCircle2 } from "lucide-react";
@@ -63,7 +65,20 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   };
 
   return (
-    <div className="location-picker-card" data-testid="location-picker">
+    <motion.div 
+      className="location-picker-card" 
+      data-testid="location-picker"
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+      style={{
+        background: "var(--bg-card)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: "1px solid rgba(255, 255, 255, 0.05)",
+        boxShadow: "var(--shadow-xl)"
+      }}
+    >
       <div className="picker-header">
         <div className="picker-title-group">
           <div className="live-dot-pulse"></div>
@@ -140,14 +155,17 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               <span>{language === "hi" ? "मेरा GPS स्थान" : "Use GPS"}</span>
             </button>
 
-            <button
+            <motion.button
               type="button"
               className="swap-btn"
               onClick={onSwapLocations}
               title="Swap Origin and Destination"
+              whileHover={{ rotate: 180, scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.3 }}
             >
               <ArrowUpDown size={15} />
-            </button>
+            </motion.button>
           </div>
 
           {/* Destination Picker */}
@@ -278,15 +296,18 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           </div>
         </div>
 
-        <button
+        <motion.button
           type="button"
           className="btn-compute-routes"
           disabled={isLoading}
           onClick={onCalculateRoutes}
+          whileHover={!isLoading ? { scale: 1.02, boxShadow: "var(--shadow-glow-emerald)" } : {}}
+          whileTap={!isLoading ? tapScale : {}}
+          style={!isLoading ? { background: "var(--gradient-aurora-success)", color: "#000" } : {}}
         >
-          <Sparkles size={17} className="text-emerald" />
-          <span>{isLoading ? "Analyzing Air..." : "Compute Cleanest Routes"}</span>
-        </button>
+          <Sparkles size={17} className={!isLoading ? "" : "text-emerald"} />
+          <span style={!isLoading ? { fontWeight: "bold" } : {}}>{isLoading ? "Analyzing Air..." : "Compute Cleanest Routes"}</span>
+        </motion.button>
       </div>
 
       {/* Popular Corridor Presets */}
@@ -345,6 +366,6 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
