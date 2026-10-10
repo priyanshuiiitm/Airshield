@@ -333,11 +333,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
       {/* ---------------------------------------------------- */}
       <section id="methodology" className="methodology-story-section">
         <div className="section-header-block">
-          <span className="section-subtitle-tag">⊙ ONE TRIP. FOUR ACTS.</span>
-          <h2 className="section-main-heading">Scroll through the Shield.</h2>
+          <span className="section-subtitle-tag">⊙ THE ARCHITECTURE</span>
+          <h2 className="section-main-heading">How the algorithm works.</h2>
           <p className="section-description-text">
-            Trace the end-to-end mathematical lifecycle of AirShield: from statutory sensor ingestion
-            and micro-urban IDW spatial decay to constrained buffer optimization and automated worker micro-rewards.
+            Trace the mathematical lifecycle of a route from sensor ingestion to exposure protection.
           </p>
         </div>
 
@@ -397,15 +396,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               </div>
               <h3 className="act-headline">Real statutory air data before taking the road.</h3>
               <p className="act-body">
-                AirShield continuously interfaces with statutory Continuous Ambient Air Quality
-                Monitoring Stations (CAAQMS) operated by DPCC, CPCB, and IMD. Every reading is
-                freshness-verified (&le; 3 hours) to eliminate stale or hallucinated sensor inputs.
+                We interface directly with CAAQMS operated by DPCC, CPCB, and IMD.
+                Every reading is freshness-verified to eliminate stale sensor inputs.
               </p>
               <div className="act-pills-row">
-                <span className="act-pill">DPCC CAAQMS</span>
-                <span className="act-pill">CPCB Network</span>
-                <span className="act-pill">≤3h Freshness Verified</span>
-                <span className="act-pill">Zero Hallucination</span>
+                <span className="act-pill">Statutory Networks</span>
+                <span className="act-pill">Freshness Verified</span>
               </div>
             </div>
 
@@ -419,17 +415,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 <span className="act-num-tag">02 / SPATIAL IDW & CONTEXT</span>
                 <span className="act-watermark">02</span>
               </div>
-              <h3 className="act-headline">Micro-urban context modifiers along ~200m chunks.</h3>
+              <h3 className="act-headline">Micro-urban context modifiers.</h3>
               <p className="act-body">
-                Candidate routes are segmented into uniform ~200m spatial chunks with proportional transit
-                durations. Ambient PM2.5 is calculated using Inverse-Distance Weighting (1 / d_ij²) and
-                refined by micro-urban context proxies: 1.25× for major road corridors and 0.78×
-                for green canopy corridors.
+                Routes are segmented into ~200m chunks. Ambient PM2.5 is calculated using
+                Inverse-Distance Weighting and refined by green canopy and major road proxies.
               </p>
               <div className="act-pills-row">
-                <span className="act-pill">Inverse-Distance Weighting</span>
-                <span className="act-pill">Road Proximity Factor (1.25×)</span>
-                <span className="act-pill">Green Canopy Buffer (0.78×)</span>
+                <span className="act-pill">Spatial Interpolation</span>
+                <span className="act-pill">Context Modifiers</span>
               </div>
             </div>
 
@@ -445,14 +438,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               </div>
               <h3 className="act-headline">Deliver on time, breathe clean air.</h3>
               <p className="act-body">
-                Cleaner routes are constrained by worker delivery windows (duration &le; fastest + buffer).
-                A recommendation is only labeled robust if it remains the minimum-exposure feasible option
-                across <strong>0.5×, 1.0×, and 1.5×</strong> modifier sensitivity configurations.
+                Cleaner routes strictly respect delivery deadlines (duration &le; fastest + buffer).
+                Recommendations are mathematically verified for robustness across multiple sensitivity configurations.
               </p>
               <div className="act-pills-row">
-                <span className="act-pill">Constrained Optimization</span>
-                <span className="act-pill">Delivery Time Buffer Filter</span>
-                <span className="act-pill">3-Point Sensitivity Invariant</span>
+                <span className="act-pill">Time Constraints</span>
+                <span className="act-pill">Robust Verification</span>
               </div>
             </div>
 
@@ -466,17 +457,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 <span className="act-num-tag">04 / 4-STATE CLASSIFICATION</span>
                 <span className="act-watermark">04</span>
               </div>
-              <h3 className="act-headline">Four operational states with particulate exposure protection.</h3>
+              <h3 className="act-headline">Clear, actionable operational states.</h3>
               <p className="act-body">
-                Every trip resolves to exactly one state: <strong>AVOIDABLE</strong> (cleaner corridor activated with verified &ge;15% PM2.5 reduction),
-                <strong>UNAVOIDABLE</strong> (transit time minimization strategy), <strong>LOW</strong> (baseline PM2.5 &lt; 60 µg/m³),
-                or <strong>INSUFFICIENT_DATA</strong>.
+                Every trip resolves to: <strong>AVOIDABLE</strong> (clean corridor found),
+                <strong>UNAVOIDABLE</strong> (default to fastest), or <strong>LOW</strong> (safe ambient baseline).
               </p>
               <div className="act-pills-row">
-                <span className="act-pill">4-State Classification</span>
-                <span className="act-pill">Inhalation Protection</span>
-                <span className="act-pill">Time Minimization</span>
-                <span className="act-pill">Full Mathematical Transparency</span>
+                <span className="act-pill">Avoidable</span>
+                <span className="act-pill">Unavoidable</span>
+                <span className="act-pill">Low Baseline</span>
               </div>
             </div>
           </div>
@@ -524,11 +513,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
       <section id="proof" className="landing-cta-section">
         <div className="cta-ambient-glow"></div>
         <div className="cta-content-box">
-          <span className="section-subtitle-tag text-amber">THE OPERATIONAL PROOF</span>
-          <h2 className="cta-headline">See the engine make a decision live.</h2>
+          <span className="section-subtitle-tag text-amber">LIVE DEMO</span>
+          <h2 className="cta-headline">See the engine in action.</h2>
           <p className="cta-subtitle">
-            Open the live interactive workspace to select custom Delhi NCR locations, test delivery buffer constraints,
-            inspect real-time statutory sensor citations, and trace pollution-aware route geometry.
+            Open the live interactive workspace to test delivery buffer constraints and trace pollution-aware route geometry.
           </p>
 
           <button

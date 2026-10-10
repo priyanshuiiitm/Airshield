@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Coordinate, RecommendationResponse } from "../api/types";
-import { MapPin, Clock, Wind, ChevronDown, Info } from "lucide-react";
+import { MapPin, Clock, Wind, ChevronDown, Info, Edit2, Check, Navigation, X } from "lucide-react";
 import { MapView } from "./MapView";
 import { motion, AnimatePresence } from "framer-motion";
+import { DELHI_LOCATIONS } from "../utils/delhiData";
 
 interface DriverViewProps {
   recommendation: RecommendationResponse | null;
@@ -12,6 +13,9 @@ interface DriverViewProps {
   dropName: string;
   onSelectRoute: (routeId: string) => void;
   selectedRouteId: string | null;
+  onUpdatePickup: (coord: Coordinate, name: string) => void;
+  onUpdateDrop: (coord: Coordinate, name: string) => void;
+  onRecalculate: () => void;
 }
 
 export const DriverView: React.FC<DriverViewProps> = ({
@@ -22,8 +26,66 @@ export const DriverView: React.FC<DriverViewProps> = ({
   dropName,
   onSelectRoute,
   selectedRouteId,
+  onUpdatePickup,
+  onUpdateDrop,
+  onRecalculate,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<"pickup" | "drop" | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState<"pickup" | "drop" | null>(null);
+  const [tempPickupLat, setTempPickupLat] = useState(pickup.lat.toString());
+  const [tempPickupLng, setTempPickupLng] = useState(pickup.lng.toString());
+  const [tempDropLat, setTempDropLat] = useState(drop.lat.toString());
+  const [tempDropLng, setTempDropLng] = useState(drop.lng.toString());
+
+  const handleUseGPS = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coord = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          if (showLocationPicker === "pickup") {
+            onUpdatePickup(coord, `My Location (${coord.lat.toFixed(3)}, ${coord.lng.toFixed(3)})`);
+          } else if (showLocationPicker === "drop") {
+            onUpdateDrop(coord, `My Location (${coord.lat.toFixed(3)}, ${coord.lng.toFixed(3)})`);
+          }
+          setShowLocationPicker(null);
+          onRecalculate();
+        },
+        () => alert("Unable to access location")
+      );
+    }
+  };
+
+  const handleSelectPreset = (location: typeof DELHI_LOCATIONS[0]) => {
+    const coord = { lat: location.lat, lng: location.lng };
+    if (showLocationPicker === "pickup") {
+      onUpdatePickup(coord, location.name);
+    } else if (showLocationPicker === "drop") {
+      onUpdateDrop(coord, location.name);
+    }
+    setShowLocationPicker(null);
+    onRecalculate();
+  };
+
+  const handleSavePickup = () => {
+    const lat = parseFloat(tempPickupLat);
+    const lng = parseFloat(tempPickupLng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      onUpdatePickup({ lat, lng }, `Custom (${lat.toFixed(3)}, ${lng.toFixed(3)})`);
+      setEditingLocation(null);
+      onRecalculate();
+    }
+  };
+
+  const handleSaveDrop = () => {
+    const lat = parseFloat(tempDropLat);
+    const lng = parseFloat(tempDropLng);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      onUpdateDrop({ lat, lng }, `Custom (${lat.toFixed(3)}, ${lng.toFixed(3)})`);
+      setEditingLocation(null);
+      onRecalculate();
+    }
+  };
 
   if (!recommendation) return null;
 
@@ -67,14 +129,138 @@ export const DriverView: React.FC<DriverViewProps> = ({
           <div className="trip-point">
             <MapPin size={16} className="pickup-icon" />
             <span className="location-text">{pickupName}</span>
+            <button
+              className="btn-edit-location"
+              onClick={() => setShowLocationPicker("pickup")}
+            >
+              <Edit2 size={14} />
+            </button>
           </div>
+
           <div className="trip-divider" />
+
           <div className="trip-point">
             <MapPin size={16} className="drop-icon" />
             <span className="location-text">{dropName}</span>
+            <button
+              className="btn-edit-location"
+              onClick={() => setShowLocationPicker("drop")}
+            >
+              <Edit2 size={14} />
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Location Picker Modal */}
+      <AnimatePresence>
+        {showLocationPicker && (
+          <motion.div
+            className="location-picker-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowLocationPicker(null)}
+          >
+            <motion.div
+              className="location-picker-content"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="picker-header-modal">
+                <h3 className="picker-title-modal">
+                  {showLocationPicker === "pickup" ? "Set Pickup" : "Set Destination"}
+                </h3>
+                <button
+                  className="btn-close-modal"
+                  onClick={() => setShowLocationPicker(null)}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* GPS Option */}
+              <button className="location-option gps-option" onClick={handleUseGPS}>
+                <Navigation size={18} className="option-icon" />
+                <div className="option-text">
+                  <span className="option-title">Use Current Location</span>
+                  <span className="option-subtitle">GPS</span>
+                </div>
+              </button>
+
+              {/* Preset Locations */}
+              <div className="preset-locations">
+                <span className="preset-heading">Popular Locations</span>
+                {DELHI_LOCATIONS.slice(0, 8).map((loc) => (
+                  <button
+                    key={loc.id}
+                    className="location-option"
+                    onClick={() => handleSelectPreset(loc)}
+                  >
+                    <MapPin size={16} className="option-icon" />
+                    <div className="option-text">
+                      <span className="option-title">{loc.name}</span>
+                      <span className="option-subtitle">
+                        {loc.lat.toFixed(3)}, {loc.lng.toFixed(3)}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Coordinates */}
+              <div className="custom-coords-section">
+                <span className="preset-heading">Custom Coordinates</span>
+                <div className="coord-inputs">
+                  <input
+                    type="number"
+                    step="0.0001"
+                    placeholder="Latitude"
+                    value={
+                      showLocationPicker === "pickup" ? tempPickupLat : tempDropLat
+                    }
+                    onChange={(e) =>
+                      showLocationPicker === "pickup"
+                        ? setTempPickupLat(e.target.value)
+                        : setTempDropLat(e.target.value)
+                    }
+                    className="coord-input"
+                  />
+                  <input
+                    type="number"
+                    step="0.0001"
+                    placeholder="Longitude"
+                    value={
+                      showLocationPicker === "pickup" ? tempPickupLng : tempDropLng
+                    }
+                    onChange={(e) =>
+                      showLocationPicker === "pickup"
+                        ? setTempPickupLng(e.target.value)
+                        : setTempDropLng(e.target.value)
+                    }
+                    className="coord-input"
+                  />
+                </div>
+                <button
+                  className="btn-save"
+                  onClick={() => {
+                    if (showLocationPicker === "pickup") {
+                      handleSavePickup();
+                    } else {
+                      handleSaveDrop();
+                    }
+                  }}
+                >
+                  <Check size={14} /> Apply Custom Location
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Route Selection Cards - Bottom */}
       <div className="driver-bottom-sheet">

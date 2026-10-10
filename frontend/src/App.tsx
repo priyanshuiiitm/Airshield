@@ -242,6 +242,15 @@ export const App: React.FC = () => {
             handleChoice(choice);
           }}
           selectedRouteId={selectedRouteId}
+          onUpdatePickup={(coord, name) => {
+            setPickup(coord);
+            setPickupName(name);
+          }}
+          onUpdateDrop={(coord, name) => {
+            setDrop(coord);
+            setDropName(name);
+          }}
+          onRecalculate={() => handleCalculateRoutes(pickup, drop, bufferMin)}
         />
       </div>
     );
