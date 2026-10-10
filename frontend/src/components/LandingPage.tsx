@@ -103,9 +103,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 className="btn-hero-primary"
                 onClick={onLaunchSimulator}
                 data-testid="btn-launch-hero"
-                whileHover={{ scale: 1.05, boxShadow: "var(--shadow-glow-violet)" }}
+                whileHover={{ scale: 1.03 }}
                 whileTap={tapScale}
-                style={{ background: "var(--gradient-aurora-primary)" }}
               >
                 <span>Launch route engine</span>
                 <ArrowRight size={16} />
