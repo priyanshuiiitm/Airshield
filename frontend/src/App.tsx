@@ -333,7 +333,7 @@ const AppContent: React.FC = () => {
         onLanguageChange={handleLanguageChange}
         onRefresh={() => handleCalculateRoutes(pickup, drop, bufferMin, true)}
         onBackToLanding={() => setViewMode("landing")}
-        onOpenRiderMode={() => setViewMode("rider")}
+        onOpenRiderMode={undefined}
         onOpenAnalytics={() => setViewMode("analytics")}
         isLoading={isLoading}
       />

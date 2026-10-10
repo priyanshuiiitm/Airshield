@@ -21,7 +21,6 @@ export const Header: React.FC<HeaderProps> = ({
   onRefresh,
   onBackToLanding,
   onOpenDriverView,
-  onOpenRiderMode,
   onOpenAnalytics,
   isLoading
 }) => {
@@ -58,11 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Shield size={22} className="shield-svg" />
         </div>
         <div>
-          <div className="brand-title-row">
-            <h1 className="brand-name" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>AirShield</h1>
-            <span className="brand-tag">Delhi NCR Live</span>
-          </div>
-          <p className="brand-subtitle" style={{ color: "var(--text-secondary)" }}>Pollution-Aware Worker Routing & Decision Support</p>
+          <h1 className="brand-name" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>AirShield</h1>
         </div>
       </motion.div>
 
@@ -101,19 +96,6 @@ export const Header: React.FC<HeaderProps> = ({
           </motion.button>
         )}
 
-        {onOpenRiderMode && (
-          <motion.button
-            type="button"
-            className="btn-header-mode btn-rider-toggle"
-            onClick={onOpenRiderMode}
-            title="Open Sunlight-Optimized Rider Handlebar Mode"
-            whileHover={hoverScale}
-            whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-secondary)", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, border: "1px solid var(--border-subtle)", background: "transparent", cursor: "pointer" }}
-          >
-            <span>Rider Mode</span>
-          </motion.button>
-        )}
 
         {onOpenAnalytics && (
           <motion.button
