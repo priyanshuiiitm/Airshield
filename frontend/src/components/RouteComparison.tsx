@@ -6,9 +6,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { formatCurrency } from "../utils/formatting";
-import { Wind, TrendingDown, Shield } from "lucide-react";
+import { Wind, TrendingDown, Shield, Car, Check } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../animation/motion-config";
-import { uberIcons, uberImages } from "../constants/uberAssets";
+import { uberIcons } from "../constants/uberAssets";
 
 interface RouteComparisonProps {
   recommendation: RecommendationResponse;
@@ -184,23 +184,25 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               {/* Uber-style Card Header */}
               <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
                 <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <img
-                    src={uberImages.signUpCar}
-                    alt="Ryde Vehicle"
-                    style={{
-                      width: 34,
-                      height: 22,
-                      objectFit: "contain",
-                      filter: "brightness(0) invert(1)",
-                      opacity: isFocused ? 1 : 0.65
-                    }}
-                  />
+                  <div style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 8,
+                    background: isFocused ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#ffffff"
+                  }}>
+                    <Car size={15} />
+                  </div>
                   <div>
                     <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", display: "block" }}>
                       {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
                     </span>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: "#a1a1aa", marginTop: 2 }}>
-                      <img src={uberIcons.star} alt="Rating" style={{ width: 10, height: 10, objectFit: "contain" }} />
+                      <span style={{ color: "#f59e0b" }}>★</span>
                       <span>{isRecommended ? "4.9 Clean" : "4.7 Direct"}</span>
                     </span>
                   </div>
@@ -208,11 +210,18 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
 
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   {isFocused && (
-                    <img
-                      src={uberIcons.checkmark}
-                      alt="Selected"
-                      style={{ width: 14, height: 14, objectFit: "contain", filter: "brightness(0) invert(1)" }}
-                    />
+                    <div style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: "50%",
+                      background: "#ffffff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#000000"
+                    }}>
+                      <Check size={11} strokeWidth={3} />
+                    </div>
                   )}
                   <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
                     {badgeLabel}

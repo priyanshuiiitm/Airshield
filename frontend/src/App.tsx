@@ -528,6 +528,7 @@ const AppContent: React.FC = () => {
                   handleChoice("fastest");
                 }}
                 isRiderMode={viewMode === 'rider'}
+                hidePromptCard={true}
               />
             </section>
           </div>
