@@ -289,12 +289,16 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             ))}
           </div>
         </div>
-
         <motion.button
           type="button"
           className="btn-compute-routes"
           disabled={isLoading}
-          onClick={onCalculateRoutes}
+          onClick={() => {
+            if (typeof navigator !== "undefined" && navigator.vibrate) {
+              navigator.vibrate([50]);
+            }
+            onCalculateRoutes();
+          }}
           whileHover={!isLoading ? { scale: 1.01 } : {}}
           whileTap={!isLoading ? { scale: 0.98 } : {}}
           style={{
@@ -305,11 +309,13 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "8px"
+            gap: "8px",
+            opacity: isLoading ? 0.7 : 1,
+            animation: isLoading ? "pulse 1.5s infinite" : "none"
           }}
         >
           <span>{isLoading ? "Analyzing..." : "Compute Routes"}</span>
-          <ArrowRight size={15} />
+          {!isLoading && <ArrowRight size={15} />}
         </motion.button>
       </div>
 

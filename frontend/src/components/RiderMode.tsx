@@ -15,6 +15,7 @@ import { RecommendationResponse, LanguageCode } from "../api/types";
 import { Shield, Navigation, Volume2, VolumeX, AlertTriangle, ArrowLeft, ArrowRight, Clock, TrendingDown } from "lucide-react";
 import { formatMinutes } from "../utils/formatting";
 import { uberIcons, uberImages } from "../constants/uberAssets";
+import { motion } from "framer-motion";
 
 interface RiderModeProps {
   recommendation: RecommendationResponse;
@@ -190,14 +191,27 @@ export const RiderMode: React.FC<RiderModeProps> = ({
 
   const highPm25 = (saferRoute?.average_pm25 || 0) > 100 || (fastestRoute?.average_pm25 || 0) > 100;
 
+  const handleActionClick = (choice: "safer" | "fastest") => {
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate([100]); // Haptic feedback!
+    }
+    onSelectChoice(choice);
+  };
+
   return (
-    <div className="rider-mode-wrapper">
+    <motion.div 
+      className="rider-mode-wrapper"
+      initial={{ y: "100%", opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: "100%", opacity: 0 }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+    >
       {/* Top Header Bar (Apple / Ola Minimalism) */}
       <header className="rider-top-nav">
-        <button type="button" className="rider-back-btn" onClick={onExitRiderMode}>
+        <motion.button type="button" className="rider-back-btn" onClick={onExitRiderMode} whileTap={{ scale: 0.9 }}>
           <ArrowLeft size={16} />
           <span>{language === "hi" ? "डेस्कटॉप दृश्य (Exit)" : "Exit Rider Mode"}</span>
-        </button>
+        </motion.button>
 
         <div className="rider-mode-badge">
           <span className="rider-badge-dot"></span>
@@ -314,10 +328,11 @@ export const RiderMode: React.FC<RiderModeProps> = ({
 
               {/* Action Buttons (Uber / Apple Monochrome) */}
               <div className="rider-actions-stack">
-                <button
+                <motion.button
                   type="button"
+                  whileTap={{ scale: 0.97 }}
                   className={`btn-rider-primary ${choiceSubmitted === "safer" ? "btn-selected-primary" : ""}`}
-                  onClick={() => onSelectChoice("safer")}
+                  onClick={() => handleActionClick("safer")}
                   style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -337,12 +352,13 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                       <img src={uberIcons.checkmark} alt="Selected" style={{ width: 18, height: 18, objectFit: "contain" }} />
                     )}
                   </div>
-                </button>
+                </motion.button>
 
-                <button
+                <motion.button
                   type="button"
+                  whileTap={{ scale: 0.97 }}
                   className={`btn-rider-secondary ${choiceSubmitted === "fastest" ? "btn-selected-secondary" : ""}`}
-                  onClick={() => onSelectChoice("fastest")}
+                  onClick={() => handleActionClick("fastest")}
                   style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -362,7 +378,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                       <img src={uberIcons.checkmark} alt="Selected" style={{ width: 18, height: 18, objectFit: "contain" }} />
                     )}
                   </div>
-                </button>
+                </motion.button>
               </div>
             </>
           ) : (
@@ -382,10 +398,11 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                 </div>
               </div>
 
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.97 }}
                 className="btn-rider-primary"
-                onClick={() => onSelectChoice("fastest")}
+                onClick={() => handleActionClick("fastest")}
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -398,7 +415,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   </div>
                 </div>
                 <img src={uberImages.signUpCar} alt="Vehicle" style={{ width: 44, height: 26, objectFit: "contain" }} />
-              </button>
+              </motion.button>
             </>
           )}
 
@@ -447,6 +464,6 @@ export const RiderMode: React.FC<RiderModeProps> = ({
           </div>
         </section>
       </main>
-    </div>
+    </motion.div>
   );
 };

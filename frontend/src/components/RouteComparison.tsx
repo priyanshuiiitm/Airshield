@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { formatCurrency } from "../utils/formatting";
 import { Wind, TrendingDown, Shield } from "lucide-react";
-import { fadeInUp, staggerContainer, tapScale } from "../animation/motion-config";
+import { fadeInUp, staggerContainer } from "../animation/motion-config";
 import { uberIcons, uberImages } from "../constants/uberAssets";
 
 interface RouteComparisonProps {
@@ -126,9 +126,14 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               key={route.route_id}
               className={`route-card ${isFocused ? "focused" : ""}`}
               variants={fadeInUp}
-              onClick={() => onSelectRoute(route.route_id)}
+              onClick={() => {
+                if (typeof navigator !== "undefined" && navigator.vibrate) {
+                  navigator.vibrate([50]);
+                }
+                onSelectRoute(route.route_id);
+              }}
               whileHover={{ scale: 1.015, borderColor: "rgba(255, 255, 255, 0.3)" }}
-              whileTap={tapScale}
+              whileTap={{ scale: 0.98 }}
               style={{
                 background: isFocused ? "rgba(20, 21, 27, 0.95)" : "rgba(12, 13, 17, 0.9)",
                 backdropFilter: "blur(12px)",
