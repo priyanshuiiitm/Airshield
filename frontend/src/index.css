@@ -200,6 +200,9 @@ button {
   display: flex;
   align-items: center;
   gap: 14px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .brand-shield-icon {
@@ -221,6 +224,8 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  max-width: 100%;
 }
 
 .brand-name {
@@ -266,6 +271,10 @@ button {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .lang-switcher-group {
