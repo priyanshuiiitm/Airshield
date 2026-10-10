@@ -5555,7 +5555,7 @@ button {
 /* Mode Toggle Button */
 .mode-toggle-btn {
   position: fixed;
-  top: 16px;
+  top: 140px;
   right: 16px;
   z-index: 100;
   width: 44px;
@@ -6684,4 +6684,15 @@ button {
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   border: 1px solid var(--border-color);
+}
+
+/* Push map zoom controls down in mobile view to avoid top card */
+.simple-driver-view .maplibregl-ctrl-top-right {
+  top: 190px !important;
+}
+
+/* Push map logo and attribution up in mobile view to avoid bottom card */
+.simple-driver-view .maplibregl-ctrl-bottom-left,
+.simple-driver-view .maplibregl-ctrl-bottom-right {
+  bottom: 150px !important;
 }
