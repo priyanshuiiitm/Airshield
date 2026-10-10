@@ -287,7 +287,7 @@ export const App: React.FC = () => {
         onLanguageChange={handleLanguageChange}
         onRefresh={() => handleCalculateRoutes(pickup, drop, bufferMin)}
         onBackToLanding={() => setViewMode("landing")}
-        onOpenRiderMode={() => setViewMode("rider")}
+        onOpenRiderMode={undefined}
         onOpenAnalytics={() => setViewMode("analytics")}
         onOpenDriverView={() => setViewMode("driver")}
         isLoading={isLoading}
