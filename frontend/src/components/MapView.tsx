@@ -31,6 +31,7 @@ interface MapViewProps {
   routeViewMode?: "all" | "safer" | "fastest";
   onViewModeChange?: (mode: "all" | "safer" | "fastest") => void;
   isRiderMode?: boolean;
+  hidePromptCard?: boolean;
 }
 
 export const MapView: React.FC<MapViewProps> = ({
@@ -48,7 +49,8 @@ export const MapView: React.FC<MapViewProps> = ({
   onSelectFastest,
   routeViewMode,
   onViewModeChange,
-  isRiderMode = false
+  isRiderMode = false,
+  hidePromptCard = false
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -434,34 +436,7 @@ export const MapView: React.FC<MapViewProps> = ({
       ROUTE_WIDTHS.recommendedActive
     );
 
-    // Animated Route Drawing using line-dasharray
-    let animationId: number;
-    let dashOffset = 0;
-    const drawRoute = () => {
-      dashOffset += 2; // Animation speed multiplier
-      const layers = ["layer-routes-red", "layer-routes-blue", "layer-routes-green"];
-      let keepAnimating = false;
-
-      layers.forEach((lId) => {
-        if (map.getLayer(lId)) {
-          // If dashOffset is very large, it covers the whole route.
-          // We cap the animation roughly around 400 (which covers most routes depending on length)
-          if (dashOffset < 400) {
-            map.setPaintProperty(lId, "line-dasharray", [dashOffset, 1000]);
-            keepAnimating = true;
-          } else {
-            // Remove dasharray to make it a solid line permanently
-            map.setPaintProperty(lId, "line-dasharray", [1, 0]);
-          }
-        }
-      });
-
-      if (keepAnimating) {
-        animationId = requestAnimationFrame(drawRoute);
-      }
-    };
-    // Start animation loop
-    drawRoute();
+    // Removed line-dasharray animation as it caused visibility bugs on long routes
 
     // Auto-fit bounds
     const targetRoutes =
@@ -480,9 +455,7 @@ export const MapView: React.FC<MapViewProps> = ({
       });
     }
 
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-    };
+    // No cleanup needed anymore
   }, [
     routes,
     fastestRouteId,
@@ -558,7 +531,7 @@ export const MapView: React.FC<MapViewProps> = ({
       </div>
 
       {/* Floating Interactive Recommendation Prompt Card (Sleek OG Minimalist) */}
-      {showPrompt && effectiveViewMode === "all" && routes.length >= 2 && (
+      {showPrompt && !hidePromptCard && effectiveViewMode === "all" && routes.length >= 2 && (
         <div className="recommendation-prompt-card animate-slide-up" role="region" aria-label="Route Advisory">
           <div className="prompt-header">
             <div className="prompt-tag-row">

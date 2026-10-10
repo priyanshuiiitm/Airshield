@@ -111,7 +111,16 @@ export const App: React.FC = () => {
           debug: true
         });
         if (apiRes) {
-          setCurrentRecommendation(apiRes);
+          setCurrentRecommendation(prev => {
+            if (!prev) return apiRes;
+            const newRes = JSON.parse(JSON.stringify(apiRes));
+            // Preserve the real geometry we generated/fetched via OSRM, 
+            // since the AWS demo backend might return hardcoded Delhi geometries
+            if (prev.routes[0]?.geometry) newRes.routes[0].geometry = prev.routes[0].geometry;
+            if (prev.routes[1]?.geometry) newRes.routes[1].geometry = prev.routes[1].geometry;
+            if (prev.routes[2]?.geometry) newRes.routes[2].geometry = prev.routes[2].geometry;
+            return newRes;
+          });
           setSelectedRouteId(apiRes.recommendation.route_id);
         }
       } catch (err) {
@@ -223,8 +232,8 @@ export const App: React.FC = () => {
         {/* Mode Toggle - Top Right */}
         <button
           className="mode-toggle-btn"
-          onClick={() => setViewMode("simulator")}
-          title="Switch to full view"
+          onClick={() => setViewMode("landing")}
+          title="Back to home"
         >
           <Car size={18} />
         </button>
