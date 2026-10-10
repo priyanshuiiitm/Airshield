@@ -15,7 +15,7 @@ export function useTripChoice() {
 
   const submitChoice = useCallback(
     async (tripId: string, choice: "safer" | "fastest") => {
-      if (isSubmitting || choiceSubmitted) return;
+      if (isSubmitting || choiceSubmitted === choice) return;
 
       setIsSubmitting(true);
       setChoiceError(null);

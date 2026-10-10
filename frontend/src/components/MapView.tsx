@@ -12,7 +12,7 @@ import { RouteDetail, Coordinate } from "../api/types";
 import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
 import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
-import { Radio, Sparkles, Check, Eye } from "lucide-react";
+import { Radio, Sparkles, Check, Eye, Navigation } from "lucide-react";
 
 interface MapViewProps {
   routes: RouteDetail[];
@@ -26,6 +26,9 @@ interface MapViewProps {
   onMapClick?: (coord: Coordinate) => void;
   onRouteClick?: (routeId: string) => void;
   onSelectRecommended?: () => void;
+  onSelectFastest?: () => void;
+  routeViewMode?: "all" | "safer" | "fastest";
+  onViewModeChange?: (mode: "all" | "safer" | "fastest") => void;
 }
 
 export const MapView: React.FC<MapViewProps> = ({
@@ -39,7 +42,10 @@ export const MapView: React.FC<MapViewProps> = ({
   isMapPickingDestination = false,
   onMapClick,
   onRouteClick,
-  onSelectRecommended
+  onSelectRecommended,
+  onSelectFastest,
+  routeViewMode,
+  onViewModeChange
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -51,21 +57,40 @@ export const MapView: React.FC<MapViewProps> = ({
   const [mapError, setMapError] = useState<string | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  // Recommendation isolation state
-  const [isRecommendedApplied, setIsRecommendedApplied] = useState(false);
+  // Route view mode: "all" (Red vs Blue), "safer" (Isolated Green), or "fastest" (Isolated Blue)
+  const [internalViewMode, setInternalViewMode] = useState<"all" | "safer" | "fastest">("all");
+  const effectiveViewMode = routeViewMode !== undefined ? routeViewMode : internalViewMode;
+
+  const setEffectiveViewMode = (mode: "all" | "safer" | "fastest") => {
+    setInternalViewMode(mode);
+    if (onViewModeChange) {
+      onViewModeChange(mode);
+    }
+  };
+
   const [showPrompt, setShowPrompt] = useState(true);
 
   // Re-trigger popup prompt whenever the trip origin, destination, or routes are recalculated
   useEffect(() => {
-    setIsRecommendedApplied(false);
+    setEffectiveViewMode("all");
     setShowPrompt(true);
   }, [pickup?.lat, pickup?.lng, drop?.lat, drop?.lng, routes]);
+
+  // Determine fastest route
+  const fastestRoute =
+    routes.find((r) => r.route_id === fastestRouteId) ||
+    [...routes].sort((a, b) => a.duration_minutes - b.duration_minutes)[0];
+
+  // Determine recommended (safer) route
+  const recommendedRoute =
+    routes.find((r) => r.route_id === (selectedRouteId || fastestRouteId)) ||
+    routes.find((r) => r.route_id === fastestRouteId) ||
+    routes[0];
 
   // Determine highest AQI route (Red) vs lower AQI route (Blue)
   const sortedByAqi = [...routes].sort((a, b) => b.average_pm25 - a.average_pm25);
   const highestAqiRouteId = sortedByAqi.length > 0 ? sortedByAqi[0].route_id : undefined;
   const lowerAqiRouteId = sortedByAqi.length > 1 ? sortedByAqi[1].route_id : undefined;
-  const recommendedRoute = routes.find((r) => r.route_id === (selectedRouteId || fastestRouteId));
 
   // Initialize MapLibre
   useEffect(() => {
@@ -266,12 +291,12 @@ export const MapView: React.FC<MapViewProps> = ({
       }
     };
 
-    // Prepare features based on isRecommendedApplied
+    // Prepare features based on effectiveViewMode
     const greenFeatures: any[] = [];
     const redFeatures: any[] = [];
     const blueFeatures: any[] = [];
 
-    if (isRecommendedApplied && recommendedRoute) {
+    if (effectiveViewMode === "safer" && recommendedRoute) {
       // ONLY show the single recommended route in Green
       greenFeatures.push({
         type: "Feature",
@@ -289,6 +314,29 @@ export const MapView: React.FC<MapViewProps> = ({
         const el = document.createElement("div");
         el.className = "route-onmap-badge badge-green";
         el.innerHTML = `<span>🟢 Recommended Path (${recommendedRoute.average_pm25} µg/m³ • ${recommendedRoute.duration_minutes}m)</span>`;
+        const m = new maplibregl.Marker({ element: el })
+          .setLngLat([midPt.lng, midPt.lat])
+          .addTo(map);
+        routeLabelMarkersRef.current.push(m);
+      }
+    } else if (effectiveViewMode === "fastest" && fastestRoute) {
+      // ONLY show the single fastest route in Royal Blue
+      blueFeatures.push({
+        type: "Feature",
+        properties: { route_id: fastestRoute.route_id },
+        geometry: {
+          type: "LineString",
+          coordinates: fastestRoute.geometry.map((pt) => [pt.lng, pt.lat])
+        }
+      });
+
+      // Add single Blue on-map midpoint badge
+      const midIdx = Math.floor(fastestRoute.geometry.length / 2);
+      const midPt = fastestRoute.geometry[midIdx];
+      if (midPt) {
+        const el = document.createElement("div");
+        el.className = "route-onmap-badge badge-blue";
+        el.innerHTML = `<span>🔵 Fastest Route (${fastestRoute.average_pm25} µg/m³ • ${fastestRoute.duration_minutes}m)</span>`;
         const m = new maplibregl.Marker({ element: el })
           .setLngLat([midPt.lng, midPt.lat])
           .addTo(map);
@@ -340,13 +388,13 @@ export const MapView: React.FC<MapViewProps> = ({
       ROUTE_WIDTHS.highAqi
     );
 
-    // 2. Blue Route Layer (Lower AQI)
+    // 2. Blue Route Layer (Lower AQI / Fastest Route)
     updateSourceAndLayer(
       "source-routes-blue",
       "layer-routes-blue",
       blueFeatures,
       ROUTE_COLORS.lowAqi,
-      ROUTE_WIDTHS.lowAqi
+      effectiveViewMode === "fastest" ? 7.5 : ROUTE_WIDTHS.lowAqi
     );
 
     // 3. Green Route Layer (Active Recommended)
@@ -359,7 +407,14 @@ export const MapView: React.FC<MapViewProps> = ({
     );
 
     // Auto-fit bounds
-    const bounds = calculateBounds(routes, pickup, drop);
+    const targetRoutes =
+      effectiveViewMode === "fastest" && fastestRoute
+        ? [fastestRoute]
+        : effectiveViewMode === "safer" && recommendedRoute
+        ? [recommendedRoute]
+        : routes;
+
+    const bounds = calculateBounds(targetRoutes, pickup, drop);
     if (bounds) {
       map.fitBounds(bounds, {
         padding: { top: 70, bottom: 70, left: 70, right: 70 },
@@ -373,7 +428,9 @@ export const MapView: React.FC<MapViewProps> = ({
     selectedRouteId,
     highestAqiRouteId,
     lowerAqiRouteId,
-    isRecommendedApplied,
+    effectiveViewMode,
+    fastestRoute,
+    recommendedRoute,
     pickup,
     drop,
     isMapLoaded,
@@ -381,15 +438,23 @@ export const MapView: React.FC<MapViewProps> = ({
   ]);
 
   const handleApplyRecommendation = () => {
-    setIsRecommendedApplied(true);
+    setEffectiveViewMode("safer");
     setShowPrompt(false);
     if (onSelectRecommended) {
       onSelectRecommended();
     }
   };
 
+  const handleApplyFastest = () => {
+    setEffectiveViewMode("fastest");
+    setShowPrompt(false);
+    if (onSelectFastest) {
+      onSelectFastest();
+    }
+  };
+
   const handleShowBoth = () => {
-    setIsRecommendedApplied(false);
+    setEffectiveViewMode("all");
     setShowPrompt(false);
   };
 
@@ -418,7 +483,7 @@ export const MapView: React.FC<MapViewProps> = ({
           <span>Live AQI Sensors</span>
         </button>
 
-        {isRecommendedApplied && (
+        {effectiveViewMode !== "all" && (
           <button
             type="button"
             className="map-pill-btn active-both-btn"
@@ -432,7 +497,7 @@ export const MapView: React.FC<MapViewProps> = ({
       </div>
 
       {/* Floating Interactive Recommendation Prompt Card */}
-      {showPrompt && !isRecommendedApplied && routes.length >= 2 && (
+      {showPrompt && effectiveViewMode === "all" && routes.length >= 2 && (
         <div className="recommendation-prompt-card animate-slide-up">
           <div className="prompt-header">
             <div className="prompt-icon-badge">
@@ -457,6 +522,14 @@ export const MapView: React.FC<MapViewProps> = ({
             </button>
             <button
               type="button"
+              className="btn-apply-fastest"
+              onClick={handleApplyFastest}
+            >
+              <Navigation size={13} />
+              <span>Fastest Path (Blue)</span>
+            </button>
+            <button
+              type="button"
               className="btn-dismiss-rec"
               onClick={() => setShowPrompt(false)}
             >
@@ -469,10 +542,15 @@ export const MapView: React.FC<MapViewProps> = ({
       {/* Route Legend */}
       {routes.length > 0 && (
         <div className="map-legend">
-          {isRecommendedApplied ? (
+          {effectiveViewMode === "safer" ? (
             <div className="legend-item">
               <span className="legend-line line-green" style={{ backgroundColor: ROUTE_COLORS.recommendedActive }}></span>
               <span className="legend-label">🟢 Recommended Single Path</span>
+            </div>
+          ) : effectiveViewMode === "fastest" ? (
+            <div className="legend-item">
+              <span className="legend-line line-blue" style={{ backgroundColor: ROUTE_COLORS.lowAqi }}></span>
+              <span className="legend-label">🔵 Fastest Single Path (Direct Transit)</span>
             </div>
           ) : (
             <>

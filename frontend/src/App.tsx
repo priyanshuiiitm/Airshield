@@ -30,6 +30,7 @@ export const App: React.FC = () => {
 
   // Route focus state
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+  const [routeViewMode, setRouteViewMode] = useState<"all" | "safer" | "fastest">("all");
 
   // Recommendation & choice hooks
   const { isLoading, fetchRecommendation } = useRecommendation();
@@ -44,6 +45,7 @@ export const App: React.FC = () => {
   const handleCalculateRoutes = useCallback(
     async (pCoord = pickup, dCoord = drop, buf = bufferMin) => {
       resetChoice();
+      setRouteViewMode("all");
 
       // Immediately generate real-time local mathematical route solution
       const localResult = generateDynamicRoutes(pCoord, dCoord, buf);
@@ -156,6 +158,13 @@ export const App: React.FC = () => {
     if (currentRecommendation?.trip_id) {
       submitChoice(currentRecommendation.trip_id, choice);
     }
+    setRouteViewMode(choice);
+    if (choice === "safer" && currentRecommendation?.recommendation?.route_id) {
+      setSelectedRouteId(currentRecommendation.recommendation.route_id);
+    } else if (choice === "fastest") {
+      const fRouteId = fastestRouteId || (routes.length > 0 ? routes[0].route_id : null);
+      if (fRouteId) setSelectedRouteId(fRouteId);
+    }
   };
 
   const routes = currentRecommendation?.routes || [];
@@ -238,7 +247,14 @@ export const App: React.FC = () => {
                 recommendation={currentRecommendation}
                 selectedRouteId={selectedRouteId}
                 language={language}
-                onSelectRoute={(rId) => setSelectedRouteId(rId)}
+                onSelectRoute={(rId) => {
+                  setSelectedRouteId(rId);
+                  if (rId === fastestRouteId) {
+                    setRouteViewMode("fastest");
+                  } else if (rId === currentRecommendation?.recommendation?.route_id) {
+                    setRouteViewMode("safer");
+                  }
+                }}
               />
             )}
           </div>
@@ -255,12 +271,27 @@ export const App: React.FC = () => {
                 drop={drop}
                 isMapPickingOrigin={isMapPickingOrigin}
                 isMapPickingDestination={isMapPickingDestination}
+                routeViewMode={routeViewMode}
+                onViewModeChange={(mode) => setRouteViewMode(mode)}
                 onMapClick={handleMapClick}
-                onRouteClick={(rId) => setSelectedRouteId(rId)}
+                onRouteClick={(rId) => {
+                  setSelectedRouteId(rId);
+                  if (rId === fastestRouteId) {
+                    setRouteViewMode("fastest");
+                  } else if (rId === currentRecommendation?.recommendation?.route_id) {
+                    setRouteViewMode("safer");
+                  }
+                }}
                 onSelectRecommended={() => {
+                  setRouteViewMode("safer");
                   if (currentRecommendation?.recommendation?.route_id) {
                     setSelectedRouteId(currentRecommendation.recommendation.route_id);
                   }
+                }}
+                onSelectFastest={() => {
+                  setRouteViewMode("fastest");
+                  const fRouteId = fastestRouteId || (routes.length > 0 ? routes[0].route_id : null);
+                  if (fRouteId) setSelectedRouteId(fRouteId);
                 }}
               />
             </section>

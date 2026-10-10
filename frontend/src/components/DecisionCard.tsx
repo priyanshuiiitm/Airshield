@@ -90,13 +90,42 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
 
           {/* Confirmation or Action Buttons */}
           {choiceSubmitted ? (
-            <div className="choice-confirmation confirmed-green" role="status">
-              <CheckCircle2 size={20} className="text-emerald" />
-              <span>
-                {choiceSubmitted === "safer"
-                  ? t.choiceConfirmedSafer
-                  : t.choiceConfirmedFastest}
-              </span>
+            <div className="choice-confirmed-wrapper">
+              <div
+                className={`choice-confirmation ${
+                  choiceSubmitted === "fastest" ? "confirmed-blue" : "confirmed-green"
+                }`}
+                role="status"
+              >
+                <CheckCircle2
+                  size={20}
+                  className={choiceSubmitted === "fastest" ? "text-cyan" : "text-emerald"}
+                />
+                <div className="choice-conf-text">
+                  <span className="choice-conf-title">
+                    {choiceSubmitted === "safer"
+                      ? t.choiceConfirmedSafer
+                      : t.choiceConfirmedFastest}
+                  </span>
+                  <span className="choice-conf-sub">
+                    {choiceSubmitted === "fastest"
+                      ? "Fastest direct path isolated on map in Royal Blue"
+                      : "Safer clean corridor isolated on map in Emerald Green"}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn-switch-choice"
+                onClick={() => onSelectChoice(choiceSubmitted === "safer" ? "fastest" : "safer")}
+                title="Switch route selection"
+              >
+                <span>
+                  {choiceSubmitted === "safer"
+                    ? "⇄ Switch to Fastest Route (Blue)"
+                    : "⇄ Switch to Safer Route (Green)"}
+                </span>
+              </button>
             </div>
           ) : (
             <div className="action-button-group">
