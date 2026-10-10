@@ -5913,3 +5913,261 @@ button {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
 }
+
+
+/* ================================================ */
+/* Simple Driver View - Minimal Clean Interface     */
+/* ================================================ */
+
+.simple-driver-view {
+  position: fixed;
+  inset: 0;
+  background: #000;
+}
+
+.simple-map {
+  position: absolute;
+  inset: 0;
+}
+
+/* Top Card - Locations */
+.simple-top-card {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.simple-location-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.simple-loc-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.simple-loc-icon.pickup {
+  background: #10b981;
+}
+
+.simple-loc-icon.drop {
+  background: #ef4444;
+}
+
+.simple-loc-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+  flex: 1;
+}
+
+.simple-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+/* Bottom Card - Routes */
+.simple-bottom-card {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 16px 32px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.simple-route-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.simple-route-btn:active {
+  transform: scale(0.98);
+  background: #f3f4f6;
+}
+
+.simple-route-btn.safer {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.simple-route-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.simple-route-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
+.simple-route-btn.safer .simple-route-label {
+  color: #10b981;
+}
+
+.simple-route-time {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+
+.simple-route-detail {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Modal */
+.simple-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+
+.simple-modal-content {
+  width: 100%;
+  max-height: 70vh;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 16px 32px;
+  overflow-y: auto;
+}
+
+.simple-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.simple-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+}
+
+.simple-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.simple-loc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+}
+
+.simple-loc-item:active {
+  background: #f3f4f6;
+  transform: scale(0.98);
+}
+
+.simple-loc-item.gps {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.simple-loc-item svg {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.simple-loc-item.gps svg {
+  color: #10b981;
+}
+
+/* ================================================ */
+/* Phase 5: Accessibility & Focus States            */
+/* ================================================ */
+*:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2) !important;
+  border-radius: inherit;
+}
+
+/* Empty State Container */
+.empty-routes-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  margin-top: 20px;
+}
+
+.empty-routes-state h3 {
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.empty-routes-state p {
+  color: #94a3b8;
+  font-size: 14px;
+}

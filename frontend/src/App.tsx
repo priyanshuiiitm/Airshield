@@ -11,12 +11,13 @@ import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
 import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
-import { DriverView } from "./components/DriverView";
+import { SimpleDriverView } from "./components/SimpleDriverView";
 import { OnboardingCarousel } from "./components/OnboardingCarousel";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 import { Wind, Clock, Shield, Car } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
+import { triggerHaptic } from "./utils/haptics";
 
 export const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics" | "driver">("landing");
@@ -26,6 +27,17 @@ export const App: React.FC = () => {
   const [language, setLanguage] = useState<LanguageCode>(() => {
     return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
   });
+
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a') || target.closest('[role="button"]')) {
+        triggerHaptic(15);
+      }
+    };
+    document.addEventListener("click", handleGlobalClick, { capture: true });
+    return () => document.removeEventListener("click", handleGlobalClick, { capture: true });
+  }, []);
 
   // Trip coordinates state
   const [pickup, setPickup] = useState<Coordinate>({ lat: 28.5474, lng: 77.1959 }); // Hauz Khas
@@ -230,7 +242,7 @@ export const App: React.FC = () => {
           <Car size={18} />
         </button>
         
-        <DriverView
+        <SimpleDriverView
           recommendation={currentRecommendation}
           pickup={pickup}
           drop={drop}

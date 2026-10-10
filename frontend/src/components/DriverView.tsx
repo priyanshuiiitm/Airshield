@@ -31,7 +31,6 @@ export const DriverView: React.FC<DriverViewProps> = ({
   onRecalculate,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
-  const [editingLocation, setEditingLocation] = useState<"pickup" | "drop" | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState<"pickup" | "drop" | null>(null);
   const [tempPickupLat, setTempPickupLat] = useState(pickup.lat.toString());
   const [tempPickupLng, setTempPickupLng] = useState(pickup.lng.toString());
@@ -72,7 +71,6 @@ export const DriverView: React.FC<DriverViewProps> = ({
     const lng = parseFloat(tempPickupLng);
     if (!isNaN(lat) && !isNaN(lng)) {
       onUpdatePickup({ lat, lng }, `Custom (${lat.toFixed(3)}, ${lng.toFixed(3)})`);
-      setEditingLocation(null);
       onRecalculate();
     }
   };
@@ -82,7 +80,6 @@ export const DriverView: React.FC<DriverViewProps> = ({
     const lng = parseFloat(tempDropLng);
     if (!isNaN(lat) && !isNaN(lng)) {
       onUpdateDrop({ lat, lng }, `Custom (${lat.toFixed(3)}, ${lng.toFixed(3)})`);
-      setEditingLocation(null);
       onRecalculate();
     }
   };

@@ -82,9 +82,32 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
   onSelectChoice,
 }) => {
   const t = translations[language];
-  const { classification, recommendation: rec, agent, message } = recommendation;
+  const { classification, recommendation: rec, agent, message, routes } = recommendation;
   const colors = stateColors[classification as keyof typeof stateColors] || stateColors.INSUFFICIENT_DATA;
   const explanationText = agent?.explanation || message || "";
+
+  if (!routes || routes.length === 0) {
+    return (
+      <motion.div
+        className="decision-card card-insufficient-data"
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        style={{
+          background: "var(--bg-card)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: "var(--radius-md)",
+          padding: "var(--space-5)",
+          textAlign: "center"
+        }}
+      >
+        <h4 style={{ color: "#fff", marginBottom: 8 }}>Action Required</h4>
+        <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.5 }}>
+          Could not compute valid routes between these locations. They may be disconnected or too close together.
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

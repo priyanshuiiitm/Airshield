@@ -63,6 +63,18 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
   }
 
   const { routes, decision, recommendation: rec, classification } = recommendation;
+  
+  if (!routes || routes.length === 0) {
+    return (
+      <div className="card comparison-card" style={{ padding: 24, textAlign: "center" }}>
+        <h3 style={{ color: "#fff", marginBottom: 8 }}>No Routes Found</h3>
+        <p style={{ color: "var(--text-secondary)", fontSize: 14 }}>
+          Could not calculate paths between the selected points.
+        </p>
+      </div>
+    );
+  }
+
   const fastestRouteId = decision?.fastest_route_id;
   const fastestRoute = routes.find((r) => r.route_id === fastestRouteId);
   const baselineExposure = fastestRoute?.estimated_integrated_pm25 || 1;
