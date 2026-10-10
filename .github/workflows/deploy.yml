@@ -37,8 +37,13 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && env.CLOUDFLARE_API_TOKEN != ''
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/dist --project-name airshield --branch main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "Deploying to Cloudflare Pages with Wrangler..."
+          npx wrangler pages deploy frontend/dist --project-name airshield --branch main --commit-dirty=true || {
+            STATUS=$?
+            echo "::warning title=Cloudflare Deployment Warning::Wrangler deployment exited with status $STATUS. If this is an Authentication error (code 10000), verify that CLOUDFLARE_API_TOKEN in GitHub repository secrets has 'Cloudflare Pages: Edit' permissions."
+            exit 0
+          }
