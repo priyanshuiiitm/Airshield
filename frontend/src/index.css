@@ -233,6 +233,7 @@ button {
   font-weight: 600;
   letter-spacing: -0.02em;
   background: linear-gradient(90deg, #ffffff, #94a3b8);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
