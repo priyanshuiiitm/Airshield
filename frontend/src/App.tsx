@@ -9,6 +9,7 @@ import { RouteComparison } from "./components/RouteComparison";
 import { DecisionCard } from "./components/DecisionCard";
 import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
+import { OnboardingCarousel } from "./components/OnboardingCarousel";
 import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { SimpleDriverView } from "./components/SimpleDriverView";
@@ -18,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
 
 export const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics" | "driver">("landing");
+  const [viewMode, setViewMode] = useState<"onboarding" | "landing" | "simulator" | "rider" | "analytics" | "driver">("onboarding");
   const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
   const [showEpisodeBanner, setShowEpisodeBanner] = useState<boolean>(true);
   const [language, setLanguage] = useState<LanguageCode>(() => {
@@ -218,8 +219,9 @@ export const App: React.FC = () => {
   const displayRoutes = airshieldEnabled ? routes : routes.filter(r => r.route_id === "route_fastest");
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
-  // Skip onboarding for now - go directly to landing
-
+  if (viewMode === "onboarding") {
+    return <OnboardingCarousel onComplete={() => setViewMode("landing")} />;
+  }
   // Render Landing Page
   if (viewMode === "landing") {
     return <LandingPage onLaunchSimulator={() => setViewMode("driver")} />;
