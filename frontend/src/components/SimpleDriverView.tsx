@@ -29,6 +29,7 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
   onRecalculate,
 }) => {
   const [showPicker, setShowPicker] = useState<"pickup" | "drop" | null>(null);
+  const [mapPicking, setMapPicking] = useState<"pickup" | "drop" | null>(null);
 
   const handleUseGPS = () => {
     if ("geolocation" in navigator) {
@@ -91,13 +92,29 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
           bufferMin={5}
           pickup={pickup}
           drop={drop}
-          isMapPickingOrigin={false}
-          isMapPickingDestination={false}
-          onMapClick={() => {}}
+          isMapPickingOrigin={mapPicking === "pickup"}
+          isMapPickingDestination={mapPicking === "drop"}
+          onMapClick={(lngLat) => {
+            if (mapPicking === "pickup") {
+              onUpdatePickup({ lat: lngLat[1], lng: lngLat[0] }, "Custom Pin");
+              setMapPicking(null);
+              onRecalculate();
+            } else if (mapPicking === "drop") {
+              onUpdateDrop({ lat: lngLat[1], lng: lngLat[0] }, "Custom Pin");
+              setMapPicking(null);
+              onRecalculate();
+            }
+          }}
           onRouteClick={() => {}}
           onSelectRecommended={() => {}}
         />
       </div>
+
+      {mapPicking && (
+        <div style={{ position: "absolute", top: 120, left: 16, right: 16, background: "#10b981", color: "#fff", padding: "12px 16px", borderRadius: 12, textAlign: "center", zIndex: 10, fontWeight: 600, boxShadow: "0 4px 12px rgba(16, 185, 129, 0.4)" }}>
+          Tap anywhere on map to set {mapPicking === "pickup" ? "Pickup" : "Destination"}
+        </div>
+      )}
 
       {/* Top Card - Locations */}
       <div className="simple-top-card">
@@ -163,6 +180,18 @@ export const SimpleDriverView: React.FC<SimpleDriverViewProps> = ({
             <button className="simple-loc-item gps" onClick={handleUseGPS}>
               <Navigation size={18} />
               <span>Use Current Location</span>
+            </button>
+
+            <button
+              className="simple-loc-item"
+              onClick={() => {
+                setMapPicking(showPicker);
+                setShowPicker(null);
+              }}
+              style={{ borderColor: "#3b82f6", color: "#3b82f6", background: "#eff6ff" }}
+            >
+              <MapPin size={18} />
+              <span>Choose on Map</span>
             </button>
 
             {DELHI_LOCATIONS.slice(0, 6).map((loc) => (

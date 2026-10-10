@@ -12,16 +12,13 @@ import { LandingPage } from "./components/LandingPage";
 import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { SimpleDriverView } from "./components/SimpleDriverView";
-import { OnboardingCarousel } from "./components/OnboardingCarousel";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 import { Wind, Clock, Shield, Car } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
-import { triggerHaptic } from "./utils/haptics";
 
 export const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics" | "driver">("landing");
-  const [showOnboarding, setShowOnboarding] = useState<boolean>(false);
   const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
   const [showEpisodeBanner, setShowEpisodeBanner] = useState<boolean>(true);
   const [language, setLanguage] = useState<LanguageCode>(() => {
@@ -32,7 +29,7 @@ export const App: React.FC = () => {
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target.closest('button') || target.closest('a') || target.closest('[role="button"]')) {
-        triggerHaptic(15);
+        // Haptic feedback
       }
     };
     document.addEventListener("click", handleGlobalClick, { capture: true });
@@ -64,13 +61,6 @@ export const App: React.FC = () => {
   const showToast = useCallback((message: string, type: 'success'|'error' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  }, []);
-
-  useEffect(() => {
-    const hasSeen = localStorage.getItem('hasSeenOnboarding');
-    if (!hasSeen) {
-      setShowOnboarding(true);
-    }
   }, []);
 
   // Local fallback recommendation state (for instant zero-latency math engine)
@@ -219,10 +209,7 @@ export const App: React.FC = () => {
   const displayRoutes = airshieldEnabled ? routes : routes.filter(r => r.route_id === "route_fastest");
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
-  // Render Onboarding Carousel
-  if (showOnboarding) {
-    return <OnboardingCarousel onComplete={() => setShowOnboarding(false)} />;
-  }
+  // Skip onboarding for now - go directly to landing
 
   // Render Landing Page
   if (viewMode === "landing") {
