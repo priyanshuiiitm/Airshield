@@ -354,7 +354,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             disabled={isRunning}
           >
             {isRunning ? (
-              <RotateCcw size={16} className="animate-spin text-cyan" />
+              <RotateCcw size={16} className="animate-spin text-white" />
             ) : (
               <Play size={16} />
             )}
@@ -398,12 +398,12 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
       <main className="analytics-content-grid">
         {/* Top 4 KPI Metric Cards */}
         <div className="analytics-kpi-grid">
-          <div className="kpi-card kpi-emerald">
+          <div className="kpi-card">
             <div className="kpi-icon-wrap">
-              <TrendingDown size={22} className="text-emerald" />
+              <TrendingDown size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="kpi-body">
-              <span className="kpi-val text-emerald">{activeStats.avoidablePct}%</span>
+              <span className="kpi-val">{activeStats.avoidablePct}%</span>
               <span className="kpi-label">
                 {isHindi ? "स्वच्छ मार्ग उपलब्ध (Cleaner Corridors)" : "Cleaner Corridors Found"}
               </span>
@@ -413,12 +413,12 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             </div>
           </div>
 
-          <div className="kpi-card kpi-cyan">
+          <div className="kpi-card">
             <div className="kpi-icon-wrap">
-              <Shield size={22} className="text-cyan" />
+              <Shield size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="kpi-body">
-              <span className="kpi-val text-cyan">↓ {activeStats.medianReductionPct}%</span>
+              <span className="kpi-val">↓ {activeStats.medianReductionPct}%</span>
               <span className="kpi-label">
                 {isHindi ? "मध्यक प्रदूषण कमी (Median Reduction)" : "Median Exposure Reduction"}
               </span>
@@ -426,12 +426,12 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             </div>
           </div>
 
-          <div className="kpi-card kpi-amber">
+          <div className="kpi-card">
             <div className="kpi-icon-wrap">
-              <Clock size={22} className="text-amber" />
+              <Clock size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="kpi-body">
-              <span className="kpi-val text-amber">+{activeStats.medianExtraMinutes} min</span>
+              <span className="kpi-val">+{activeStats.medianExtraMinutes} min</span>
               <span className="kpi-label">
                 {isHindi ? "मध्यक अतिरिक्त समय (Median Overhead)" : "Median Transit Overhead"}
               </span>
@@ -439,12 +439,12 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             </div>
           </div>
 
-          <div className="kpi-card kpi-purple">
+          <div className="kpi-card">
             <div className="kpi-icon-wrap">
-              <BarChart3 size={22} className="text-purple" />
+              <BarChart3 size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="kpi-body">
-              <span className="kpi-val text-purple">{activeStats.totalIntakeAvoided}</span>
+              <span className="kpi-val">{activeStats.totalIntakeAvoided}</span>
               <span className="kpi-label">
                 {isHindi ? "कुल बचाई गई खुराक (µg·min/m³)" : "Total Particulate Intake Avoided"}
               </span>
@@ -459,7 +459,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
           <div className="analytics-panel">
             <div className="panel-header">
               <div className="panel-title-row">
-                <Layers size={18} className="text-cyan" />
+                <Layers size={18} style={{ color: "#ffffff" }} />
                 <h2 className="panel-title">
                   {isHindi ? "4-स्टेट वर्गीकरण वितरण" : "4-State Classification Distribution"} ({activeStats.total} Trips)
                 </h2>
@@ -474,13 +474,13 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               <div className="dist-item">
                 <div className="dist-label-row">
                   <span className="dist-name">AVOIDABLE (Cleaner corridor within buffer)</span>
-                  <span className="dist-val text-emerald">
+                  <span className="dist-val">
                     {activeStats.avoidableCount} trips ({activeStats.avoidablePct}%)
                   </span>
                 </div>
                 <div className="dist-track">
                   <div
-                    className="dist-fill bg-emerald"
+                    className="dist-fill dist-fill-primary"
                     style={{ width: `${activeStats.avoidablePct}%` }}
                   ></div>
                 </div>
@@ -490,13 +490,13 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               <div className="dist-item">
                 <div className="dist-label-row">
                   <span className="dist-name">UNAVOIDABLE (Background smog uniformly elevated)</span>
-                  <span className="dist-val text-amber">
+                  <span className="dist-val">
                     {activeStats.unavoidableCount} trips ({activeStats.unavoidablePct}%)
                   </span>
                 </div>
                 <div className="dist-track">
                   <div
-                    className="dist-fill bg-amber"
+                    className="dist-fill dist-fill-secondary"
                     style={{ width: `${activeStats.unavoidablePct}%` }}
                   ></div>
                 </div>
@@ -506,13 +506,13 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               <div className="dist-item">
                 <div className="dist-label-row">
                   <span className="dist-name">LOW (Acceptable ambient air / PM2.5 &lt; 60 µg/m³)</span>
-                  <span className="dist-val text-cyan">
+                  <span className="dist-val">
                     {activeStats.lowCount} trips ({activeStats.lowPct}%)
                   </span>
                 </div>
                 <div className="dist-track">
                   <div
-                    className="dist-fill bg-cyan"
+                    className="dist-fill dist-fill-tertiary"
                     style={{ width: `${activeStats.lowPct}%` }}
                   ></div>
                 </div>
@@ -544,7 +544,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
           <div className="analytics-panel">
             <div className="panel-header">
               <div className="panel-title-row">
-                <Clock size={18} className="text-amber" />
+                <Clock size={18} style={{ color: "#ffffff" }} />
                 <h2 className="panel-title">
                   {isHindi ? "डिलीवरी बफर संवेदनशीलता विश्लेषण" : "Delivery Buffer Sensitivity Tradeoff Sweep"}
                 </h2>
@@ -579,10 +579,10 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
                       <strong>+{row.buffer} min</strong>
                       {activeBufferTab === row.buffer && <span className="active-tag"> (Active)</span>}
                     </td>
-                    <td className="text-emerald">
+                    <td>
                       <strong>{row.avoidablePct}%</strong>
                     </td>
-                    <td className="text-amber">{row.unavoidablePct}%</td>
+                    <td>{row.unavoidablePct}%</td>
                     <td>↓ {row.medianRed}%</td>
                     <td>+{row.medianExtra}m</td>
                   </tr>
@@ -591,7 +591,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             </table>
 
             <div className="buffer-sweetspot-callout">
-              <CheckCircle2 size={16} className="text-emerald" />
+              <CheckCircle2 size={16} style={{ color: "#ffffff" }} />
               <span>
                 <strong>Sweet-Spot Tradeoff:</strong> At <strong>+5.0 min</strong>, the system unlocks cleaner routes for <strong>{dynamicBufferSweep.find(r => r.buffer === 5)?.avoidablePct || 53.3}%</strong> of couriers while consuming only an average of <strong>{dynamicBufferSweep.find(r => r.buffer === 5)?.medianExtra || 2.3} min</strong>, fitting standard food and quick-commerce delivery SLAs.
               </span>
@@ -603,12 +603,12 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
         <section className="analytics-panel hotspots-panel">
           <div className="panel-header">
             <div className="panel-title-row">
-              <Building2 size={20} className="text-amber" />
+              <Building2 size={20} style={{ color: "#ffffff" }} />
               <h2 className="panel-title">
                 {isHindi ? "नगर निगम नीति अंतर्दृष्टि: अपरिहार्य स्मॉग हॉटस्पॉट" : "Municipal Policy Insights: Unavoidable Smog Hotspots in Delhi NCR"}
               </h2>
             </div>
-            <span className="panel-badge badge-warning">Vector E Policy Evidence</span>
+            <span className="panel-badge">Vector E Policy Evidence</span>
           </div>
 
           <p className="panel-desc">
@@ -620,7 +620,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               <div key={idx} className="hotspot-card">
                 <div className="hotspot-header">
                   <div className="hotspot-title-wrap">
-                    <AlertTriangle size={16} className="text-amber" />
+                    <AlertTriangle size={16} style={{ color: "#ffffff" }} />
                     <span className="hotspot-corridor">{spot.corridor}</span>
                   </div>
                   <span className="hotspot-pm">PM2.5: {spot.avgPm25} µg/m³</span>
