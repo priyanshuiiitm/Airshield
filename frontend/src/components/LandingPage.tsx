@@ -152,44 +152,96 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
 
               <div className="radar-visual-container">
                 <svg className="radar-svg" viewBox="0 0 360 220" fill="none">
+                  <defs>
+                    {/* Rotating Radar Sweep Gradient */}
+                    <linearGradient id="sweep-beam-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                    </linearGradient>
+                    {/* Clean corridor glow */}
+                    <filter id="radar-glow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                  </defs>
+
                   {/* Background concentric rings */}
                   <circle cx="180" cy="110" r="95" stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="3 3" />
                   <circle cx="180" cy="110" r="65" stroke="rgba(255,255,255,0.09)" strokeWidth="1" />
-                  <circle cx="180" cy="110" r="35" stroke="rgba(16,185,129,0.2)" strokeWidth="1" />
+                  <circle cx="180" cy="110" r="35" stroke="rgba(16,185,129,0.25)" strokeWidth="1" />
+                  
+                  {/* Expanding radar sonar wave */}
+                  <circle cx="180" cy="110" r="10" stroke="#10b981" strokeWidth="1.5" fill="none" className="radar-sonar-wave" />
 
                   {/* Crosshairs */}
                   <line x1="180" y1="10" x2="180" y2="210" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
                   <line x1="50" y1="110" x2="310" y2="110" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
 
-                  {/* Red High AQI Arterial Route Line */}
+                  {/* 360-Degree Continuous Rotating Radar Scanning Beam */}
+                  <g className="radar-sweep-group">
+                    <line x1="180" y1="110" x2="180" y2="15" stroke="url(#sweep-beam-gradient)" strokeWidth="2.5" />
+                    <path d="M 180 110 L 180 15 A 95 95 0 0 1 247 43 Z" fill="rgba(16,185,129,0.08)" />
+                  </g>
+
+                  {/* Red High AQI Arterial Base Track */}
                   <path
                     d="M 100 170 Q 150 140 180 50"
-                    stroke="#dc2626"
+                    stroke="#7f1d1d"
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     fill="none"
-                    opacity="0.9"
+                    opacity="0.6"
+                  />
+                  {/* Red Flowing Traffic Pulses */}
+                  <path
+                    d="M 100 170 Q 150 140 180 50"
+                    stroke="#ef4444"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    fill="none"
+                    className="animated-flow-red"
                   />
 
-                  {/* Green Clean Ridge Corridor Route Line */}
+                  {/* Green Clean Ridge Corridor Base Track */}
                   <path
                     d="M 100 170 Q 230 150 180 50"
-                    stroke="#10b981"
+                    stroke="#065f46"
                     strokeWidth="4"
                     strokeLinecap="round"
                     fill="none"
-                    className="path-glow-green"
+                    opacity="0.6"
+                  />
+                  {/* Green Flowing Shield Pulses with Neon Glow */}
+                  <path
+                    d="M 100 170 Q 230 150 180 50"
+                    stroke="#10b981"
+                    strokeWidth="4.5"
+                    strokeLinecap="round"
+                    fill="none"
+                    filter="url(#radar-glow)"
+                    className="animated-flow-green"
                   />
 
-                  {/* Station Points */}
-                  <circle cx="120" cy="80" r="4.5" fill="#f59e0b" />
-                  <circle cx="250" cy="130" r="4.5" fill="#f59e0b" />
-                  <circle cx="160" cy="160" r="4.5" fill="#f59e0b" />
-                  <circle cx="210" cy="60" r="4.5" fill="#f59e0b" />
+                  {/* Station Monitoring Points with animated pulses */}
+                  {[
+                    { cx: 120, cy: 80 },
+                    { cx: 250, cy: 130 },
+                    { cx: 160, cy: 160 },
+                    { cx: 210, cy: 60 }
+                  ].map((pt, i) => (
+                    <g key={i}>
+                      <circle cx={pt.cx} cy={pt.cy} r="8" fill="rgba(245,158,11,0.2)" className="pulse-dot-amber" />
+                      <circle cx={pt.cx} cy={pt.cy} r="4.5" fill="#f59e0b" />
+                    </g>
+                  ))}
 
-                  {/* Origin & Drop markers */}
-                  <circle cx="100" cy="170" r="6" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="180" cy="50" r="6" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
+                  {/* Origin Marker (Blue) with Ripple */}
+                  <circle cx="100" cy="170" r="10" stroke="#3b82f6" strokeWidth="1.5" fill="none" className="pulse-ripple-blue" />
+                  <circle cx="100" cy="170" r="5.5" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
+
+                  {/* Destination Marker (Red) with Ripple */}
+                  <circle cx="180" cy="50" r="10" stroke="#ef4444" strokeWidth="1.5" fill="none" className="pulse-ripple-red" />
+                  <circle cx="180" cy="50" r="5.5" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
                 </svg>
 
                 {/* Radar Floating Badges */}
@@ -397,18 +449,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
               onMouseEnter={() => setActiveAct(4)}
             >
               <div className="act-top-row">
-                <span className="act-num-tag">04 / CLASSIFICATION & REWARDS</span>
+                <span className="act-num-tag">04 / 4-STATE CLASSIFICATION</span>
                 <span className="act-watermark">04</span>
               </div>
-              <h3 className="act-headline">Four operational states with automated worker rewards.</h3>
+              <h3 className="act-headline">Four operational states with particulate exposure protection.</h3>
               <p className="act-body">
-                Every trip resolves to exactly one state: <strong>AVOIDABLE</strong> (cleaner route takes effect + ₹3 micro-reward),
+                Every trip resolves to exactly one state: <strong>AVOIDABLE</strong> (cleaner corridor activated with verified &ge;15% PM2.5 reduction),
                 <strong>UNAVOIDABLE</strong> (transit time minimization strategy), <strong>LOW</strong> (baseline PM2.5 &lt; 60 µg/m³),
                 or <strong>INSUFFICIENT_DATA</strong>.
               </p>
               <div className="act-pills-row">
                 <span className="act-pill">4-State Classification</span>
-                <span className="act-pill">₹3 Simulated Incentive</span>
+                <span className="act-pill">Inhalation Protection</span>
                 <span className="act-pill">Time Minimization</span>
                 <span className="act-pill">Full Mathematical Transparency</span>
               </div>

@@ -9,12 +9,10 @@ import { RouteComparison } from "./components/RouteComparison";
 import { DecisionCard } from "./components/DecisionCard";
 import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
-import { AdminDashboard } from "./components/AdminDashboard";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
 
 export const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "admin">("landing");
-  const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
+  const [viewMode, setViewMode] = useState<"landing" | "simulator">("landing");
   const [language, setLanguage] = useState<LanguageCode>(() => {
     return (localStorage.getItem("airshield_lang") as LanguageCode) || "en";
   });
@@ -160,18 +158,12 @@ export const App: React.FC = () => {
     }
   };
 
-  // If AirShield is disabled, only show the fastest route
   const routes = currentRecommendation?.routes || [];
-  const displayRoutes = airshieldEnabled ? routes : routes.filter(r => r.route_id === "route_fastest");
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
   // Render Landing Page
   if (viewMode === "landing") {
     return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
-  }
-
-  if (viewMode === "admin") {
-    return <AdminDashboard onBack={() => setViewMode("simulator")} />;
   }
 
   // Render Live Simulator Workspace
@@ -185,25 +177,6 @@ export const App: React.FC = () => {
         onBackToLanding={() => setViewMode("landing")}
         isLoading={isLoading}
       />
-      
-      {/* Hackathon Demo Controls Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 2rem', backgroundColor: '#1e293b', borderBottom: '1px solid #334155', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontWeight: 600, color: '#e2e8f0' }}>Hackathon Demo Toggles:</span>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.5rem', backgroundColor: airshieldEnabled ? '#047857' : '#475569', padding: '0.4rem 1rem', borderRadius: '9999px', transition: 'all 0.2s' }}>
-                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} style={{ cursor: 'pointer' }} />
-                  <span style={{ color: '#fff', fontSize: '0.9rem', fontWeight: 600 }}>
-                      {airshieldEnabled ? "AirShield Protection ON" : "Standard Delivery App (AirShield OFF)"}
-                  </span>
-              </label>
-          </div>
-          <button 
-              onClick={() => setViewMode("admin")}
-              style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '0.4rem 1rem', borderRadius: '0.375rem', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}
-          >
-              View Fleet Admin Dashboard
-          </button>
-      </div>
 
       {/* Main Content Area */}
       <main className="main-content">
@@ -248,27 +221,19 @@ export const App: React.FC = () => {
               onCalculateRoutes={() => handleCalculateRoutes(pickup, drop, bufferMin)}
             />
 
-            {/* Decision & Action Card - Only show if AirShield is enabled! */}
-            {airshieldEnabled ? (
-                currentRecommendation && (
-                <DecisionCard
-                    recommendation={currentRecommendation}
-                    language={language}
-                    isSubmitting={isSubmitting}
-                    choiceSubmitted={choiceSubmitted}
-                    onSelectChoice={handleChoice}
-                />
-                )
-            ) : (
-                <div style={{ backgroundColor: '#1e293b', padding: '1.5rem', borderRadius: '0.75rem', border: '1px solid #334155', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>⏱️</div>
-                    <h3 style={{ color: '#e2e8f0', margin: '0 0 0.5rem 0' }}>Standard Delivery Mode</h3>
-                    <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>Showing only the fastest route. Worker exposure is unmitigated and unmeasured.</p>
-                </div>
+            {/* Decision & Action Card */}
+            {currentRecommendation && (
+              <DecisionCard
+                recommendation={currentRecommendation}
+                language={language}
+                isSubmitting={isSubmitting}
+                choiceSubmitted={choiceSubmitted}
+                onSelectChoice={handleChoice}
+              />
             )}
 
             {/* Side-by-Side Route Exposure Comparison */}
-            {airshieldEnabled && currentRecommendation && (
+            {currentRecommendation && (
               <RouteComparison
                 recommendation={currentRecommendation}
                 selectedRouteId={selectedRouteId}
@@ -282,7 +247,7 @@ export const App: React.FC = () => {
           <div className="right-map-column">
             <section className="map-section" aria-label="Route Map">
               <MapView
-                routes={displayRoutes}
+                routes={routes}
                 fastestRouteId={fastestRouteId}
                 selectedRouteId={selectedRouteId}
                 bufferMin={bufferMin}
@@ -303,7 +268,7 @@ export const App: React.FC = () => {
         </div>
 
         {/* Bottom Section: Full "How We Got This" Mathematical & Citation Transparency */}
-        {airshieldEnabled && currentRecommendation && (
+        {currentRecommendation && (
           <section className="transparency-section">
             <TransparencyPanel recommendation={currentRecommendation} language={language} />
           </section>

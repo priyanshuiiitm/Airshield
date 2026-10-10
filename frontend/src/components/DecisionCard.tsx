@@ -8,8 +8,8 @@
 import React from "react";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { translations } from "../utils/localization";
-import { formatCurrency, formatMinutes, formatPercentage } from "../utils/formatting";
-import { Shield, Sparkles, TrendingDown, Clock, Award, AlertTriangle, CheckCircle2, Navigation } from "lucide-react";
+import { formatMinutes, formatPercentage } from "../utils/formatting";
+import { Shield, Sparkles, TrendingDown, Clock, AlertTriangle, CheckCircle2, Navigation } from "lucide-react";
 
 interface DecisionCardProps {
   recommendation: RecommendationResponse;
@@ -77,18 +77,16 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             </div>
           </div>
 
-          {/* Reward Banner */}
-          {rec.reward_eligible && (
-            <div className="reward-banner">
-              <Award size={18} className="text-emerald" />
-              <div className="reward-text-wrap">
-                <span className="reward-text">
-                  Worker Incentive: <strong className="reward-glow">{formatCurrency(rec.reward_amount_inr || 3)}</strong> credited to wallet
-                </span>
-                <span className="reward-sub">Simulated carbon & health payout</span>
-              </div>
+          {/* Inhalation Health Shield Banner */}
+          <div className="reward-banner">
+            <Shield size={18} className="text-emerald" />
+            <div className="reward-text-wrap">
+              <span className="reward-text">
+                Inhalation Protection: <strong className="reward-glow">↓ {rec.exposure_reduction_percent}% PM2.5 Intake Avoided</strong>
+              </span>
+              <span className="reward-sub">Statutory CAAQMS-verified clean air corridor</span>
             </div>
-          )}
+          </div>
 
           {/* Confirmation or Action Buttons */}
           {choiceSubmitted ? (
@@ -96,7 +94,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
               <CheckCircle2 size={20} className="text-emerald" />
               <span>
                 {choiceSubmitted === "safer"
-                  ? t.choiceConfirmedSafer.replace("{amount}", String(rec.reward_amount_inr || 3))
+                  ? t.choiceConfirmedSafer
                   : t.choiceConfirmedFastest}
               </span>
             </div>

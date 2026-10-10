@@ -108,7 +108,7 @@ export const translations: Record<LanguageCode, TranslationDict> = {
     btnKeepFastest: "Keep fastest route",
     btnContinue: "Continue on fastest route",
     btnSubmitting: "Recording choice...",
-    choiceConfirmedSafer: "✓ Safer route selected (₹{amount} benefit added)",
+    choiceConfirmedSafer: "✓ Clean corridor selected (Exposure reduction active)",
     choiceConfirmedFastest: "✓ Fastest route confirmed",
     
     howEstimatedTitle: "How we estimated this",
@@ -165,7 +165,7 @@ export const translations: Record<LanguageCode, TranslationDict> = {
     btnKeepFastest: "सबसे तेज़ मार्ग रखें",
     btnContinue: "सबसे तेज़ मार्ग पर चलें",
     btnSubmitting: "विकल्प दर्ज हो रहा है...",
-    choiceConfirmedSafer: "✓ सुरक्षित मार्ग चुना गया (₹{amount} लाभ जोड़ा गया)",
+    choiceConfirmedSafer: "✓ स्वच्छ मार्ग चुना गया (प्रदूषण जोखिम में कमी सक्रिय)",
     choiceConfirmedFastest: "✓ सबसे तेज़ मार्ग की पुष्टि हुई",
     
     howEstimatedTitle: "हमने यह अनुमान कैसे लगाया",

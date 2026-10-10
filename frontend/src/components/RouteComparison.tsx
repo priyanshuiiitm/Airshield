@@ -1,7 +1,6 @@
 import React from "react";
 import { RecommendationResponse, LanguageCode } from "../api/types";
-import { formatCurrency } from "../utils/formatting";
-import { Shield, Wind, TrendingDown, Award } from "lucide-react";
+import { Shield, Wind, TrendingDown } from "lucide-react";
 
 interface RouteComparisonProps {
   recommendation: RecommendationResponse;
@@ -158,12 +157,12 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 </div>
               </div>
 
-              {/* Reward or Protection Incentive Footer */}
-              {isRecommended && isAvoidable && rec.reward_eligible && (
+              {/* Particulate Inhalation Protection Footer */}
+              {isRecommended && isAvoidable && (
                 <div className="route-incentive-bar incentive-emerald">
-                  <Award size={15} className="text-emerald" />
+                  <Shield size={15} className="text-emerald" />
                   <span>
-                    Worker Micro-Reward: <strong>{formatCurrency(rec.reward_amount_inr || 3)}</strong> credited for choosing cleaner route
+                    Clean Ridge Shield: <strong>{reductionPct}% lower particulate inhalation</strong> vs arterial route
                   </span>
                 </div>
               )}
