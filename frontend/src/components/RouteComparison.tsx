@@ -61,14 +61,14 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
       {/* Section Header */}
       <motion.div className="section-header-row" variants={fadeInUp}>
         <div className="section-title-wrap">
-          <Wind size={18} style={{ color: "var(--aurora-teal-400)" }} />
-          <h3 className="section-title" style={{ color: "var(--text-primary)" }}>
+          <Wind size={18} style={{ color: "#ffffff" }} />
+          <h3 className="section-title" style={{ color: "#ffffff" }}>
             {language === "hi" ? "मार्गों की तुलना और प्रदूषण स्तर" : "Route Exposure Comparison"}
           </h3>
         </div>
         <span
           className="route-count-badge"
-          style={{ background: "var(--bg-elevated)", color: "var(--text-muted)", fontSize: "var(--text-xs)", padding: "2px 10px", borderRadius: "var(--radius-full)", border: "1px solid rgba(255,255,255,0.06)" }}
+          style={{ background: "rgba(255,255,255,0.06)", color: "#a1a1aa", fontSize: "var(--text-xs)", padding: "2px 10px", borderRadius: "var(--radius-full)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
           {routes.length} paths analyzed
         </span>
@@ -84,68 +84,57 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
           const reductionPct = Math.max(0, Math.round((diffExposure / baselineExposure) * 100));
           const extraMins = fastestRoute ? Math.max(0, route.duration_minutes - fastestRoute.duration_minutes) : 0;
 
-          // Badge config
+          // Monochrome Badge config
           let badgeLabel = "Alternative";
-          let badgeBg = "rgba(100,116,139,0.15)";
-          let badgeColor = "var(--text-secondary)";
-          let badgeBorder = "rgba(100,116,139,0.2)";
-          let dotColor = "var(--text-muted)";
+          let badgeBg = "rgba(255, 255, 255, 0.05)";
+          let badgeColor = "#a1a1aa";
+          let badgeBorder = "rgba(255, 255, 255, 0.1)";
+          let dotColor = "#71717a";
 
           if (isFastest && isRecommended) {
             badgeLabel = "Fastest & Recommended";
-            badgeBg = "rgba(20,184,166,0.12)";
-            badgeColor = "var(--aurora-teal-400)";
-            badgeBorder = "rgba(20,184,166,0.3)";
-            dotColor = "var(--aurora-teal-400)";
+            badgeBg = "rgba(255, 255, 255, 0.14)";
+            badgeColor = "#ffffff";
+            badgeBorder = "rgba(255, 255, 255, 0.25)";
+            dotColor = "#ffffff";
           } else if (isFastest) {
             badgeLabel = "Fastest Route";
-            badgeBg = "rgba(20,184,166,0.12)";
-            badgeColor = "var(--aurora-teal-400)";
-            badgeBorder = "rgba(20,184,166,0.3)";
-            dotColor = "var(--aurora-teal-400)";
+            badgeBg = "rgba(255, 255, 255, 0.08)";
+            badgeColor = "#ffffff";
+            badgeBorder = "rgba(255, 255, 255, 0.16)";
+            dotColor = "#a1a1aa";
           } else if (isRecommended && isAvoidable) {
             badgeLabel = "Safer Route ✓";
-            badgeBg = "rgba(16,185,129,0.12)";
-            badgeColor = "var(--aurora-emerald-400)";
-            badgeBorder = "rgba(16,185,129,0.3)";
-            dotColor = "var(--aurora-emerald-400)";
+            badgeBg = "rgba(255, 255, 255, 0.14)";
+            badgeColor = "#ffffff";
+            badgeBorder = "rgba(255, 255, 255, 0.25)";
+            dotColor = "#ffffff";
           } else if (reductionPct > 10) {
             badgeLabel = "Clean Corridor";
-            badgeBg = "rgba(16,185,129,0.08)";
-            badgeColor = "var(--aurora-emerald-400)";
-            badgeBorder = "rgba(16,185,129,0.2)";
-            dotColor = "var(--aurora-emerald-500)";
+            badgeBg = "rgba(255, 255, 255, 0.08)";
+            badgeColor = "#e4e4e7";
+            badgeBorder = "rgba(255, 255, 255, 0.16)";
+            dotColor = "#ffffff";
           }
 
-          // PM2.5 color
-          const pm25Color = route.average_pm25 < 100
-            ? "var(--aurora-emerald-400)"
-            : route.average_pm25 < 180
-            ? "var(--aurora-amber-400)"
-            : "var(--aurora-rose-400)";
-
           const focusedBorder = isFocused
-            ? isRecommended
-              ? "rgba(16,185,129,0.5)"
-              : "rgba(20,184,166,0.5)"
-            : "rgba(255,255,255,0.05)";
+            ? "rgba(255, 255, 255, 0.35)"
+            : "rgba(255, 255, 255, 0.08)";
 
           const focusedShadow = isFocused
-            ? isRecommended
-              ? "0 0 16px rgba(16,185,129,0.2)"
-              : "0 0 16px rgba(20,184,166,0.15)"
+            ? "0 8px 24px rgba(0, 0, 0, 0.6)"
             : "none";
 
           return (
             <motion.div
               key={route.route_id}
-              className={`route-card ${isFocused ? "focused" : ""} ${isRecommended ? "recommended-glow" : ""}`}
+              className={`route-card ${isFocused ? "focused" : ""}`}
               variants={fadeInUp}
               onClick={() => onSelectRoute(route.route_id)}
-              whileHover={{ scale: 1.015, borderColor: "rgba(20,184,166,0.4)" }}
+              whileHover={{ scale: 1.015, borderColor: "rgba(255, 255, 255, 0.3)" }}
               whileTap={tapScale}
               style={{
-                background: isFocused ? "var(--bg-card-hover)" : "var(--bg-card)",
+                background: isFocused ? "rgba(20, 21, 27, 0.95)" : "rgba(12, 13, 17, 0.9)",
                 backdropFilter: "blur(12px)",
                 border: `1px solid ${focusedBorder}`,
                 boxShadow: focusedShadow,
@@ -158,8 +147,8 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               {/* Card Header */}
               <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
                 <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: dotColor, boxShadow: `0 0 8px ${dotColor}` }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: dotColor, boxShadow: `0 0 6px ${dotColor}` }} />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>
                     {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
                   </span>
                 </div>
@@ -171,41 +160,41 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               {/* Metrics Row */}
               <div className="route-metrics-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "var(--space-2)" }}>
                 {/* Exposure Index */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Exposure</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Exposure</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: reductionPct >= 15 ? "var(--aurora-emerald-400)" : "var(--text-secondary)" }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>
                       {route.exposure_index}
                     </span>
-                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>/100</span>
+                    <span style={{ fontSize: 10, color: "#71717a" }}>/100</span>
                   </div>
                   {reductionPct > 0 ? (
-                    <span style={{ fontSize: 10, color: "var(--aurora-emerald-400)", display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
+                    <span style={{ fontSize: 10, color: "#a1a1aa", display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
                       <TrendingDown size={10} /> {reductionPct}% cleaner
                     </span>
                   ) : (
-                    <span style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>Baseline</span>
+                    <span style={{ fontSize: 10, color: "#71717a", marginTop: 2 }}>Baseline</span>
                   )}
                 </div>
 
                 {/* PM2.5 */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg PM2.5</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg PM2.5</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: pm25Color }}>{route.average_pm25}</span>
-                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>µg/m³</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>{route.average_pm25}</span>
+                    <span style={{ fontSize: 10, color: "#71717a" }}>µg/m³</span>
                   </div>
-                  <ExposureBar value={route.average_pm25} max={300} color={pm25Color} />
+                  <ExposureBar value={route.average_pm25} max={300} color="#ffffff" />
                 </div>
 
                 {/* Duration */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Trip Time</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Trip Time</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--aurora-teal-400)" }}>{route.duration_minutes}</span>
-                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>min</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>{route.duration_minutes}</span>
+                    <span style={{ fontSize: 10, color: "#71717a" }}>min</span>
                   </div>
-                  <span style={{ fontSize: 10, color: "var(--text-secondary)", marginTop: 2, display: "block" }}>
+                  <span style={{ fontSize: 10, color: "#a1a1aa", marginTop: 2, display: "block" }}>
                     {extraMins > 0 ? `+${extraMins}m detour` : "Fastest"} · {route.distance_km}km
                   </span>
                 </div>
@@ -217,16 +206,16 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", fontSize: "var(--text-xs)", color: "#a7f3d0" }}
+                  style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(255, 255, 255, 0.06)", border: "1px solid rgba(255, 255, 255, 0.12)", fontSize: "var(--text-xs)", color: "#f4f4f5" }}
                 >
-                  <Award size={14} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+                  <Award size={14} style={{ color: "#ffffff", flexShrink: 0 }} />
                   <span>Worker Micro-Reward: <strong>{formatCurrency(rec.reward_amount_inr || 3)}</strong> for choosing cleaner route</span>
                 </motion.div>
               )}
 
               {isFastest && isUnavoidable && (
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)", fontSize: "var(--text-xs)", color: "#fde68a" }}>
-                  <Shield size={14} style={{ color: "var(--aurora-amber-400)", flexShrink: 0 }} />
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.1)", fontSize: "var(--text-xs)", color: "#d4d4d8" }}>
+                  <Shield size={14} style={{ color: "#ffffff", flexShrink: 0 }} />
                   <span>Dose Optimum: Fastest transit minimizes total outdoor inhalation.</span>
                 </div>
               )}

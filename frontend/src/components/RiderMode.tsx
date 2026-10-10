@@ -111,23 +111,18 @@ export const RiderMode: React.FC<RiderModeProps> = ({
     const extraMin = rec?.additional_minutes ?? 2;
     const redPct = rec?.exposure_reduction_percent ?? 24;
 
-    let speechText = "";
-    if (language === "hi") {
-      if (isAvoidable) {
-        speechText = `सावधान: वायु गुणवत्ता गंभीर है। स्वच्छ मार्ग उपलब्ध है। ${extraMin} मिनट अतिरिक्त लगेंगे और ${redPct} प्रतिशत कम धुआं मिलेगा। N95 मास्क लगाएं।`;
-      } else {
-        speechText = `सभी मार्गों पर प्रदूषण अधिक है। सड़क पर समय न्यूनतम रखने के लिए सबसे तेज़ मार्ग चुनें। N95 मास्क लगाएं।`;
-      }
-    } else {
-      if (isAvoidable) {
-        speechText = `Caution: Severe air pollution detected. A cleaner corridor is available adding ${extraMin} minutes with ${redPct} percent lower exposure. Please wear an N95 respirator mask.`;
-      } else {
-        speechText = `Background smog is uniformly high. Take the fastest route to minimize total time outdoors. Wear an N95 respirator mask.`;
-      }
-    }
+    const speechTextHi = isAvoidable
+      ? `सावधान: वायु गुणवत्ता गंभीर है। स्वच्छ मार्ग उपलब्ध है। ${extraMin} मिनट अतिरिक्त लगेंगे और ${redPct} प्रतिशत कम धुआं मिलेगा। N95 मास्क लगाएं।`
+      : `सभी मार्गों पर प्रदूषण अधिक है। सड़क पर समय न्यूनतम रखने के लिए सबसे तेज़ मार्ग चुनें। N95 मास्क लगाएं।`;
+
+    const speechTextEn = isAvoidable
+      ? `Caution: Severe air pollution detected. A cleaner corridor is available adding ${extraMin} minutes with ${redPct} percent lower exposure. Please wear an N95 respirator mask.`
+      : `Background smog is uniformly high. Take the fastest route to minimize total time outdoors. Wear an N95 respirator mask.`;
+
+    const displayCaption = language === "hi" ? speechTextHi : speechTextEn;
 
     setIsSpeaking(true);
-    setLiveSpeechCaption(speechText);
+    setLiveSpeechCaption(displayCaption);
 
     // 2. Synthesize speech if supported
     if ("speechSynthesis" in window) {
@@ -137,49 +132,59 @@ export const RiderMode: React.FC<RiderModeProps> = ({
           window.speechSynthesis.resume();
         }
 
-        const utterance = new SpeechSynthesisUtterance(speechText);
-        utterance.lang = language === "hi" ? "hi-IN" : "en-US";
-        utterance.rate = 0.95;
+        // Tiny delay required by Chromium to allow cancel() to complete before scheduling speak()
+        setTimeout(() => {
+          try {
+            const voices = window.speechSynthesis.getVoices();
+            const hasHindiVoice = voices.some((v) => v.lang.toLowerCase().startsWith("hi"));
 
-        // Voice selection
-        const voices = window.speechSynthesis.getVoices();
-        if (voices.length > 0) {
-          const langPrefix = language === "hi" ? "hi" : "en";
-          const match =
-            voices.find((v) => v.lang.toLowerCase().startsWith(langPrefix)) ||
-            voices.find((v) => v.lang.toLowerCase().startsWith("en")) ||
-            voices[0];
-          if (match) {
-            utterance.voice = match;
+            // If user requested Hindi, but device has no Hindi voice, speak English so device doesn't error out or remain mute
+            const textToSpeak = (language === "hi" && hasHindiVoice) ? speechTextHi : speechTextEn;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = (language === "hi" && hasHindiVoice) ? "hi-IN" : "en-US";
+            utterance.rate = 0.95;
+
+            if (voices.length > 0) {
+              const langPrefix = (language === "hi" && hasHindiVoice) ? "hi" : "en";
+              const match =
+                voices.find((v) => v.lang.toLowerCase().startsWith(langPrefix)) ||
+                voices.find((v) => v.lang.toLowerCase().startsWith("en")) ||
+                voices[0];
+              if (match) {
+                utterance.voice = match;
+              }
+            }
+
+            utterance.onend = () => {
+              setIsSpeaking(false);
+              setLiveSpeechCaption("");
+            };
+            utterance.onerror = (e) => {
+              console.warn("SpeechSynthesis error:", e);
+              // Retain caption banner visible even if browser audio synthesis fails
+            };
+
+            // GC protection (prevents garbage collector canceling speech in Chrome)
+            utteranceRef.current = utterance;
+            (window as any).__airshieldUtterance = utterance;
+
+            window.speechSynthesis.resume();
+            window.speechSynthesis.speak(utterance);
+          } catch (speakErr) {
+            console.warn("Inner speech synthesis error:", speakErr);
           }
-        }
-
-        utterance.onend = () => {
-          setIsSpeaking(false);
-          setLiveSpeechCaption("");
-        };
-        utterance.onerror = (e) => {
-          console.warn("SpeechSynthesis error:", e);
-          setIsSpeaking(false);
-          setLiveSpeechCaption("");
-        };
-
-        // GC protection (prevents garbage collector canceling speech in Chrome)
-        utteranceRef.current = utterance;
-        (window as any).__airshieldUtterance = utterance;
-
-        window.speechSynthesis.speak(utterance);
+        }, 60);
       } catch (err) {
         console.warn("SpeechSynthesis engine error:", err);
       }
     }
 
-    // Safety timeout to reset caption
+    // Safety timeout to reset caption and button state after 9 seconds
     if (speechTimeoutRef.current) clearTimeout(speechTimeoutRef.current);
     speechTimeoutRef.current = setTimeout(() => {
       setIsSpeaking(false);
       setLiveSpeechCaption("");
-    }, 10000);
+    }, 9000);
   };
 
   const highPm25 = (saferRoute?.average_pm25 || 0) > 100 || (fastestRoute?.average_pm25 || 0) > 100;

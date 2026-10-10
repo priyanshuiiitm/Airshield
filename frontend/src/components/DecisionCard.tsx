@@ -19,57 +19,57 @@ interface DecisionCardProps {
   onSelectChoice: (choice: "safer" | "fastest") => void;
 }
 
-// State-specific color tokens
+// State-specific monochrome design tokens
 const stateColors = {
   AVOIDABLE: {
-    border: "rgba(16, 185, 129, 0.35)",
-    glow: "0 0 24px rgba(16, 185, 129, 0.3)",
-    pillBg: "rgba(16, 185, 129, 0.12)",
-    pillColor: "var(--aurora-emerald-400)",
-    pillBorder: "rgba(16, 185, 129, 0.3)",
-    iconBg: "rgba(16, 185, 129, 0.12)",
-    iconBorder: "rgba(16, 185, 129, 0.3)",
+    border: "rgba(255, 255, 255, 0.14)",
+    glow: "0 8px 24px rgba(0, 0, 0, 0.6)",
+    pillBg: "rgba(255, 255, 255, 0.08)",
+    pillColor: "#ffffff",
+    pillBorder: "rgba(255, 255, 255, 0.15)",
+    iconBg: "rgba(255, 255, 255, 0.06)",
+    iconBorder: "rgba(255, 255, 255, 0.12)",
   },
   UNAVOIDABLE: {
-    border: "rgba(245, 158, 11, 0.35)",
-    glow: "0 0 24px rgba(245, 158, 11, 0.25)",
-    pillBg: "rgba(245, 158, 11, 0.12)",
-    pillColor: "var(--aurora-amber-400)",
-    pillBorder: "rgba(245, 158, 11, 0.3)",
-    iconBg: "rgba(245, 158, 11, 0.12)",
-    iconBorder: "rgba(245, 158, 11, 0.3)",
+    border: "rgba(255, 255, 255, 0.12)",
+    glow: "0 8px 24px rgba(0, 0, 0, 0.6)",
+    pillBg: "rgba(255, 255, 255, 0.06)",
+    pillColor: "#ffffff",
+    pillBorder: "rgba(255, 255, 255, 0.12)",
+    iconBg: "rgba(255, 255, 255, 0.06)",
+    iconBorder: "rgba(255, 255, 255, 0.12)",
   },
   LOW: {
-    border: "rgba(20, 184, 166, 0.35)",
-    glow: "0 0 24px rgba(20, 184, 166, 0.25)",
-    pillBg: "rgba(20, 184, 166, 0.12)",
-    pillColor: "var(--aurora-teal-400)",
-    pillBorder: "rgba(20, 184, 166, 0.3)",
-    iconBg: "rgba(20, 184, 166, 0.12)",
-    iconBorder: "rgba(20, 184, 166, 0.3)",
+    border: "rgba(255, 255, 255, 0.12)",
+    glow: "0 8px 24px rgba(0, 0, 0, 0.6)",
+    pillBg: "rgba(255, 255, 255, 0.06)",
+    pillColor: "#ffffff",
+    pillBorder: "rgba(255, 255, 255, 0.12)",
+    iconBg: "rgba(255, 255, 255, 0.06)",
+    iconBorder: "rgba(255, 255, 255, 0.12)",
   },
   INSUFFICIENT_DATA: {
-    border: "rgba(100, 116, 139, 0.3)",
+    border: "rgba(255, 255, 255, 0.08)",
     glow: "none",
-    pillBg: "rgba(100, 116, 139, 0.12)",
+    pillBg: "rgba(255, 255, 255, 0.04)",
     pillColor: "var(--text-secondary)",
-    pillBorder: "rgba(100, 116, 139, 0.3)",
-    iconBg: "rgba(100, 116, 139, 0.12)",
-    iconBorder: "rgba(100, 116, 139, 0.2)",
+    pillBorder: "rgba(255, 255, 255, 0.1)",
+    iconBg: "rgba(255, 255, 255, 0.04)",
+    iconBorder: "rgba(255, 255, 255, 0.08)",
   },
 };
 
-// Animated gradient progress bar
-const ExposureBar: React.FC<{ pct: number; color: string }> = ({ pct, color }) => (
+// Animated monochrome progress bar
+const ExposureBar: React.FC<{ pct: number; color?: string }> = ({ pct }) => (
   <div style={{
-    height: 6, borderRadius: 999,
+    height: 5, borderRadius: 999,
     background: "rgba(255,255,255,0.08)", overflow: "hidden", marginTop: 4
   }}>
     <motion.div
       initial={{ width: 0 }}
       animate={{ width: `${Math.min(100, Math.max(0, pct))}%` }}
       transition={{ duration: 0.8, ease: [0, 0, 0.2, 1], delay: 0.3 }}
-      style={{ height: "100%", borderRadius: 999, background: color }}
+      style={{ height: "100%", borderRadius: 999, background: "#ffffff" }}
     />
   </div>
 );
@@ -85,8 +85,6 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
   const { classification, recommendation: rec, agent, message } = recommendation;
   const colors = stateColors[classification as keyof typeof stateColors] || stateColors.INSUFFICIENT_DATA;
   const explanationText = agent?.explanation || message || "";
-
-
 
   return (
     <motion.div
@@ -111,11 +109,10 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           {/* Header */}
           <motion.div className="card-header" variants={fadeInUp}>
             <div className="card-icon-wrap" style={{ background: colors.iconBg, border: `1px solid ${colors.iconBorder}` }}>
-              <Sparkles size={22} style={{ color: "var(--aurora-emerald-400)" }} />
+              <Sparkles size={18} style={{ color: "#ffffff" }} />
             </div>
             <div className="card-title-group">
               <div className="classification-pill" style={{ background: colors.pillBg, color: colors.pillColor, border: `1px solid ${colors.pillBorder}` }}>
-                <span className="dot-pulse-green" />
                 <span>{language === "hi" ? "स्वच्छ मार्ग उपलब्ध" : "Safer Route Available"}</span>
               </div>
               <h2 className="card-title" style={{ fontSize: 15, fontWeight: 600 }}>{t.titleAvoidable}</h2>
@@ -128,16 +125,16 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           {/* Metrics */}
           <motion.div className="metrics-grid" variants={staggerContainer}>
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <Clock size={15} style={{ color: "var(--aurora-amber-400)", flexShrink: 0 }} />
+              <Clock size={15} style={{ color: "var(--text-secondary)", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "var(--aurora-amber-400)", fontWeight: 600, fontSize: 14 }}>{formatMinutes(rec.additional_minutes)}</span>
+                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 14 }}>{formatMinutes(rec.additional_minutes)}</span>
                 <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.additionalTime}</span>
               </div>
             </motion.div>
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <TrendingDown size={15} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+              <TrendingDown size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "var(--aurora-emerald-400)", fontWeight: 600, fontSize: 14 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
+                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 14 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
                 <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.exposureReduction}</span>
               </div>
             </motion.div>
@@ -145,18 +142,18 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
 
           {/* Exposure reduction bar */}
           <motion.div variants={fadeInUp}>
-            <ExposureBar pct={rec.exposure_reduction_percent} color="linear-gradient(90deg, var(--aurora-emerald-600), var(--aurora-teal-500))" />
+            <ExposureBar pct={rec.exposure_reduction_percent} />
           </motion.div>
 
           {/* Inhalation Health Shield Banner */}
           <motion.div
             className="reward-banner"
             variants={fadeInUp}
-            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
           >
-            <Shield size={15} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+            <Shield size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
             <span style={{ fontSize: 11, color: "var(--text-secondary)", fontWeight: 400 }}>
-              Protection: <strong style={{ color: "var(--aurora-emerald-400)", fontWeight: 600 }}>↓ {rec.exposure_reduction_percent}% lower inhalation</strong>
+              Protection: <strong style={{ color: "#ffffff", fontWeight: 600 }}>↓ {rec.exposure_reduction_percent}% lower inhalation</strong>
             </span>
           </motion.div>
 
@@ -172,23 +169,21 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
               <div className="choice-confirmed-wrapper">
                 <motion.div
                   key="confirmed"
-                  className={`choice-confirmation ${
-                    choiceSubmitted === "fastest" ? "confirmed-blue" : "confirmed-green"
-                  }`}
+                  className="choice-confirmation"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  style={{ background: "rgba(16,185,129,0.15)", border: "1px solid var(--aurora-emerald-500)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
                   role="status"
                 >
-                  <CheckCircle2 size={20} style={{ color: "var(--aurora-emerald-400)" }} />
+                  <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
                   <div className="choice-conf-text">
                     <span className="choice-conf-title">
                       {choiceSubmitted === "safer" ? t.choiceConfirmedSafer : t.choiceConfirmedFastest}
                     </span>
                     <span className="choice-conf-sub">
                       {choiceSubmitted === "fastest"
-                        ? "Fastest direct path isolated on map in Royal Blue"
-                        : "Safer clean corridor isolated on map in Emerald Green"}
+                        ? "Fastest direct path active on map"
+                        : "Cleaner air corridor active on map"}
                     </span>
                   </div>
                 </motion.div>
@@ -200,8 +195,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
                 >
                   <span>
                     {choiceSubmitted === "safer"
-                      ? "⇄ Switch to Fastest Route (Blue)"
-                      : "⇄ Switch to Safer Route (Green)"}
+                      ? "⇄ Switch to Fastest Route"
+                      : "⇄ Switch to Cleaner Route"}
                   </span>
                 </button>
               </div>
@@ -213,9 +208,9 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
                   disabled={isSubmitting}
                   onClick={() => onSelectChoice("safer")}
                   data-testid="btn-take-safer"
-                  whileHover={{ scale: 1.04, boxShadow: "var(--shadow-glow-emerald)" }}
+                  whileHover={{ scale: 1.02 }}
                   whileTap={tapScale}
-                  style={{ background: "linear-gradient(135deg, var(--aurora-emerald-500), var(--aurora-teal-500))", color: "#fff" }}
+                  style={{ background: "#ffffff", color: "#000000", fontWeight: 600, border: "none" }}
                 >
                   <Sparkles size={16} />
                   <span>{isSubmitting ? t.btnSubmitting : t.btnTakeSafer}</span>
@@ -228,7 +223,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
                   data-testid="btn-keep-fastest"
                   whileHover={hoverScale}
                   whileTap={tapScale}
-                  style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.08)", color: "var(--text-secondary)" }}
+                  style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "#ffffff", fontWeight: 500 }}
                 >
                   <Navigation size={15} />
                   <span>{t.btnKeepFastest}</span>
@@ -244,29 +239,29 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         <motion.div className="card-content" variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div className="card-header" variants={fadeInUp}>
             <div className="card-icon-wrap" style={{ background: colors.iconBg, border: `1px solid ${colors.iconBorder}` }}>
-              <AlertTriangle size={22} style={{ color: "var(--aurora-amber-400)" }} />
+              <AlertTriangle size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="card-title-group">
               <div className="classification-pill" style={{ background: colors.pillBg, color: colors.pillColor, border: `1px solid ${colors.pillBorder}` }}>
                 <span>{language === "hi" ? "अपरिहार्य प्रदूषण" : "Unavoidable Smog"}</span>
               </div>
-              <h2 className="card-title" style={{ color: "var(--aurora-amber-400)" }}>{t.titleUnavoidable}</h2>
-              <p className="card-subtitle" style={{ color: "var(--text-secondary)" }}>{explanationText || t.msgUnavoidable}</p>
+              <h2 className="card-title" style={{ color: "#ffffff", fontSize: 15, fontWeight: 600 }}>{t.titleUnavoidable}</h2>
+              <p className="card-subtitle" style={{ color: "var(--text-secondary)", fontSize: 12 }}>{explanationText || t.msgUnavoidable}</p>
             </div>
           </motion.div>
 
           <motion.div
             className="unavoidable-advisory-box"
             variants={fadeInUp}
-            style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
           >
             <div className="advisory-top-row">
-              <Shield size={16} style={{ color: "var(--aurora-amber-400)" }} />
-              <span className="advisory-heading" style={{ color: "var(--aurora-amber-400)" }}>
+              <Shield size={15} style={{ color: "#ffffff" }} />
+              <span className="advisory-heading" style={{ color: "#ffffff", fontWeight: 600, fontSize: 12 }}>
                 {language === "hi" ? "न्यूनतम समय रणनीति" : "Dose Minimization Strategy"}
               </span>
             </div>
-            <p className="advisory-desc" style={{ color: "#fde68a" }}>
+            <p className="advisory-desc" style={{ color: "var(--text-secondary)", fontSize: 12, lineHeight: 1.45, margin: "4px 0 0 0" }}>
               {language === "hi"
                 ? "सभी उपलब्ध गलियारों में प्रदूषण अधिक है। सबसे तेज़ मार्ग चुनें।"
                 : "Background PM2.5 is uniformly elevated. Follow the fastest route to minimize total time outdoors."}
@@ -276,15 +271,15 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                style={{ background: "rgba(20,184,166,0.1)", border: "1px solid var(--aurora-teal-500)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
-                <CheckCircle2 size={20} style={{ color: "var(--aurora-teal-400)" }} />
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
             ) : (
               <motion.button key="action" type="button" className="btn btn-primary btn-neutral" disabled={isSubmitting}
                 onClick={() => onSelectChoice("fastest")} data-testid="btn-continue-fastest"
-                whileHover={{ scale: 1.04, boxShadow: "0 0 20px rgba(245,158,11,0.3)" }} whileTap={tapScale}
-                style={{ background: "linear-gradient(135deg, var(--aurora-amber-500), var(--aurora-amber-600))", color: "#000", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 44, borderRadius: "var(--radius-sm)", fontWeight: 700 }}
+                whileHover={{ scale: 1.02 }} whileTap={tapScale}
+                style={{ background: "#ffffff", color: "#000000", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 42, borderRadius: "var(--radius-sm)", fontWeight: 600, border: "none" }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                 <Navigation size={15} />
                 <span>{isSubmitting ? t.btnSubmitting : t.btnContinue}</span>
@@ -299,28 +294,28 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         <motion.div className="card-content" variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div className="card-header" variants={fadeInUp}>
             <div className="card-icon-wrap" style={{ background: colors.iconBg, border: `1px solid ${colors.iconBorder}` }}>
-              <Shield size={22} style={{ color: "var(--aurora-teal-400)" }} />
+              <Shield size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="card-title-group">
               <div className="classification-pill" style={{ background: colors.pillBg, color: colors.pillColor, border: `1px solid ${colors.pillBorder}` }}>
                 <span>Safe Ambient Air Quality (PM2.5 &lt; 60 µg/m³)</span>
               </div>
-              <h2 className="card-title" style={{ color: "var(--aurora-teal-400)" }}>{t.titleLow}</h2>
-              <p className="card-subtitle" style={{ color: "var(--text-secondary)" }}>{explanationText || t.msgLow}</p>
+              <h2 className="card-title" style={{ color: "#ffffff", fontSize: 15, fontWeight: 600 }}>{t.titleLow}</h2>
+              <p className="card-subtitle" style={{ color: "var(--text-secondary)", fontSize: 12 }}>{explanationText || t.msgLow}</p>
             </div>
           </motion.div>
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                style={{ background: "rgba(20,184,166,0.1)", border: "1px solid var(--aurora-teal-500)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
-                <CheckCircle2 size={20} style={{ color: "var(--aurora-teal-400)" }} />
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
             ) : (
               <motion.button key="action" type="button" className="btn btn-primary btn-neutral" disabled={isSubmitting}
                 onClick={() => onSelectChoice("fastest")} data-testid="btn-continue-fastest"
-                whileHover={{ scale: 1.04, boxShadow: "var(--shadow-glow-teal)" }} whileTap={tapScale}
-                style={{ background: "linear-gradient(135deg, var(--aurora-teal-500), var(--aurora-teal-600))", color: "#fff", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 44, borderRadius: "var(--radius-sm)", fontWeight: 700 }}
+                whileHover={{ scale: 1.02 }} whileTap={tapScale}
+                style={{ background: "#ffffff", color: "#000000", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 42, borderRadius: "var(--radius-sm)", fontWeight: 600, border: "none" }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                 <Navigation size={15} />
                 <span>{t.btnContinue}</span>
@@ -335,27 +330,27 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         <motion.div className="card-content" variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div className="card-header" variants={fadeInUp}>
             <div className="card-icon-wrap" style={{ background: colors.iconBg, border: `1px solid ${colors.iconBorder}` }}>
-              <AlertTriangle size={22} style={{ color: "var(--text-secondary)" }} />
+              <AlertTriangle size={20} style={{ color: "#ffffff" }} />
             </div>
             <div className="card-title-group">
               <div className="classification-pill" style={{ background: colors.pillBg, color: colors.pillColor, border: `1px solid ${colors.pillBorder}` }}>
                 <span>Insufficient Nearby Stations (&lt; 2 within 25km)</span>
               </div>
-              <h2 className="card-title" style={{ color: "var(--text-secondary)" }}>{t.titleInsufficientData}</h2>
-              <p className="card-subtitle" style={{ color: "var(--text-muted)" }}>{explanationText || t.msgInsufficientData}</p>
+              <h2 className="card-title" style={{ color: "#ffffff", fontSize: 15, fontWeight: 600 }}>{t.titleInsufficientData}</h2>
+              <p className="card-subtitle" style={{ color: "var(--text-muted)", fontSize: 12 }}>{explanationText || t.msgInsufficientData}</p>
             </div>
           </motion.div>
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                style={{ background: "rgba(100,116,139,0.1)", border: "1px solid rgba(100,116,139,0.3)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
             ) : (
               <motion.button key="action" type="button" className="btn btn-primary btn-neutral" disabled={isSubmitting}
                 onClick={() => onSelectChoice("fastest")} data-testid="btn-continue-fastest"
-                whileHover={hoverScale} whileTap={tapScale}
-                style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 44, borderRadius: "var(--radius-sm)", fontWeight: 700 }}
+                whileHover={{ scale: 1.02 }} whileTap={tapScale}
+                style={{ background: "#ffffff", color: "#000000", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)", height: 42, borderRadius: "var(--radius-sm)", fontWeight: 600, border: "none" }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                 <Navigation size={15} />
                 <span>{t.btnContinue}</span>

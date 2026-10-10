@@ -12,7 +12,7 @@ import { RouteDetail, Coordinate } from "../api/types";
 import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
 import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
-import { Radio, Sparkles, Check, Eye, Navigation, Map } from "lucide-react";
+import { Radio, Check, Eye, Map, X } from "lucide-react";
 
 interface MapViewProps {
   routes: RouteDetail[];
@@ -479,8 +479,8 @@ export const MapView: React.FC<MapViewProps> = ({
           onClick={() => setShowStations(!showStations)}
           title="Toggle live DPCC/CPCB monitoring stations overlay"
         >
-          <Radio size={14} className="text-amber" />
-          <span>Live AQI Sensors</span>
+          <Radio size={13} style={{ color: "#ffffff" }} />
+          <span>Live Sensors</span>
         </button>
 
         {effectiveViewMode !== "all" && (
@@ -488,27 +488,32 @@ export const MapView: React.FC<MapViewProps> = ({
             type="button"
             className="map-pill-btn active-both-btn"
             onClick={handleShowBoth}
-            title="View both High AQI (Red) and Lower AQI (Blue) paths"
+            title="View alternative routes"
           >
-            <Eye size={14} className="text-cyan" />
-            <span>Show Both Routes (Red vs Blue)</span>
+            <Eye size={13} style={{ color: "#ffffff" }} />
+            <span>Show Both Routes</span>
           </button>
         )}
       </div>
 
-      {/* Floating Interactive Recommendation Prompt Card */}
+      {/* Floating Interactive Recommendation Prompt Card (Sleek OG Minimalist) */}
       {showPrompt && effectiveViewMode === "all" && routes.length >= 2 && (
-        <div className="recommendation-prompt-card animate-slide-up">
+        <div className="recommendation-prompt-card animate-slide-up" role="region" aria-label="Route Advisory">
           <div className="prompt-header">
-            <div className="prompt-icon-badge">
-              <Sparkles size={16} className="text-emerald" />
+            <div className="prompt-tag-row">
+              <span className="prompt-tag">CLEANER CORRIDOR AVAILABLE</span>
+              <button
+                type="button"
+                className="prompt-close-btn"
+                onClick={() => setShowPrompt(false)}
+                title="Dismiss"
+              >
+                <X size={13} />
+              </button>
             </div>
-            <div className="prompt-text-group">
-              <span className="prompt-title">Route Recommendation Assistant</span>
-              <p className="prompt-question">
-                Do you need the recommended path with respect to your delivery constraint (+{bufferMin}m)?
-              </p>
-            </div>
+            <p className="prompt-question">
+              Lower inhalation route within your +{bufferMin}m buffer.
+            </p>
           </div>
 
           <div className="prompt-action-row">
@@ -517,23 +522,22 @@ export const MapView: React.FC<MapViewProps> = ({
               className="btn-apply-rec"
               onClick={handleApplyRecommendation}
             >
-              <Check size={14} />
-              <span>Apply Recommended Route (Turns Green)</span>
+              <Check size={13} />
+              <span>Take Clean Path</span>
             </button>
             <button
               type="button"
               className="btn-apply-fastest"
               onClick={handleApplyFastest}
             >
-              <Navigation size={13} />
-              <span>Fastest Path (Blue)</span>
+              <span>Fastest</span>
             </button>
             <button
               type="button"
               className="btn-dismiss-rec"
               onClick={() => setShowPrompt(false)}
             >
-              <span>Compare Both</span>
+              <span>Compare</span>
             </button>
           </div>
         </div>
