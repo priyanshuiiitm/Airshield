@@ -12,6 +12,8 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { LanguageCode } from "../api/types";
 import { ArrowLeft, Play, BarChart3, TrendingDown, Clock, Shield, AlertTriangle, Layers, Building2, CheckCircle2, RotateCcw } from "lucide-react";
 import { DELHI_LOCATIONS, calculateIdwPm25, haversineDistanceKm } from "../utils/delhiData";
+import { useVoice } from "../context/VoiceContext";
+import { voiceScripts } from "../services/voiceScripts";
 
 interface BatchAnalyticsProps {
   language: LanguageCode;
@@ -171,6 +173,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
   onBackToSimulator
 }) => {
   const isHindi = language === "hi";
+  const { isVoiceEnabled, speak } = useVoice();
 
   // Batch simulation iteration tracker
   const [runSeed, setRunSeed] = useState<number>(0);
@@ -243,6 +246,20 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
       totalIntakeAvoided: totalIntake.toLocaleString()
     };
   }, [currentTrips, activeBufferTab]);
+
+  // Voice welcome explaining the intention behind the 150-trail simulation and live metrics
+  useEffect(() => {
+    if (isVoiceEnabled) {
+      speak(
+        voiceScripts.batchAnalyticsWelcome(isHindi ? "hi" : "en", {
+          medianReductionPct: activeStats.medianReductionPct,
+          medianExtraMinutes: activeStats.medianExtraMinutes,
+          totalIntakeAvoided: activeStats.totalIntakeAvoided
+        }),
+        "btn-run-batch"
+      );
+    }
+  }, [isVoiceEnabled, isHindi, speak]);
 
   // Dynamically compute the Buffer Sweep table rows across all 4 buffer policies
   const dynamicBufferSweep = useMemo(() => {
@@ -338,6 +355,16 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
       if (count >= 150) {
         if (simTimerRef.current) clearInterval(simTimerRef.current);
         setIsRunning(false);
+        if (isVoiceEnabled) {
+          speak(
+            voiceScripts.batchSimulationCompleted(isHindi ? "hi" : "en", {
+              medianReductionPct: activeStats.medianReductionPct,
+              medianExtraMinutes: activeStats.medianExtraMinutes,
+              totalIntakeAvoided: activeStats.totalIntakeAvoided
+            }),
+            "analytics-kpi-grid"
+          );
+        }
       }
     }, intervalMs);
   };
@@ -368,6 +395,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
         <div className="analytics-header-actions">
           <button
             type="button"
+            id="btn-run-batch"
             className="btn-run-batch"
             onClick={handleRunBatchSimulation}
             disabled={isRunning}
@@ -416,7 +444,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
       {/* Main Content Layout */}
       <main className="analytics-content-grid">
         {/* Top 4 KPI Metric Cards */}
-        <div className="analytics-kpi-grid">
+        <div className="analytics-kpi-grid" id="analytics-kpi-grid">
           <div className="kpi-card">
             <div className="kpi-icon-wrap">
               <TrendingDown size={20} style={{ color: "#ffffff" }} />

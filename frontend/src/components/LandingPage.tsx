@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, ArrowRight, Wind, MapPin, Zap, ChevronRight } from "lucide-react";
+import { Shield, ArrowRight, Wind, MapPin, Zap, ChevronRight, Volume2, VolumeX } from "lucide-react";
+import { useVoice } from "../context/VoiceContext";
+import { voiceScripts } from "../services/voiceScripts";
 
 interface LandingPageProps {
   onLaunchSimulator: () => void;
@@ -37,6 +39,14 @@ const CARDS = [
 export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) => {
   const [activeCard, setActiveCard] = useState(0);
   const [tick, setTick] = useState(0);
+  const { isVoiceEnabled, setVoiceEnabled, speak, stop, activeHighlightId, language, setLanguage } = useVoice();
+
+  // Initial welcome greeting on landing page mount
+  useEffect(() => {
+    if (isVoiceEnabled) {
+      speak(voiceScripts.landingWelcome(language), "hero-actions-row");
+    }
+  }, [isVoiceEnabled, language, speak]);
 
   // Auto-rotate stat cards
   useEffect(() => {
@@ -81,9 +91,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
             Micro-urban PM2.5 routing for delivery workers. Real sensor data. Zero fluff.
           </p>
 
-          <button className="lp-cta" onClick={onLaunchSimulator}>
-            Start routing <ArrowRight size={16} />
-          </button>
+          {/* Frontpage Audio Guide Language Choice Bar */}
+          <div className="hero-voice-bar-wrapper">
+            <div className="hero-voice-bar">
+              <div className="hero-voice-bar-left">
+                <Volume2 size={16} className="text-emerald animate-pulse" />
+                <span className="hero-voice-bar-label">
+                  {language === "hi" ? "ऑडियो सहायता (महिला आवाज):" : "Voice Assistance (Female Voice):"}
+                </span>
+              </div>
+              <div className="hero-voice-bar-actions">
+                <button
+                  type="button"
+                  className={`hero-voice-choice-btn ${language === "hi" && isVoiceEnabled ? "active" : ""}`}
+                  onClick={() => {
+                    setLanguage("hi");
+                    localStorage.setItem("airshield_lang", "hi");
+                    setVoiceEnabled(true);
+                    speak(voiceScripts.landingWelcome("hi"), "hero-actions-row");
+                  }}
+                  title="हिंदी में महिला आवाज सहायता चालू करें"
+                >
+                  <span>🇮🇳 हिंदी (Hindi)</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`hero-voice-choice-btn ${language === "en" && isVoiceEnabled ? "active" : ""}`}
+                  onClick={() => {
+                    setLanguage("en");
+                    localStorage.setItem("airshield_lang", "en");
+                    setVoiceEnabled(true);
+                    speak(voiceScripts.landingWelcome("en"), "hero-actions-row");
+                  }}
+                  title="Enable English female voice guide"
+                >
+                  <span>🇬🇧 English</span>
+                </button>
+
+                {isVoiceEnabled && (
+                  <button
+                    type="button"
+                    className="hero-voice-mute-btn"
+                    onClick={() => {
+                      stop();
+                      setVoiceEnabled(false);
+                    }}
+                    title={language === "hi" ? "आवाज बंद करें" : "Mute voice"}
+                  >
+                    <VolumeX size={13} />
+                    <span>{language === "hi" ? "म्यूट" : "Mute"}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="hero-actions-row"
+            className={activeHighlightId === "hero-actions-row" ? "voice-spotlight-active" : ""}
+            style={{ borderRadius: "99px", display: "inline-block" }}
+          >
+            <button className="lp-cta" onClick={onLaunchSimulator}>
+              Start routing <ArrowRight size={16} />
+            </button>
+          </div>
         </motion.div>
 
         {/* Animated stat ticker */}
