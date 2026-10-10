@@ -11,13 +11,16 @@ import { TransparencyPanel } from "./components/TransparencyPanel";
 import { LandingPage } from "./components/LandingPage";
 import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
+import { DriverView } from "./components/DriverView";
+import { OnboardingCarousel } from "./components/OnboardingCarousel";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
-import { Wind, Clock, Shield } from "lucide-react";
+import { Wind, Clock, Shield, Car } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
 
 export const App: React.FC = () => {
-  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics">("landing");
+  const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics" | "driver">("landing");
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(false);
   const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
   const [showEpisodeBanner, setShowEpisodeBanner] = useState<boolean>(true);
   const [language, setLanguage] = useState<LanguageCode>(() => {
@@ -49,6 +52,13 @@ export const App: React.FC = () => {
   const showToast = useCallback((message: string, type: 'success'|'error' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
+  }, []);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('hasSeenOnboarding');
+    if (!hasSeen) {
+      setShowOnboarding(true);
+    }
   }, []);
 
   // Local fallback recommendation state (for instant zero-latency math engine)
@@ -197,27 +207,47 @@ export const App: React.FC = () => {
   const displayRoutes = airshieldEnabled ? routes : routes.filter(r => r.route_id === "route_fastest");
   const fastestRouteId = currentRecommendation?.decision?.fastest_route_id;
 
-  // Render Landing Page
-  if (viewMode === "landing") {
-    return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
+  // Render Onboarding Carousel
+  if (showOnboarding) {
+    return <OnboardingCarousel onComplete={() => setShowOnboarding(false)} />;
   }
 
-  // Render Rider Sunlight Handlebar View
-  if (viewMode === "rider" && currentRecommendation) {
+  // Render Landing Page
+  if (viewMode === "landing") {
+    return <LandingPage onLaunchSimulator={() => setViewMode("driver")} />;
+  }
+
+  // Render Clean Driver View (Mobile-First)
+  if (viewMode === "driver" && currentRecommendation) {
     return (
-      <RiderMode
-        recommendation={currentRecommendation}
-        language={language}
-        pickupName={pickupName}
-        dropName={dropName}
-        bufferMin={bufferMin}
-        onExitRiderMode={() => setViewMode("simulator")}
-        onSelectChoice={handleChoice}
-        choiceSubmitted={choiceSubmitted}
-      />
+      <div className="driver-wrapper">
+        {/* Mode Toggle - Top Right */}
+        <button
+          className="mode-toggle-btn"
+          onClick={() => setViewMode("simulator")}
+          title="Switch to full view"
+        >
+          <Car size={18} />
+        </button>
+        
+        <DriverView
+          recommendation={currentRecommendation}
+          pickup={pickup}
+          drop={drop}
+          pickupName={pickupName}
+          dropName={dropName}
+          onSelectRoute={(rId) => {
+            setSelectedRouteId(rId);
+            const choice = rId === currentRecommendation?.recommendation.route_id ? "safer" : "fastest";
+            handleChoice(choice);
+          }}
+          selectedRouteId={selectedRouteId}
+        />
+      </div>
     );
   }
 
+  // Render Rider Sunlight Handlebar View
   // Render Batch Impact Evidence View
   if (viewMode === "analytics") {
     return (
@@ -239,6 +269,7 @@ export const App: React.FC = () => {
         onBackToLanding={() => setViewMode("landing")}
         onOpenRiderMode={() => setViewMode("rider")}
         onOpenAnalytics={() => setViewMode("analytics")}
+        onOpenDriverView={() => setViewMode("driver")}
         isLoading={isLoading}
       />
       
@@ -286,16 +317,44 @@ export const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="main-content">
-        <div className="content-split-layout">
+        <div className={`content-split-layout ${viewMode === 'rider' ? 'rider-active-layout' : ''}`}>
           {/* Left Column: Location Controls & Decision */}
           <motion.div 
             className="left-controls-column"
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
+            style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
           >
             <AnimatePresence mode="popLayout">
-            {/* Origin & Destination Picker */}
+            {viewMode === "rider" && currentRecommendation ? (
+              <motion.div
+                key="rider-mode"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                style={{ flex: 1, overflowY: "auto" }}
+              >
+                <RiderMode
+                  recommendation={currentRecommendation}
+                  language={language}
+                  pickupName={pickupName}
+                  dropName={dropName}
+                  bufferMin={bufferMin}
+                  onExitRiderMode={() => setViewMode("simulator")}
+                  onSelectChoice={handleChoice}
+                  choiceSubmitted={choiceSubmitted}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="simulator-mode"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+              >
+                {/* Origin & Destination Picker */}
             <LocationPicker
               pickup={pickup}
               pickupName={pickupName}
@@ -398,6 +457,8 @@ export const App: React.FC = () => {
                 </div>
               </div>
             </div>
+              </motion.div>
+            )}
             </AnimatePresence>
           </motion.div>
 
@@ -436,6 +497,7 @@ export const App: React.FC = () => {
                     setSelectedRouteId(fastestRouteId);
                   }
                 }}
+                isRiderMode={viewMode === 'rider'}
               />
             </section>
           </div>

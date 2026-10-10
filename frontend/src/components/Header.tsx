@@ -1,6 +1,6 @@
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { Shield, RefreshCw, Smartphone, BarChart3, ArrowLeft } from "lucide-react";
+import { Shield, RefreshCw, Smartphone, BarChart3, ArrowLeft, Car } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { slideInLeft, fadeIn, hoverScale, tapScale, durations } from "../animation/motion-config";
 
@@ -11,6 +11,7 @@ interface HeaderProps {
   onBackToLanding?: () => void;
   onOpenRiderMode?: () => void;
   onOpenAnalytics?: () => void;
+  onOpenDriverView?: () => void;
   isLoading: boolean;
 }
 
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   onBackToLanding,
   onOpenRiderMode,
   onOpenAnalytics,
+  onOpenDriverView,
   isLoading
 }) => {
   const { scrollY } = useScroll();
@@ -83,6 +85,21 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <ArrowLeft size={14} />
             <span>Story & Overview</span>
+          </motion.button>
+        )}
+
+        {onOpenDriverView && (
+          <motion.button
+            type="button"
+            className="btn-header-mode btn-driver-toggle"
+            onClick={onOpenDriverView}
+            title="Simple Driver View"
+            whileHover={hoverScale}
+            whileTap={tapScale}
+            style={{ display: "flex", alignItems: "center", gap: "6px", background: "#10b981", color: "#000" }}
+          >
+            <Car size={14} />
+            <span>Driver</span>
           </motion.button>
         )}
 

@@ -30,6 +30,7 @@ interface MapViewProps {
   onSelectFastest?: () => void;
   routeViewMode?: "all" | "safer" | "fastest";
   onViewModeChange?: (mode: "all" | "safer" | "fastest") => void;
+  isRiderMode?: boolean;
 }
 
 export const MapView: React.FC<MapViewProps> = ({
@@ -46,7 +47,8 @@ export const MapView: React.FC<MapViewProps> = ({
   onSelectRecommended,
   onSelectFastest,
   routeViewMode,
-  onViewModeChange
+  onViewModeChange,
+  isRiderMode = false
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -142,6 +144,26 @@ export const MapView: React.FC<MapViewProps> = ({
       }
     };
   }, []);
+
+  // Effect: Handle RiderMode 3D Pitch
+  useEffect(() => {
+    if (!mapRef.current || !isMapLoaded) return;
+    const map = mapRef.current;
+
+    if (isRiderMode) {
+      map.easeTo({
+        pitch: 60,
+        bearing: 30,
+        duration: 1000
+      });
+    } else {
+      map.easeTo({
+        pitch: 0,
+        bearing: 0,
+        duration: 1000
+      });
+    }
+  }, [isRiderMode, isMapLoaded]);
 
   // Set cursor style when picking pins
   useEffect(() => {
@@ -412,6 +434,35 @@ export const MapView: React.FC<MapViewProps> = ({
       ROUTE_WIDTHS.recommendedActive
     );
 
+    // Animated Route Drawing using line-dasharray
+    let animationId: number;
+    let dashOffset = 0;
+    const drawRoute = () => {
+      dashOffset += 2; // Animation speed multiplier
+      const layers = ["layer-routes-red", "layer-routes-blue", "layer-routes-green"];
+      let keepAnimating = false;
+
+      layers.forEach((lId) => {
+        if (map.getLayer(lId)) {
+          // If dashOffset is very large, it covers the whole route.
+          // We cap the animation roughly around 400 (which covers most routes depending on length)
+          if (dashOffset < 400) {
+            map.setPaintProperty(lId, "line-dasharray", [dashOffset, 1000]);
+            keepAnimating = true;
+          } else {
+            // Remove dasharray to make it a solid line permanently
+            map.setPaintProperty(lId, "line-dasharray", [1, 0]);
+          }
+        }
+      });
+
+      if (keepAnimating) {
+        animationId = requestAnimationFrame(drawRoute);
+      }
+    };
+    // Start animation loop
+    drawRoute();
+
     // Auto-fit bounds
     const targetRoutes =
       effectiveViewMode === "fastest" && fastestRoute
@@ -428,6 +479,10 @@ export const MapView: React.FC<MapViewProps> = ({
         maxZoom: 15
       });
     }
+
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
   }, [
     routes,
     fastestRouteId,
