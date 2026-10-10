@@ -14,7 +14,7 @@ import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { SimpleDriverView } from "./components/SimpleDriverView";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
-import { Wind, Clock, Shield, Car } from "lucide-react";
+import { Clock, Car, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
 import { VoiceProvider, useVoice } from "./context/VoiceContext";
@@ -23,8 +23,7 @@ import { voiceScripts } from "./services/voiceScripts";
 
 const AppContent: React.FC = () => {
   const [viewMode, setViewMode] = useState<"onboarding" | "landing" | "simulator" | "rider" | "analytics" | "driver">("onboarding");
-  const [airshieldEnabled, setAirshieldEnabled] = useState<boolean>(true);
-  const [showEpisodeBanner, setShowEpisodeBanner] = useState<boolean>(true);
+  const airshieldEnabled = true;
 
   // Voice context integration
   const { isVoiceEnabled, speak, activeHighlightId, language, setLanguage } = useVoice();
@@ -338,47 +337,7 @@ const AppContent: React.FC = () => {
         isLoading={isLoading}
       />
       
-      {/* Demo Controls Bar */}
-      <div className="demo-controls-bar">
-          <div className="demo-controls-left">
-              <span className="demo-mode-label">Mode</span>
-              <label className={`demo-toggle ${airshieldEnabled ? "active" : "inactive"}`}>
-                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} />
-                  <span>
-                      {airshieldEnabled ? "AirShield Protection Active" : "Standard Direct Routing"}
-                  </span>
-              </label>
-          </div>
-          <button
-              className="btn-demo-analytics"
-              onClick={() => setViewMode("analytics")}
-          >
-              150-Trip Batch Analytics →
-          </button>
-      </div>
 
-      {/* Seasonal Stubble Episode Banner */}
-      {showEpisodeBanner && (
-        <div className="seasonal-episode-banner animate-slide-up">
-          <div className="episode-banner-content">
-            <span className="episode-icon"><Wind size={14} /></span>
-            <div className="episode-text-group">
-              <span className="episode-badge">ADVISORY</span>
-              <span className="episode-message">
-                Active seasonal transboundary particulate smoke over Delhi NCR.
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn-close-episode"
-            onClick={() => setShowEpisodeBanner(false)}
-            title="Dismiss notification"
-          >
-            ✕
-          </button>
-        </div>
-      )}
 
       {/* Main Content Area */}
       <main className="main-content">

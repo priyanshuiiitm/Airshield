@@ -1,6 +1,6 @@
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { Shield, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { slideInLeft, fadeIn, hoverScale, tapScale, durations } from "../animation/motion-config";
 
@@ -53,9 +53,6 @@ export const Header: React.FC<HeaderProps> = ({
         initial="hidden"
         animate="visible"
       >
-        <div className="brand-shield-icon">
-          <Shield size={22} className="shield-svg" />
-        </div>
         <div>
           <h1 className="brand-name" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>AirShield</h1>
         </div>
@@ -63,6 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       <motion.div 
         className="header-actions"
+        style={{ margin: "0 auto" }}
         variants={fadeIn}
         initial="hidden"
         animate="visible"
@@ -111,16 +109,6 @@ export const Header: React.FC<HeaderProps> = ({
           </motion.button>
         )}
 
-        {/* Live Network Pulse Indicator */}
-        <motion.div 
-          className="live-status-pill" 
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)' }} 
-          title="Live CPCB/DPCC Sensor Integration Active"
-          whileHover={hoverScale}
-        >
-          <div className="live-pulse-dot" style={{ background: "var(--aurora-emerald-500)" }}></div>
-          <span className="live-status-text" style={{ color: "var(--aurora-emerald-500)" }}>Live 10-Station Feed</span>
-        </motion.div>
 
         {/* Language Switcher */}
         <div className="lang-switcher-group" role="group" aria-label="Language selection" style={{ background: "var(--bg-input)" }}>
