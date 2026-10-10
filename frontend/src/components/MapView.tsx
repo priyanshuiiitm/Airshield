@@ -13,6 +13,7 @@ import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/ma
 import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
 import { Radio, Check, Eye, Map, X } from "lucide-react";
+import { uberIcons } from "../constants/uberAssets";
 
 interface MapViewProps {
   routes: RouteDetail[];
@@ -206,14 +207,13 @@ export const MapView: React.FC<MapViewProps> = ({
     routeLabelMarkersRef.current.forEach((m) => m.remove());
     routeLabelMarkersRef.current = [];
 
-    // Add Pickup Marker (Blue)
+    // Add Pickup Marker (Uber Target Icon)
     if (pickup) {
       const el = document.createElement("div");
-      el.className = "map-marker pickup-marker-glow";
+      el.className = "map-marker uber-pickup-pin";
       el.innerHTML = `
-        <div class="marker-pin-outer">
-          <div class="marker-dot pickup-dot"></div>
-          <div class="marker-pulse-ring blue-ring"></div>
+        <div class="marker-pin-outer" style="display:flex;align-items:center;justify-content:center;background:#09090b;border:2px solid #ffffff;border-radius:50%;width:28px;height:28px;box-shadow:0 4px 14px rgba(0,0,0,0.8);">
+          <img src="${uberIcons.target}" alt="Pickup" style="width:14px;height:14px;object-fit:contain;filter:brightness(0) invert(1);" />
         </div>
         <div class="marker-tooltip">Pickup Origin</div>
       `;
@@ -223,14 +223,13 @@ export const MapView: React.FC<MapViewProps> = ({
       markersRef.current.push(marker);
     }
 
-    // Add Drop Marker (Red)
+    // Add Drop Marker (Uber Point Icon)
     if (drop) {
       const el = document.createElement("div");
-      el.className = "map-marker drop-marker-glow";
+      el.className = "map-marker uber-drop-pin";
       el.innerHTML = `
-        <div class="marker-pin-outer">
-          <div class="marker-dot drop-dot"></div>
-          <div class="marker-pulse-ring red-ring"></div>
+        <div class="marker-pin-outer" style="display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #09090b;border-radius:50%;width:28px;height:28px;box-shadow:0 4px 14px rgba(0,0,0,0.8);">
+          <img src="${uberIcons.point}" alt="Drop" style="width:14px;height:14px;object-fit:contain;" />
         </div>
         <div class="marker-tooltip">Destination Drop</div>
       `;

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { fadeInUp, tapScale } from "../animation/motion-config";
+import { fadeInUp } from "../animation/motion-config";
 import { Coordinate, LanguageCode } from "../api/types";
 import { DELHI_LOCATIONS } from "../utils/delhiData";
-import { MapPin, Navigation, ArrowUpDown, Clock, Crosshair, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Navigation, ArrowUpDown, Clock, Crosshair, ArrowRight, CheckCircle2 } from "lucide-react";
+import { uberIcons } from "../constants/uberAssets";
 
 interface LocationPickerProps {
   pickup: Coordinate;
@@ -90,16 +91,16 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
 
       {!isCustomMode ? (
         <div className="picker-inputs-flow">
-          {/* Origin Picker */}
+          {/* Origin Picker (Uber 'From' Style) */}
           <div className="input-group">
             <div className="input-label-row">
-              <span className="input-indicator pickup-indicator"></span>
+              <img src={uberIcons.target} alt="From" style={{ width: 12, height: 12, objectFit: "contain", filter: "brightness(0) invert(1)" }} />
               <label className="input-label">
-                {language === "hi" ? "पिकअप स्थान (प्रारंभिक बिंदु)" : "Origin"}
+                {language === "hi" ? "पिकअप स्थान (From)" : "From (Pickup Origin)"}
               </label>
             </div>
             <div className="input-wrapper">
-              <MapPin className="input-icon text-muted" size={16} />
+              <img src={uberIcons.target} alt="Origin" style={{ width: 16, height: 16, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.85 }} />
               <select
                 className="select-field"
                 value={
@@ -161,16 +162,16 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             </motion.button>
           </div>
 
-          {/* Destination Picker */}
+          {/* Destination Picker (Uber 'To' Style) */}
           <div className="input-group">
             <div className="input-label-row">
-              <span className="input-indicator drop-indicator"></span>
+              <img src={uberIcons.point} alt="To" style={{ width: 12, height: 12, objectFit: "contain", filter: "brightness(0) invert(1)" }} />
               <label className="input-label">
-                {language === "hi" ? "गंतव्य स्थान (ड्रॉप)" : "Destination"}
+                {language === "hi" ? "गंतव्य स्थान (To)" : "To (Destination)"}
               </label>
             </div>
             <div className="input-wrapper">
-              <MapPin className="input-icon text-muted" size={16} />
+              <img src={uberIcons.point} alt="Destination" style={{ width: 16, height: 16, objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.85 }} />
               <select
                 className="select-field"
                 value={
@@ -295,7 +296,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           disabled={isLoading}
           onClick={onCalculateRoutes}
           whileHover={!isLoading ? { scale: 1.01 } : {}}
-          whileTap={!isLoading ? tapScale : {}}
+          whileTap={!isLoading ? { scale: 0.98 } : {}}
           style={{
             background: "#ffffff",
             color: "#000000",

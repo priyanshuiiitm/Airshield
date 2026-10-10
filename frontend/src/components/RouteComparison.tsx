@@ -6,8 +6,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { formatCurrency } from "../utils/formatting";
-import { Wind, TrendingDown, Award, Shield } from "lucide-react";
+import { Wind, TrendingDown, Shield } from "lucide-react";
 import { fadeInUp, staggerContainer, tapScale } from "../animation/motion-config";
+import { uberIcons, uberImages } from "../constants/uberAssets";
 
 interface RouteComparisonProps {
   recommendation: RecommendationResponse;
@@ -74,7 +75,7 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
         </span>
       </motion.div>
 
-      {/* Route Cards */}
+      {/* Route Cards (Uber Ryde / Courier Layout) */}
       <div className="routes-list-grid">
         {routes.map((route, idx) => {
           const isFastest = route.route_id === fastestRouteId;
@@ -89,32 +90,27 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
           let badgeBg = "rgba(255, 255, 255, 0.05)";
           let badgeColor = "#a1a1aa";
           let badgeBorder = "rgba(255, 255, 255, 0.1)";
-          let dotColor = "#71717a";
 
           if (isFastest && isRecommended) {
             badgeLabel = "Fastest & Recommended";
             badgeBg = "rgba(255, 255, 255, 0.14)";
             badgeColor = "#ffffff";
             badgeBorder = "rgba(255, 255, 255, 0.25)";
-            dotColor = "#ffffff";
           } else if (isFastest) {
             badgeLabel = "Fastest Route";
             badgeBg = "rgba(255, 255, 255, 0.08)";
             badgeColor = "#ffffff";
             badgeBorder = "rgba(255, 255, 255, 0.16)";
-            dotColor = "#a1a1aa";
           } else if (isRecommended && isAvoidable) {
             badgeLabel = "Safer Route ✓";
             badgeBg = "rgba(255, 255, 255, 0.14)";
             badgeColor = "#ffffff";
             badgeBorder = "rgba(255, 255, 255, 0.25)";
-            dotColor = "#ffffff";
           } else if (reductionPct > 10) {
             badgeLabel = "Clean Corridor";
             badgeBg = "rgba(255, 255, 255, 0.08)";
             badgeColor = "#e4e4e7";
             badgeBorder = "rgba(255, 255, 255, 0.16)";
-            dotColor = "#ffffff";
           }
 
           const focusedBorder = isFocused
@@ -144,17 +140,43 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             >
-              {/* Card Header */}
+              {/* Uber-style Card Header */}
               <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
-                <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: dotColor, boxShadow: `0 0 6px ${dotColor}` }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>
-                    {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
+                <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <img
+                    src={uberImages.signUpCar}
+                    alt="Ryde Vehicle"
+                    style={{
+                      width: 34,
+                      height: 22,
+                      objectFit: "contain",
+                      filter: "brightness(0) invert(1)",
+                      opacity: isFocused ? 1 : 0.65
+                    }}
+                  />
+                  <div>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", display: "block" }}>
+                      {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
+                    </span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: "#a1a1aa", marginTop: 2 }}>
+                      <img src={uberIcons.star} alt="Rating" style={{ width: 10, height: 10, objectFit: "contain" }} />
+                      <span>{isRecommended ? "4.9 Clean" : "4.7 Direct"}</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {isFocused && (
+                    <img
+                      src={uberIcons.checkmark}
+                      alt="Selected"
+                      style={{ width: 14, height: 14, objectFit: "contain", filter: "brightness(0) invert(1)" }}
+                    />
+                  )}
+                  <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
+                    {badgeLabel}
                   </span>
                 </div>
-                <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
-                  {badgeLabel}
-                </span>
               </div>
 
               {/* Metrics Row */}
@@ -200,7 +222,7 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 </div>
               </div>
 
-              {/* Incentive Footer */}
+              {/* Incentive Footer (Uber Dollar Icon) */}
               {isRecommended && isAvoidable && rec.reward_eligible && (
                 <motion.div
                   initial={{ opacity: 0, y: 4 }}
@@ -208,7 +230,7 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                   transition={{ delay: 0.4 }}
                   style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(255, 255, 255, 0.06)", border: "1px solid rgba(255, 255, 255, 0.12)", fontSize: "var(--text-xs)", color: "#f4f4f5" }}
                 >
-                  <Award size={14} style={{ color: "#ffffff", flexShrink: 0 }} />
+                  <img src={uberIcons.dollar} alt="Reward" style={{ width: 13, height: 13, objectFit: "contain", filter: "brightness(0) invert(1)", flexShrink: 0 }} />
                   <span>Worker Micro-Reward: <strong>{formatCurrency(rec.reward_amount_inr || 3)}</strong> for choosing cleaner route</span>
                 </motion.div>
               )}

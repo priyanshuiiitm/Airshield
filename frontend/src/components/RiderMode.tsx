@@ -12,8 +12,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { RecommendationResponse, LanguageCode } from "../api/types";
-import { Shield, Navigation, Volume2, VolumeX, AlertTriangle, ArrowLeft, ArrowRight, CheckCircle2, Clock, TrendingDown } from "lucide-react";
+import { Shield, Navigation, Volume2, VolumeX, AlertTriangle, ArrowLeft, ArrowRight, Clock, TrendingDown } from "lucide-react";
 import { formatMinutes } from "../utils/formatting";
+import { uberIcons, uberImages } from "../constants/uberAssets";
 
 interface RiderModeProps {
   recommendation: RecommendationResponse;
@@ -241,18 +242,24 @@ export const RiderMode: React.FC<RiderModeProps> = ({
           </div>
         )}
 
-        {/* Route Origin & Destination Summary */}
+        {/* Route Origin & Destination Summary (Uber Route Format) */}
         <div className="rider-trip-summary">
-          <div className="trip-point">
-            <span className="point-tag">ORIGIN</span>
-            <span className="point-name">{pickupName}</span>
+          <div className="trip-point" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+            <img src={uberIcons.target} alt="Pickup" style={{ width: 18, height: 18, objectFit: "contain" }} />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span className="point-tag">PICKUP</span>
+              <span className="point-name">{pickupName}</span>
+            </div>
           </div>
           <div className="trip-arrow">
             <ArrowRight size={16} />
           </div>
-          <div className="trip-point">
-            <span className="point-tag">DESTINATION</span>
-            <span className="point-name">{dropName}</span>
+          <div className="trip-point" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+            <img src={uberIcons.point} alt="Destination" style={{ width: 18, height: 18, objectFit: "contain" }} />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span className="point-tag">DROP</span>
+              <span className="point-name">{dropName}</span>
+            </div>
           </div>
         </div>
 
@@ -305,21 +312,30 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                 </div>
               </div>
 
-              {/* Action Buttons (Ola / Apple Monochrome) */}
+              {/* Action Buttons (Uber / Apple Monochrome) */}
               <div className="rider-actions-stack">
                 <button
                   type="button"
                   className={`btn-rider-primary ${choiceSubmitted === "safer" ? "btn-selected-primary" : ""}`}
                   onClick={() => onSelectChoice("safer")}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
-                  <Shield size={20} />
-                  <div className="btn-text-wrap">
-                    <span className="btn-main-title">
-                      {language === "hi" ? "स्वच्छ मार्ग लें (Take Safer Route)" : "Take Cleaner Air Route"}
-                    </span>
-                    <span className="btn-sub-note">
-                      {saferRoute.duration_minutes}m • {saferRoute.average_pm25} µg/m³ PM2.5
-                    </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    <Shield size={20} />
+                    <div className="btn-text-wrap">
+                      <span className="btn-main-title">
+                        {language === "hi" ? "स्वच्छ मार्ग लें (Take Safer Route)" : "Take Cleaner Air Route"}
+                      </span>
+                      <span className="btn-sub-note">
+                        {saferRoute.duration_minutes}m • {saferRoute.average_pm25} µg/m³ PM2.5
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <img src={uberImages.signUpCar} alt="Vehicle" style={{ width: 44, height: 26, objectFit: "contain" }} />
+                    {choiceSubmitted === "safer" && (
+                      <img src={uberIcons.checkmark} alt="Selected" style={{ width: 18, height: 18, objectFit: "contain" }} />
+                    )}
                   </div>
                 </button>
 
@@ -327,15 +343,24 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   type="button"
                   className={`btn-rider-secondary ${choiceSubmitted === "fastest" ? "btn-selected-secondary" : ""}`}
                   onClick={() => onSelectChoice("fastest")}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
-                  <Navigation size={18} />
-                  <div className="btn-text-wrap">
-                    <span className="btn-main-title">
-                      {language === "hi" ? "सबसे तेज़ मार्ग रखें (Keep Fastest)" : "Keep Fastest Direct Route"}
-                    </span>
-                    <span className="btn-sub-note">
-                      {fastestRoute.duration_minutes}m • {fastestRoute.average_pm25} µg/m³ PM2.5
-                    </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    <Navigation size={18} />
+                    <div className="btn-text-wrap">
+                      <span className="btn-main-title">
+                        {language === "hi" ? "सबसे तेज़ मार्ग रखें (Keep Fastest)" : "Keep Fastest Direct Route"}
+                      </span>
+                      <span className="btn-sub-note">
+                        {fastestRoute.duration_minutes}m • {fastestRoute.average_pm25} µg/m³ PM2.5
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <img src={uberImages.signUpCar} alt="Vehicle" style={{ width: 40, height: 24, objectFit: "contain", opacity: 0.8 }} />
+                    {choiceSubmitted === "fastest" && (
+                      <img src={uberIcons.checkmark} alt="Selected" style={{ width: 18, height: 18, objectFit: "contain" }} />
+                    )}
                   </div>
                 </button>
               </div>
@@ -361,14 +386,18 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                 type="button"
                 className="btn-rider-primary"
                 onClick={() => onSelectChoice("fastest")}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
-                <Navigation size={20} />
-                <div className="btn-text-wrap">
-                  <span className="btn-main-title">
-                    {language === "hi" ? "सबसे तेज़ मार्ग पर जारी रखें" : "Proceed on Fastest Route"}
-                  </span>
-                  <span className="btn-sub-note">{fastestRoute.duration_minutes}m direct transit</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                  <Navigation size={20} />
+                  <div className="btn-text-wrap">
+                    <span className="btn-main-title">
+                      {language === "hi" ? "सबसे तेज़ मार्ग पर जारी रखें" : "Proceed on Fastest Route"}
+                    </span>
+                    <span className="btn-sub-note">{fastestRoute.duration_minutes}m direct transit</span>
+                  </div>
                 </div>
+                <img src={uberImages.signUpCar} alt="Vehicle" style={{ width: 44, height: 26, objectFit: "contain" }} />
               </button>
             </>
           )}
@@ -376,7 +405,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
           {/* Confirmation Alert */}
           {choiceSubmitted && (
             <div className="rider-confirmation-banner">
-              <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
+              <img src={uberIcons.checkmark} alt="Selected" style={{ width: 18, height: 18, objectFit: "contain" }} />
               <span>
                 {choiceSubmitted === "safer"
                   ? language === "hi"
