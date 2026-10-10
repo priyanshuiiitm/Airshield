@@ -1,6 +1,6 @@
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { Shield, RefreshCw, Activity } from "lucide-react";
+import { Shield, RefreshCw } from "lucide-react";
 
 interface HeaderProps {
   language: LanguageCode;
