@@ -159,11 +159,11 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
                 <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: dotColor, boxShadow: `0 0 8px ${dotColor}` }} />
-                  <span style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--text-primary)" }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
                     {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
                   </span>
                 </div>
-                <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
+                <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
                   {badgeLabel}
                 </span>
               </div>
@@ -171,13 +171,13 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               {/* Metrics Row */}
               <div className="route-metrics-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "var(--space-2)" }}>
                 {/* Exposure Index */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "var(--space-2) var(--space-3)" }}>
-                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Exposure</span>
+                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Exposure</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: "var(--text-lg)", fontWeight: 800, fontFamily: "var(--font-mono)", color: reductionPct >= 15 ? "var(--aurora-emerald-400)" : "var(--text-secondary)" }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: reductionPct >= 15 ? "var(--aurora-emerald-400)" : "var(--text-secondary)" }}>
                       {route.exposure_index}
                     </span>
-                    <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>/100</span>
+                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>/100</span>
                   </div>
                   {reductionPct > 0 ? (
                     <span style={{ fontSize: 10, color: "var(--aurora-emerald-400)", display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
@@ -189,21 +189,21 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 </div>
 
                 {/* PM2.5 */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "var(--space-2) var(--space-3)" }}>
-                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg PM2.5</span>
+                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg PM2.5</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: "var(--text-lg)", fontWeight: 800, fontFamily: "var(--font-mono)", color: pm25Color }}>{route.average_pm25}</span>
-                    <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>µg/m³</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: pm25Color }}>{route.average_pm25}</span>
+                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>µg/m³</span>
                   </div>
                   <ExposureBar value={route.average_pm25} max={300} color={pm25Color} />
                 </div>
 
                 {/* Duration */}
-                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "var(--space-2) var(--space-3)" }}>
-                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Trip Time</span>
+                <div style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Trip Time</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
-                    <span style={{ fontSize: "var(--text-lg)", fontWeight: 800, fontFamily: "var(--font-mono)", color: "var(--aurora-teal-400)" }}>{route.duration_minutes}</span>
-                    <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>min</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--aurora-teal-400)" }}>{route.duration_minutes}</span>
+                    <span style={{ fontSize: 10, color: "var(--text-muted)" }}>min</span>
                   </div>
                   <span style={{ fontSize: 10, color: "var(--text-secondary)", marginTop: 2, display: "block" }}>
                     {extraMins > 0 ? `+${extraMins}m detour` : "Fastest"} · {route.distance_km}km

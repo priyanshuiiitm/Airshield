@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div>
           <div className="brand-title-row">
-            <h1 className="brand-name" style={{ color: "#ffffff", fontWeight: 700, letterSpacing: "-0.02em" }}>AirShield</h1>
+            <h1 className="brand-name" style={{ color: "#ffffff", fontWeight: 600, letterSpacing: "-0.02em" }}>AirShield</h1>
             <span className="brand-tag">Delhi NCR Live</span>
           </div>
           <p className="brand-subtitle" style={{ color: "var(--text-secondary)" }}>Pollution-Aware Worker Routing Engine</p>

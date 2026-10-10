@@ -118,25 +118,27 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
                 <span className="dot-pulse-green" />
                 <span>{language === "hi" ? "स्वच्छ मार्ग उपलब्ध" : "Safer Route Available"}</span>
               </div>
-              <h2 className="card-title">{t.titleAvoidable}</h2>
-              <p className="card-subtitle" style={{ color: "var(--text-secondary)" }}>{explanationText}</p>
+              <h2 className="card-title" style={{ fontSize: 15, fontWeight: 600 }}>{t.titleAvoidable}</h2>
+              <p className="card-subtitle" style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 400 }}>
+                {language === "hi" ? "स्वच्छ मार्ग उपलब्ध है" : "Ridge/Green corridor reduces particulate exposure."}
+              </p>
             </div>
           </motion.div>
 
           {/* Metrics */}
           <motion.div className="metrics-grid" variants={staggerContainer}>
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <Clock size={16} style={{ color: "var(--aurora-amber-400)", flexShrink: 0 }} />
+              <Clock size={15} style={{ color: "var(--aurora-amber-400)", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "var(--aurora-amber-400)" }}>{formatMinutes(rec.additional_minutes)}</span>
-                <span className="metric-lbl">{t.additionalTime}</span>
+                <span className="metric-val" style={{ color: "var(--aurora-amber-400)", fontWeight: 600, fontSize: 14 }}>{formatMinutes(rec.additional_minutes)}</span>
+                <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.additionalTime}</span>
               </div>
             </motion.div>
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <TrendingDown size={16} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+              <TrendingDown size={15} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "var(--aurora-emerald-400)" }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
-                <span className="metric-lbl">{t.exposureReduction}</span>
+                <span className="metric-val" style={{ color: "var(--aurora-emerald-400)", fontWeight: 600, fontSize: 14 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
+                <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.exposureReduction}</span>
               </div>
             </motion.div>
           </motion.div>
@@ -150,21 +152,18 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <motion.div
             className="reward-banner"
             variants={fadeInUp}
-            style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
           >
-            <Shield size={18} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
-            <div className="reward-text-wrap">
-              <span className="reward-text">
-                Inhalation Protection: <strong style={{ color: "var(--aurora-emerald-400)" }}>↓ {rec.exposure_reduction_percent}% Estimated Exposure Avoided</strong>
-              </span>
-              <span className="reward-sub" style={{ color: "var(--text-secondary)" }}>Statutory CAAQMS-modeled clean air corridor</span>
-            </div>
+            <Shield size={15} style={{ color: "var(--aurora-emerald-400)", flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: "var(--text-secondary)", fontWeight: 400 }}>
+              Protection: <strong style={{ color: "var(--aurora-emerald-400)", fontWeight: 600 }}>↓ {rec.exposure_reduction_percent}% lower inhalation</strong>
+            </span>
           </motion.div>
 
           {/* N95 Respirator Advisory */}
-          <div className="mask-advisory-pill">
-            <AlertTriangle size={13} style={{ flexShrink: 0 }} />
-            <span>N95 Mask Advised: Ambient PM2.5 exceeds 100 µg/m³ across Delhi NCR.</span>
+          <div className="mask-advisory-pill" style={{ padding: "6px 10px", fontSize: 11, fontWeight: 400 }}>
+            <AlertTriangle size={12} style={{ flexShrink: 0 }} />
+            <span>N95 respirator advised (high ambient PM2.5)</span>
           </div>
 
           {/* Confirmation or Action Buttons */}

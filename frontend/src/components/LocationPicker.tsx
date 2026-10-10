@@ -299,7 +299,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           style={{
             background: "#ffffff",
             color: "#000000",
-            fontWeight: 700,
+            fontWeight: 600,
             border: "none",
             display: "inline-flex",
             alignItems: "center",

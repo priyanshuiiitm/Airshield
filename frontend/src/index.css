@@ -4,7 +4,7 @@
  * with glowing neon accents, glassmorphic cards, and crisp typography.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 :root {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -83,8 +83,11 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-weight: 400;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -141,7 +144,7 @@ button {
   padding: 8px 16px;
   border-radius: var(--radius-sm);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
   transition: top 0.2s;
 }
@@ -205,7 +208,7 @@ button {
 
 .brand-name {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   background: linear-gradient(90deg, #ffffff, #94a3b8);
   -webkit-background-clip: text;
@@ -214,7 +217,7 @@ button {
 
 .brand-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--emerald-neon);
@@ -303,8 +306,8 @@ button {
 
 .content-split-layout {
   display: grid;
-  grid-template-columns: 460px 1fr;
-  gap: 24px;
+  grid-template-columns: 400px 1fr;
+  gap: 20px;
   align-items: start;
 }
 
@@ -373,7 +376,7 @@ button {
 
 .picker-title {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-primary);
 }
@@ -550,7 +553,7 @@ button {
 
 .coord-title {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .coord-inputs-row {
@@ -649,7 +652,7 @@ button {
   background: var(--aurora-amber-500, #f59e0b);
   color: #0a0e1a;
   border-color: var(--aurora-amber-500, #f59e0b);
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
@@ -664,7 +667,7 @@ button {
   border-radius: var(--radius-sm);
   color: #ffffff;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
   transition: all 0.2s;
@@ -796,7 +799,7 @@ button {
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 2px 8px;
@@ -824,7 +827,7 @@ button {
 
 .card-title {
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
   letter-spacing: -0.01em;
 }
@@ -860,7 +863,7 @@ button {
 
 .metric-val {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
 }
 
@@ -901,7 +904,7 @@ button {
 
 .advisory-heading {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #fbbf24;
 }
 
@@ -945,7 +948,7 @@ button {
   height: 42px;
   border-radius: var(--radius-sm);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   transition: all 0.2s;
   flex: 1;
 }
@@ -1014,7 +1017,7 @@ button {
 
 .choice-conf-title {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -1067,7 +1070,7 @@ button {
 
 .section-title {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-primary);
 }
@@ -1146,13 +1149,13 @@ button {
 
 .route-title {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
 .route-badge {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: var(--radius-full);
   text-transform: uppercase;
@@ -1206,7 +1209,7 @@ button {
 
 .metric-num {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
 }
 
@@ -1220,7 +1223,7 @@ button {
   align-items: center;
   gap: 3px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--emerald-neon);
 }
 
@@ -1384,7 +1387,7 @@ button {
   padding: 2px 6px;
   border-radius: 10px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
   color: #000000;
   border: 1.5px solid #ffffff;
@@ -1476,7 +1479,7 @@ button {
 
 .transparency-title {
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -1574,7 +1577,7 @@ button {
 
 .station-operator-badge {
   font-size: 9px;
-  font-weight: 800;
+  font-weight: 600;
   background: #1e293b;
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.3);
@@ -1584,13 +1587,13 @@ button {
 
 .station-name {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
 .station-aqi-pill {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
   padding: 2px 8px;
   border-radius: var(--radius-full);
@@ -1666,7 +1669,7 @@ button {
 
 .step-num {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--cyan-neon);
   background: var(--cyan-bg);
@@ -1686,7 +1689,7 @@ button {
 
 .step-heading {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -1742,7 +1745,7 @@ button {
   background: var(--bg-card-subtle);
   padding: 10px 12px;
   color: var(--text-secondary);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 0.05em;
@@ -1761,7 +1764,7 @@ button {
 
 .table-rec-tag {
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--emerald-neon);
   background: var(--emerald-bg);
   border: 1px solid rgba(16, 185, 129, 0.3);
@@ -1789,7 +1792,7 @@ button {
 
 .disclaimer-title {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #fbbf24;
 }
 
@@ -1807,7 +1810,7 @@ button {
   padding: 4px 10px;
   border-radius: var(--radius-full);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   font-family: var(--font-sans);
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
@@ -1891,7 +1894,7 @@ button {
 
 .prompt-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--emerald-neon);
@@ -1920,7 +1923,7 @@ button {
   padding: 8px 14px;
   border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
   transition: all 0.15s;
   flex: 1;
@@ -1941,7 +1944,7 @@ button {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   transition: all 0.15s;
   cursor: pointer;
@@ -2082,14 +2085,14 @@ button {
 
 .nav-brand-title {
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: #ffffff;
 }
 
 .nav-brand-tag {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #f97316;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2191,7 +2194,7 @@ button {
   padding: 6px 14px;
   border-radius: var(--radius-full);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: #fb923c;
   width: fit-content;
@@ -2207,28 +2210,28 @@ button {
 }
 
 .hero-main-headline {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
   color: #ffffff;
 }
 
 @media (max-width: 768px) {
   .hero-main-headline {
-    font-size: 40px;
+    font-size: 32px;
   }
 }
 
 .headline-gradient-sub {
-  color: #94a3b8;
+  color: #a1a1aa;
 }
 
 .hero-description {
-  font-size: 17px;
-  color: #94a3b8;
+  font-size: 15px;
+  color: #a1a1aa;
   line-height: 1.6;
-  max-width: 580px;
+  max-width: 520px;
 }
 
 .hero-actions-row {
@@ -2255,7 +2258,7 @@ button {
   padding: 14px 28px;
   border-radius: var(--radius-sm);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
   transition: all 0.2s;
 }
@@ -2315,7 +2318,7 @@ button {
 
 .h-metric-val {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
 }
 
@@ -2363,7 +2366,7 @@ button {
 
 .radar-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: #94a3b8;
 }
@@ -2373,7 +2376,7 @@ button {
   align-items: center;
   gap: 6px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--emerald-neon);
   background: var(--emerald-bg);
   padding: 2px 8px;
@@ -2501,7 +2504,7 @@ button {
   padding: 4px 10px;
   border-radius: var(--radius-full);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   background: rgba(10, 14, 23, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
@@ -2560,7 +2563,7 @@ button {
 
 .dp-label {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: #94a3b8;
 }
@@ -2593,7 +2596,7 @@ button {
 
 .dp-tradeoff-label {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   color: #64748b;
   letter-spacing: 0.05em;
 }
@@ -2606,7 +2609,7 @@ button {
 
 .dp-val {
   font-size: 24px;
-  font-weight: 900;
+  font-weight: 600;
   font-family: var(--font-mono);
 }
 
@@ -2641,20 +2644,20 @@ button {
 
 .dp-dial-score {
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 600;
   line-height: 1;
   font-family: var(--font-mono);
 }
 
 .dp-dial-label {
   font-size: 8px;
-  font-weight: 800;
+  font-weight: 600;
   color: #94a3b8;
 }
 
 .dp-dial-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .dp-feature-list {
@@ -2686,7 +2689,7 @@ button {
 
 .btn-dp-inspect {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #f97316;
   background: rgba(249, 115, 22, 0.1);
   border: 1px solid rgba(249, 115, 22, 0.3);
@@ -2727,28 +2730,28 @@ button {
 
 .section-subtitle-tag {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #f97316;
 }
 
 .section-main-heading {
-  font-size: 42px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: #ffffff;
 }
 
 @media (max-width: 768px) {
   .section-main-heading {
-    font-size: 32px;
+    font-size: 26px;
   }
 }
 
 .section-description-text {
-  font-size: 16px;
-  color: #94a3b8;
+  font-size: 14px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -2791,14 +2794,14 @@ button {
 
 .chrono-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: #64748b;
 }
 
 .chrono-act-indicator {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #f97316;
   font-family: var(--font-mono);
 }
@@ -2861,7 +2864,7 @@ button {
 
 .chrono-step-tag {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   color: #94a3b8;
   letter-spacing: 0.04em;
 }
@@ -2915,29 +2918,29 @@ button {
 
 .act-num-tag {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: #f97316;
 }
 
 .act-watermark {
   font-size: 36px;
-  font-weight: 900;
+  font-weight: 600;
   color: rgba(255, 255, 255, 0.04);
   font-family: var(--font-mono);
 }
 
 .act-headline {
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 600;
   color: #ffffff;
   letter-spacing: -0.01em;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .act-body {
-  font-size: 15px;
-  color: #94a3b8;
+  font-size: 13.5px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -2981,7 +2984,7 @@ button {
 
 .btn-sensors-launch {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #f97316;
   background: rgba(249, 115, 22, 0.1);
   border: 1px solid rgba(249, 115, 22, 0.3);
@@ -3018,7 +3021,7 @@ button {
 
 .st-op-badge {
   font-size: 9px;
-  font-weight: 800;
+  font-weight: 600;
   background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.3);
@@ -3028,14 +3031,14 @@ button {
 
 .st-pm-val {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
   color: #fbbf24;
 }
 
 .st-name {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -3078,7 +3081,7 @@ button {
 
 .cta-headline {
   font-size: 48px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: #ffffff;
   line-height: 1.15;
@@ -3105,7 +3108,7 @@ button {
   padding: 16px 36px;
   border-radius: var(--radius-sm);
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
   transition: all 0.2s;
   margin-top: 12px;
@@ -3137,7 +3140,7 @@ button {
 
 .footer-brand-title {
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: #ffffff;
   margin-bottom: 6px;
@@ -3176,7 +3179,7 @@ button {
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .builder-info {
@@ -3186,7 +3189,7 @@ button {
 
 .builder-name {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -3237,7 +3240,7 @@ button {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -3305,7 +3308,7 @@ button {
   background: #f59e0b;
   color: #000000;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   padding: 2px 8px;
   border-radius: var(--radius-full);
   letter-spacing: 0.05em;
@@ -3375,13 +3378,13 @@ button {
 
 .dosimetry-title {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
 .dosimetry-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--cyan-neon);
   background: rgba(6, 182, 212, 0.12);
   padding: 2px 8px;
@@ -3408,7 +3411,7 @@ button {
 
 .dosimetry-val {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .dosimetry-lbl {
@@ -3469,7 +3472,7 @@ button {
   border: 1px solid var(--border-subtle);
   color: #ffffff;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 6px 14px;
@@ -3544,7 +3547,7 @@ button {
 
 .mask-title {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -3573,7 +3576,7 @@ button {
 
 .point-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
   letter-spacing: 0.05em;
 }
@@ -3666,14 +3669,14 @@ button {
 
 .metric-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
   letter-spacing: 0.05em;
 }
 
 .metric-large-val {
   font-size: 30px;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
   color: #ffffff;
   letter-spacing: -0.02em;
@@ -3712,7 +3715,7 @@ button {
 
 .btn-rider-primary .btn-main-title {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   color: #000000;
 }
 
@@ -3785,7 +3788,7 @@ button {
 
 .notice-title {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
   margin: 0 0 4px 0;
 }
@@ -3834,7 +3837,7 @@ button {
 
 .shift-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 6px;
@@ -3861,7 +3864,7 @@ button {
 
 .shift-stat-val {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   font-family: var(--font-mono);
   color: #ffffff;
 }
@@ -3931,7 +3934,7 @@ button {
 
 .analytics-heading {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
   margin: 0;
 }
@@ -3952,7 +3955,7 @@ button {
   padding: 10px 18px;
   border-radius: var(--radius-sm);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
   transition: all 0.15s;
@@ -4026,12 +4029,12 @@ button {
 
 .kpi-val {
   font-size: 26px;
-  font-weight: 900;
+  font-weight: 600;
 }
 
 .kpi-label {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -4071,14 +4074,14 @@ button {
 
 .panel-title {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
   margin: 0;
 }
 
 .panel-badge {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--cyan-neon);
   background: rgba(6, 182, 212, 0.12);
   padding: 3px 10px;
@@ -4152,7 +4155,7 @@ button {
   padding: 10px 8px;
   text-align: left;
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 600;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -4219,13 +4222,13 @@ button {
 
 .hotspot-corridor {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
 }
 
 .hotspot-pm {
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ef4444;
   background: rgba(239, 68, 68, 0.15);
   padding: 2px 8px;
@@ -4244,7 +4247,7 @@ button {
 
 .action-tag {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   color: #fbbf24;
   letter-spacing: 0.05em;
 }
@@ -4291,7 +4294,7 @@ button {
 
 .un-metric-lbl {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: 0.04em;
@@ -4299,7 +4302,7 @@ button {
 
 .un-metric-val {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -4333,7 +4336,7 @@ button {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: #0f172a;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   border: none;
   padding: 7px 12px;
   border-radius: 5px;
@@ -4368,7 +4371,7 @@ button {
   align-items: center;
   gap: 8px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--cyan-neon);
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -4410,7 +4413,7 @@ button {
 
 .ticker-id {
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ticker-route {
@@ -4420,14 +4423,14 @@ button {
 
 .ticker-pm {
   color: #ef4444;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ticker-badge {
   padding: 1px 6px;
   border-radius: var(--radius-full);
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .ticker-badge.avoidable {
@@ -4453,7 +4456,7 @@ button {
 .active-tag {
   font-size: 10px;
   color: var(--cyan-neon);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 

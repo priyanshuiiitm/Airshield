@@ -19,7 +19,7 @@ const tabs: { id: Tab; icon: React.ReactNode; label: string }[] = [
 ];
 
 export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommendation, language }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("sources");
   const { routes, recommendation: rec } = recommendation;
 
@@ -39,16 +39,16 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
         className="transparency-header"
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ background: "rgba(26,32,50,0.8)" }}
-        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 24px", cursor: "pointer", background: "rgba(20,26,42,0.6)", borderBottom: isOpen ? "1px solid rgba(255,255,255,0.06)" : "none" }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", cursor: "pointer", background: "rgba(20,26,42,0.6)", borderBottom: isOpen ? "1px solid rgba(255,255,255,0.06)" : "none" }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <Database size={20} style={{ color: "var(--aurora-teal-400)" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Database size={18} style={{ color: "var(--aurora-teal-400)" }} />
           <div>
-            <h3 style={{ fontSize: 15, fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
-              {language === "hi" ? "हमने यह कैसे तय किया?" : "How We Calculated This"}
+            <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: 0, letterSpacing: "-0.01em" }}>
+              {language === "hi" ? "गणना का आधार (Methodology)" : "How We Calculated This"}
             </h3>
-            <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: 0, marginTop: 2 }}>
-              Station citations, IDW interpolation, and exposure formulas
+            <p style={{ fontSize: 11, color: "var(--text-muted)", margin: 0, marginTop: 2 }}>
+              Statutory station citations, IDW spatial decay, and exposure matrix
             </p>
           </div>
         </div>
@@ -123,10 +123,10 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
                             <motion.div key={st.station_id} variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
                               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                  <span style={{ fontSize: 9, fontWeight: 800, background: "rgba(20,184,166,0.15)", color: "var(--aurora-teal-400)", border: "1px solid rgba(20,184,166,0.3)", padding: "1px 5px", borderRadius: 4 }}>{st.operator}</span>
-                                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-primary)" }}>{st.name}</span>
+                                  <span style={{ fontSize: 9, fontWeight: 600, background: "rgba(20,184,166,0.15)", color: "var(--aurora-teal-400)", border: "1px solid rgba(20,184,166,0.3)", padding: "1px 5px", borderRadius: 4 }}>{st.operator}</span>
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}>{st.name}</span>
                                 </div>
-                                <span style={{ fontSize: 11, fontWeight: 800, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: "var(--radius-full)", background: pmBg, color: pmColor, border: `1px solid ${pmColor}40` }}>{st.pm25} µg/m³</span>
+                                <span style={{ fontSize: 11, fontWeight: 600, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: "var(--radius-full)", background: pmBg, color: pmColor, border: `1px solid ${pmColor}40` }}>{st.pm25} µg/m³</span>
                               </div>
                               <div style={{ fontSize: 11, color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: 2 }}>
                                 <span>Observed: {st.timestamp.split("T")[1].slice(0, 5)} IST ({st.last_updated_mins_ago}m ago)</span>
@@ -157,9 +157,9 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
                         { step: "05", title: "Constrained Buffer Check", desc: "Recommendation only if alt_duration ≤ fastest + buffer AND robust across 3 sensitivity sweeps:", code: "Check: 0.5×, 1.0×, 1.5× modifier invariant" },
                       ].map((s) => (
                         <motion.div key={s.step} variants={fadeInUp} style={{ display: "flex", gap: 14, background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: 14 }}>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: "var(--aurora-teal-400)", background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.3)", padding: "4px 8px", borderRadius: 6, height: "fit-content", whiteSpace: "nowrap" }}>Step {s.step}</span>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: "var(--aurora-teal-400)", background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.3)", padding: "4px 8px", borderRadius: 6, height: "fit-content", whiteSpace: "nowrap" }}>Step {s.step}</span>
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-                            <h4 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>{s.title}</h4>
+                            <h4 style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>{s.title}</h4>
                             <p style={{ fontSize: 12, color: "var(--text-secondary)", margin: 0 }}>{s.desc}</p>
                             <div style={{ background: "var(--bg-app)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "10px 14px" }}>
                               <code style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "var(--aurora-teal-400)", display: "block", whiteSpace: "pre-wrap" }}>{s.code}</code>

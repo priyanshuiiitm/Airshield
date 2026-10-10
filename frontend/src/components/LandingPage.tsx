@@ -88,13 +88,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
 
             <motion.h1 className="hero-main-headline" variants={fadeInUp}>
               Pollution is dynamic. <br />
-              <span className="headline-gradient-sub" style={{ color: "#ffffff", fontWeight: 700 }}>So should the route.</span>
+              <span className="headline-gradient-sub" style={{ color: "#ffffff", fontWeight: 600 }}>So should the route.</span>
             </motion.h1>
 
-            <motion.p className="hero-description" variants={fadeInUp} style={{ color: "var(--text-secondary)" }}>
-              AirShield models real-time micro-urban PM2.5 exposure in Delhi NCR, interpolates
-              statutory CAAQMS monitoring networks, and guides outdoor delivery workers through
-              constrained-optimal clean corridors.
+            <motion.p className="hero-description" variants={fadeInUp} style={{ color: "var(--text-secondary)", fontWeight: 400 }}>
+              Real-time micro-urban PM2.5 routing for Delhi NCR. Interpolates statutory CAAQMS sensor networks into clean, constrained-optimal corridors for outdoor couriers.
             </motion.p>
 
             <motion.div className="hero-actions-row" variants={fadeInUp}>
@@ -105,7 +103,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 data-testid="btn-launch-hero"
                 whileHover={{ scale: 1.02 }}
                 whileTap={tapScale}
-                style={{ background: "#ffffff", color: "#000000", fontWeight: 700, border: "none" }}
+                style={{ background: "#ffffff", color: "#000000", fontWeight: 600, border: "none" }}
               >
                 <span>Launch route engine</span>
                 <ArrowRight size={16} />

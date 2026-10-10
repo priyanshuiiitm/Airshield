@@ -236,11 +236,11 @@ export const App: React.FC = () => {
       {showEpisodeBanner && (
         <div className="seasonal-episode-banner animate-slide-up">
           <div className="episode-banner-content">
-            <span className="episode-icon"><Wind size={15} /></span>
+            <span className="episode-icon"><Wind size={14} /></span>
             <div className="episode-text-group">
-              <span className="episode-badge">SEASONAL INVERSION LAYER</span>
+              <span className="episode-badge">ADVISORY</span>
               <span className="episode-message">
-                North-Western transboundary particulate smoke and boundary inversion layer active over Delhi NCR.
+                Active seasonal transboundary particulate smoke over Delhi NCR.
               </span>
             </div>
           </div>
