@@ -256,7 +256,7 @@ const AppContent: React.FC = () => {
   }
   // Render Landing Page
   if (viewMode === "landing") {
-    return <LandingPage onLaunchSimulator={() => setViewMode("driver")} />;
+    return <LandingPage onLaunchSimulator={() => setViewMode("simulator")} />;
   }
 
   // Render Clean Driver View (Mobile-First)

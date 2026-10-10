@@ -1,17 +1,17 @@
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { Shield, RefreshCw, Smartphone, BarChart3, ArrowLeft, Car } from "lucide-react";
+import { Shield, RefreshCw } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { slideInLeft, fadeIn, hoverScale, tapScale, durations } from "../animation/motion-config";
 
 interface HeaderProps {
+  onOpenDriverView?: () => void;
   language: LanguageCode;
   onLanguageChange: (lang: LanguageCode) => void;
   onRefresh: () => void;
   onBackToLanding?: () => void;
   onOpenRiderMode?: () => void;
   onOpenAnalytics?: () => void;
-  onOpenDriverView?: () => void;
   isLoading: boolean;
 }
 
@@ -20,9 +20,9 @@ export const Header: React.FC<HeaderProps> = ({
   onLanguageChange,
   onRefresh,
   onBackToLanding,
+  onOpenDriverView,
   onOpenRiderMode,
   onOpenAnalytics,
-  onOpenDriverView,
   isLoading
 }) => {
   const { scrollY } = useScroll();
@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   const backgroundColor = useTransform(
     scrollY,
     [0, 50],
-    ["rgba(9, 9, 11, 0.85)", "rgba(9, 9, 11, 0.98)"]
+    ["rgba(10, 14, 26, 0.8)", "rgba(10, 14, 26, 0.95)"]
   );
   
   return (
@@ -55,14 +55,14 @@ export const Header: React.FC<HeaderProps> = ({
         animate="visible"
       >
         <div className="brand-shield-icon">
-          <Shield size={20} className="shield-svg" />
+          <Shield size={22} className="shield-svg" />
         </div>
         <div>
           <div className="brand-title-row">
-            <h1 className="brand-name" style={{ color: "#ffffff", fontWeight: 600, letterSpacing: "-0.02em" }}>AirShield</h1>
+            <h1 className="brand-name" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>AirShield</h1>
             <span className="brand-tag">Delhi NCR Live</span>
           </div>
-          <p className="brand-subtitle" style={{ color: "var(--text-secondary)" }}>Pollution-Aware Worker Routing Engine</p>
+          <p className="brand-subtitle" style={{ color: "var(--text-secondary)" }}>Pollution-Aware Worker Routing & Decision Support</p>
         </div>
       </motion.div>
 
@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
         variants={fadeIn}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.15 }}
+        transition={{ delay: 0.2 }}
       >
         {onBackToLanding && (
           <motion.button
@@ -83,8 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
             whileTap={tapScale}
             style={{ color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "6px" }}
           >
-            <ArrowLeft size={14} />
-            <span>Story & Overview</span>
+            <span>← Story & Overview</span>
           </motion.button>
         )}
 
@@ -96,10 +95,9 @@ export const Header: React.FC<HeaderProps> = ({
             title="Simple Driver View"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px", background: "#10b981", color: "#000" }}
+            style={{ display: "flex", alignItems: "center", gap: "6px", background: "#10b981", color: "#000", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 600, border: "none", cursor: "pointer" }}
           >
-            <Car size={14} />
-            <span>Driver</span>
+            <span>Mobile App</span>
           </motion.button>
         )}
 
@@ -111,9 +109,8 @@ export const Header: React.FC<HeaderProps> = ({
             title="Open Sunlight-Optimized Rider Handlebar Mode"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-secondary)", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, border: "1px solid var(--border-subtle)", background: "transparent", cursor: "pointer" }}
           >
-            <Smartphone size={14} />
             <span>Rider Mode</span>
           </motion.button>
         )}
@@ -126,9 +123,8 @@ export const Header: React.FC<HeaderProps> = ({
             title="View 150-Trip Batch Impact Evidence & Municipal Hotspots"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-secondary)", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, border: "1px solid var(--border-subtle)", background: "transparent", cursor: "pointer" }}
           >
-            <BarChart3 size={14} />
             <span>Batch Impact</span>
           </motion.button>
         )}
@@ -136,16 +132,16 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Live Network Pulse Indicator */}
         <motion.div 
           className="live-status-pill" 
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }} 
-          title="Live CPCB/DPCC Statutory CAAQMS Stations • Synced 12m ago • 10 Active Nodes"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)' }} 
+          title="Live CPCB/DPCC Sensor Integration Active"
           whileHover={hoverScale}
         >
-          <div className="live-pulse-dot" style={{ background: "var(--color-safe)" }}></div>
-          <span className="live-status-text" style={{ color: "var(--text-secondary)" }}>10-Station Feed</span>
+          <div className="live-pulse-dot" style={{ background: "var(--aurora-emerald-500)" }}></div>
+          <span className="live-status-text" style={{ color: "var(--aurora-emerald-500)" }}>Live 10-Station Feed</span>
         </motion.div>
 
         {/* Language Switcher */}
-        <div className="lang-switcher-group" role="group" aria-label="Language selection">
+        <div className="lang-switcher-group" role="group" aria-label="Language selection" style={{ background: "var(--bg-input)" }}>
           <motion.button
             type="button"
             className={`lang-btn ${language === "en" ? "active" : ""}`}
@@ -176,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
           whileTap={tapScale}
           style={{ background: "var(--bg-elevated)", color: "var(--text-primary)" }}
         >
-          <RefreshCw size={15} className={isLoading ? "animate-spin" : ""} />
+          <RefreshCw size={17} className={isLoading ? "animate-spin text-cyan" : ""} />
         </motion.button>
       </motion.div>
     </motion.header>
