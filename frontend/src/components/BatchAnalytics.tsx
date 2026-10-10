@@ -473,7 +473,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               {/* Avoidable */}
               <div className="dist-item">
                 <div className="dist-label-row">
-                  <span className="dist-name">🟢 AVOIDABLE (Cleaner corridor within buffer)</span>
+                  <span className="dist-name">AVOIDABLE (Cleaner corridor within buffer)</span>
                   <span className="dist-val text-emerald">
                     {activeStats.avoidableCount} trips ({activeStats.avoidablePct}%)
                   </span>
@@ -489,7 +489,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               {/* Unavoidable */}
               <div className="dist-item">
                 <div className="dist-label-row">
-                  <span className="dist-name">🟠 UNAVOIDABLE (Background smog uniformly elevated)</span>
+                  <span className="dist-name">UNAVOIDABLE (Background smog uniformly elevated)</span>
                   <span className="dist-val text-amber">
                     {activeStats.unavoidableCount} trips ({activeStats.unavoidablePct}%)
                   </span>
@@ -505,7 +505,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               {/* Low */}
               <div className="dist-item">
                 <div className="dist-label-row">
-                  <span className="dist-name">🔵 LOW (Acceptable ambient air / PM2.5 &lt; 60 µg/m³)</span>
+                  <span className="dist-name">LOW (Acceptable ambient air / PM2.5 &lt; 60 µg/m³)</span>
                   <span className="dist-val text-cyan">
                     {activeStats.lowCount} trips ({activeStats.lowPct}%)
                   </span>

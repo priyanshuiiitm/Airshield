@@ -129,8 +129,8 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
                                 <span style={{ fontSize: 11, fontWeight: 800, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: "var(--radius-full)", background: pmBg, color: pmColor, border: `1px solid ${pmColor}40` }}>{st.pm25} µg/m³</span>
                               </div>
                               <div style={{ fontSize: 11, color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: 2 }}>
-                                <span>🕒 Observed: {st.timestamp.split("T")[1].slice(0, 5)} IST ({st.last_updated_mins_ago}m ago)</span>
-                                <span>📡 Source: {st.source}</span>
+                                <span>Observed: {st.timestamp.split("T")[1].slice(0, 5)} IST ({st.last_updated_mins_ago}m ago)</span>
+                                <span>Source: {st.source}</span>
                               </div>
                               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--text-muted)", fontFamily: "var(--font-mono)", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 6 }}>
                                 <span>{st.lat.toFixed(4)}° N, {st.lng.toFixed(4)}° E</span>

@@ -12,6 +12,7 @@ import { LandingPage } from "./components/LandingPage";
 import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
+import { Wind, Clock, Shield } from "lucide-react";
 
 export const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<"landing" | "simulator" | "rider" | "analytics">("landing");
@@ -212,22 +213,22 @@ export const App: React.FC = () => {
         isLoading={isLoading}
       />
       
-      {/* Hackathon Demo Controls Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 24px', backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid rgba(255,255,255,0.06)', alignItems: 'center', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Demo Toggles</span>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, backgroundColor: airshieldEnabled ? 'rgba(16,185,129,0.15)' : 'rgba(100,116,139,0.15)', padding: '6px 14px', borderRadius: 9999, border: `1px solid ${airshieldEnabled ? 'rgba(16,185,129,0.4)' : 'rgba(100,116,139,0.3)'}`, transition: 'all 0.2s' }}>
-                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} style={{ cursor: 'pointer', accentColor: 'var(--aurora-emerald-500)' }} />
-                  <span style={{ color: airshieldEnabled ? 'var(--aurora-emerald-400)' : 'var(--text-muted)', fontSize: 13, fontWeight: 600 }}>
-                      {airshieldEnabled ? "AirShield Protection ON" : "Standard Delivery Mode (OFF)"}
+      {/* Demo Controls Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 28px', backgroundColor: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <span style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Mode</span>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8, backgroundColor: airshieldEnabled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)', padding: '6px 14px', borderRadius: 9999, border: `1px solid ${airshieldEnabled ? 'rgba(255,255,255,0.2)' : 'var(--border-subtle)'}`, transition: 'all 0.2s' }}>
+                  <input type="checkbox" checked={airshieldEnabled} onChange={() => setAirshieldEnabled(!airshieldEnabled)} style={{ cursor: 'pointer', accentColor: '#ffffff' }} />
+                  <span style={{ color: airshieldEnabled ? '#ffffff' : 'var(--text-muted)', fontSize: 13, fontWeight: 600 }}>
+                      {airshieldEnabled ? "AirShield Protection Active" : "Standard Direct Routing"}
                   </span>
               </label>
           </div>
           <button
               onClick={() => setViewMode("analytics")}
-              style={{ backgroundColor: 'rgba(99,102,241,0.15)', color: 'var(--aurora-violet-300)', border: '1px solid rgba(99,102,241,0.3)', padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+              style={{ backgroundColor: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', padding: '6px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
           >
-              150-Trip Batch Impact Evidence →
+              150-Trip Batch Analytics →
           </button>
       </div>
 
@@ -235,11 +236,11 @@ export const App: React.FC = () => {
       {showEpisodeBanner && (
         <div className="seasonal-episode-banner animate-slide-up">
           <div className="episode-banner-content">
-            <span className="episode-icon">🌾</span>
+            <span className="episode-icon"><Wind size={15} /></span>
             <div className="episode-text-group">
-              <span className="episode-badge">SEASONAL EPISODE ACTIVE</span>
+              <span className="episode-badge">SEASONAL INVERSION LAYER</span>
               <span className="episode-message">
-                North-Western transboundary crop stubble smoke & winter boundary inversion layer active over Delhi NCR. Clean corridor navigation active.
+                North-Western transboundary particulate smoke and boundary inversion layer active over Delhi NCR.
               </span>
             </div>
           </div>
@@ -309,10 +310,10 @@ export const App: React.FC = () => {
                 />
                 )
             ) : (
-                <div style={{ backgroundColor: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center', backdropFilter: 'blur(12px)' }}>
-                    <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>⏱️</div>
-                    <h3 style={{ color: 'var(--text-primary)', margin: '0 0 0.5rem 0', fontWeight: 700 }}>Standard Delivery Mode</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Showing only the fastest route. Worker exposure is unmitigated and unmeasured.</p>
+                <div style={{ backgroundColor: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--text-muted)' }}><Clock size={20} /></div>
+                    <h3 style={{ color: 'var(--text-primary)', margin: '0 0 6px 0', fontWeight: 600, fontSize: 15 }}>Standard Delivery Mode</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: 0, lineHeight: 1.5 }}>Showing standard fastest path without pollution mitigation.</p>
                 </div>
             )}
 
@@ -329,25 +330,28 @@ export const App: React.FC = () => {
             {/* Courier Shift Health Dosimetry (Non-Monetary) */}
             <div className="shift-dosimetry-card">
               <div className="dosimetry-header">
-                <span className="dosimetry-title">🛡️ Today's Shift Health Dosimetry</span>
-                <span className="dosimetry-tag">Statutory Modeled</span>
+                <span className="dosimetry-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shield size={14} />
+                  <span>Today's Shift Exposure Summary</span>
+                </span>
+                <span className="dosimetry-tag">Observed</span>
               </div>
               <div className="dosimetry-grid">
                 <div className="dosimetry-item">
-                  <span className="dosimetry-val text-emerald">4</span>
+                  <span className="dosimetry-val">4</span>
                   <span className="dosimetry-lbl">Trips Completed</span>
                 </div>
                 <div className="dosimetry-item">
-                  <span className="dosimetry-val text-cyan">2h 15m</span>
-                  <span className="dosimetry-lbl">Transit Outdoors</span>
+                  <span className="dosimetry-val">2h 15m</span>
+                  <span className="dosimetry-lbl">Transit Time</span>
                 </div>
                 <div className="dosimetry-item">
-                  <span className="dosimetry-val text-emerald">↓ 1,840</span>
-                  <span className="dosimetry-lbl">Smog Avoided (µg·min)</span>
+                  <span className="dosimetry-val">↓ 1,840</span>
+                  <span className="dosimetry-lbl">Avoided (µg·min)</span>
                 </div>
                 <div className="dosimetry-item">
-                  <span className="dosimetry-val text-amber">92%</span>
-                  <span className="dosimetry-lbl">Clean Air Adherence</span>
+                  <span className="dosimetry-val">92%</span>
+                  <span className="dosimetry-lbl">Adherence</span>
                 </div>
               </div>
             </div>

@@ -17,64 +17,60 @@
      automatically pick up the new, richer palette.
   ══════════════════════════════════════════════════════════ */
 
-  /* Backgrounds — deeper blue-black base */
-  --bg-app: #0a0e1a;
-  --bg-surface: #0f1420;
-  --bg-card: rgba(20, 26, 42, 0.85);
-  --bg-card-hover: rgba(30, 39, 61, 0.95);
-  --bg-card-subtle: #13182e;
-  --bg-input: #151d2e;
+  /* Backgrounds — clean obsidian dark */
+  --bg-app: #09090b;
+  --bg-surface: #101115;
+  --bg-card: #14151b;
+  --bg-card-hover: #191b22;
+  --bg-card-subtle: #121318;
+  --bg-input: #121318;
 
   /* Text */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-dark: #0f172a;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-dark: #09090b;
 
-  /* Aurora accent aliases — maps old neon vars to Aurora palette */
-  --emerald-neon: var(--aurora-emerald-500, #10b981);
-  --emerald-glow: rgba(16, 185, 129, 0.25);
-  --emerald-bg: rgba(16, 185, 129, 0.12);
+  /* Clean Functional Status Colors (No glowing halos) */
+  --emerald-neon: #10b981;
+  --emerald-glow: rgba(16, 185, 129, 0.15);
+  --emerald-bg: rgba(16, 185, 129, 0.08);
 
-  /* Cyan → Aurora Teal (more refined) */
-  --cyan-neon: var(--aurora-teal-400, #2dd4bf);
-  --cyan-glow: rgba(20, 184, 166, 0.25);
-  --cyan-bg: rgba(20, 184, 166, 0.12);
+  --cyan-neon: #ffffff;
+  --cyan-glow: rgba(255, 255, 255, 0.1);
+  --cyan-bg: rgba(255, 255, 255, 0.06);
 
-  /* Amber → Aurora Amber */
-  --amber-neon: var(--aurora-amber-400, #fbbf24);
-  --amber-glow: rgba(245, 158, 11, 0.25);
-  --amber-bg: rgba(245, 158, 11, 0.12);
+  --amber-neon: #f59e0b;
+  --amber-glow: rgba(245, 158, 11, 0.15);
+  --amber-bg: rgba(245, 158, 11, 0.08);
 
-  /* Red → Aurora Rose (softer, more premium) */
-  --red-neon: var(--aurora-rose-500, #f43f5e);
-  --red-glow: rgba(244, 63, 94, 0.25);
-  --red-bg: rgba(244, 63, 94, 0.12);
+  --red-neon: #ef4444;
+  --red-glow: rgba(239, 68, 68, 0.15);
+  --red-bg: rgba(239, 68, 68, 0.08);
 
-  /* Indigo → Aurora Violet */
-  --indigo-neon: var(--aurora-violet-400, #c084fc);
-  --indigo-bg: rgba(168, 85, 247, 0.12);
+  --indigo-neon: #ffffff;
+  --indigo-bg: rgba(255, 255, 255, 0.06);
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-glow-emerald: rgba(16, 185, 129, 0.4);
-  --border-glow-cyan: rgba(20, 184, 166, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-glow-emerald: rgba(16, 185, 129, 0.25);
+  --border-glow-cyan: rgba(255, 255, 255, 0.2);
 
   /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
 
   /* Elevation shadows */
-  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-  --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.35);
-  --shadow-glow-cyan: 0 0 20px rgba(20, 184, 166, 0.35);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-glow-emerald: none;
+  --shadow-glow-cyan: none;
 
-  /* Aurora-specific gradient for active/interactive highlights */
-  --gradient-aurora-primary: linear-gradient(135deg, #9333ea 0%, #4f46e5 50%, #0d9488 100%);
-  --gradient-aurora-success: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+  /* Solid Clean Monochrome Highlights */
+  --gradient-aurora-primary: #ffffff;
+  --gradient-aurora-success: #ffffff;
 }
 
 * {
@@ -118,19 +114,19 @@ button {
 
 /* ── Focus indicators (WCAG AA) ── */
 :focus-visible {
-  outline: 2px solid var(--aurora-violet-500, #a855f7);
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Glassmorphism fallback for browsers without backdrop-filter ── */
+/* ── Fallback for browsers without backdrop-filter ── */
 @supports not (backdrop-filter: blur(1px)) {
   .app-header,
   .location-picker-card,
   .route-card,
   .decision-card,
   .transparency-container {
-    background: rgba(15, 20, 32, 0.98) !important;
+    background: #14151b !important;
   }
 }
 
@@ -140,8 +136,8 @@ button {
   top: -100%;
   left: 16px;
   z-index: 9999;
-  background: var(--aurora-violet-600, #9333ea);
-  color: #fff;
+  background: #ffffff;
+  color: #000000;
   padding: 8px 16px;
   border-radius: var(--radius-sm);
   font-size: 14px;
@@ -270,9 +266,9 @@ button {
 }
 
 .lang-btn.active {
-  background: var(--aurora-violet-600, #9333ea);
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(147, 51, 234, 0.35);
+  background: #ffffff;
+  color: #000000;
+  box-shadow: none;
 }
 
 .header-icon-btn {
@@ -290,7 +286,7 @@ button {
 
 .header-icon-btn:hover {
   border-color: rgba(255,255,255,0.15);
-  background: var(--bg-elevated, #1a2034);
+  background: var(--bg-elevated);
 }
 
 /* ---------------------------------------------------- */
@@ -301,14 +297,14 @@ button {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px 24px;
-  gap: 20px;
+  padding: 24px 32px;
+  gap: 24px;
 }
 
 .content-split-layout {
   display: grid;
   grid-template-columns: 460px 1fr;
-  gap: 20px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -321,7 +317,7 @@ button {
 .left-controls-column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .right-map-column {

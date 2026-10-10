@@ -12,7 +12,7 @@ import { RouteDetail, Coordinate } from "../api/types";
 import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
 import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
-import { Radio, Sparkles, Check, Eye, Navigation } from "lucide-react";
+import { Radio, Sparkles, Check, Eye, Navigation, Map } from "lucide-react";
 
 interface MapViewProps {
   routes: RouteDetail[];
@@ -178,8 +178,8 @@ export const MapView: React.FC<MapViewProps> = ({
           </div>
           <div class="popup-body">
             <div class="popup-pm">PM2.5: <strong>${station.pm25} µg/m³</strong></div>
-            <div class="popup-time">🕒 Updated: ${station.last_updated_mins_ago}m ago</div>
-            <div class="popup-src">📡 ${station.source}</div>
+            <div class="popup-time">Updated: ${station.last_updated_mins_ago}m ago</div>
+            <div class="popup-src">Source: ${station.source}</div>
           </div>
         </div>
       `);
@@ -313,7 +313,7 @@ export const MapView: React.FC<MapViewProps> = ({
       if (midPt) {
         const el = document.createElement("div");
         el.className = "route-onmap-badge badge-green";
-        el.innerHTML = `<span>🟢 Recommended Path (${recommendedRoute.average_pm25} µg/m³ • ${recommendedRoute.duration_minutes}m)</span>`;
+        el.innerHTML = `<span>Recommended Path (${recommendedRoute.average_pm25} µg/m³ • ${recommendedRoute.duration_minutes}m)</span>`;
         const m = new maplibregl.Marker({ element: el })
           .setLngLat([midPt.lng, midPt.lat])
           .addTo(map);
@@ -336,7 +336,7 @@ export const MapView: React.FC<MapViewProps> = ({
       if (midPt) {
         const el = document.createElement("div");
         el.className = "route-onmap-badge badge-blue";
-        el.innerHTML = `<span>🔵 Fastest Route (${fastestRoute.average_pm25} µg/m³ • ${fastestRoute.duration_minutes}m)</span>`;
+        el.innerHTML = `<span>Fastest Route (${fastestRoute.average_pm25} µg/m³ • ${fastestRoute.duration_minutes}m)</span>`;
         const m = new maplibregl.Marker({ element: el })
           .setLngLat([midPt.lng, midPt.lat])
           .addTo(map);
@@ -368,8 +368,8 @@ export const MapView: React.FC<MapViewProps> = ({
           const el = document.createElement("div");
           el.className = `route-onmap-badge ${isHighAqi ? "badge-red" : "badge-blue"}`;
           el.innerHTML = isHighAqi
-            ? `<span>🔴 High AQI Corridor (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`
-            : `<span>🔵 Lower AQI Path (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`;
+            ? `<span>Higher Exposure (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`
+            : `<span>Lower Exposure (${r.average_pm25} µg/m³ • ${r.duration_minutes}m)</span>`;
           el.onclick = () => onRouteClick && onRouteClick(r.route_id);
           const m = new maplibregl.Marker({ element: el })
             .setLngLat([midPt.lng, midPt.lat])
@@ -461,7 +461,7 @@ export const MapView: React.FC<MapViewProps> = ({
   if (mapError) {
     return (
       <div className="map-fallback-card" role="alert">
-        <div className="map-fallback-icon">🗺️</div>
+        <div className="map-fallback-icon"><Map size={24} /></div>
         <p className="map-fallback-text">{mapError}</p>
       </div>
     );
@@ -545,22 +545,22 @@ export const MapView: React.FC<MapViewProps> = ({
           {effectiveViewMode === "safer" ? (
             <div className="legend-item">
               <span className="legend-line line-green" style={{ backgroundColor: ROUTE_COLORS.recommendedActive }}></span>
-              <span className="legend-label">🟢 Recommended Single Path</span>
+              <span className="legend-label">Recommended Clean Path</span>
             </div>
           ) : effectiveViewMode === "fastest" ? (
             <div className="legend-item">
               <span className="legend-line line-blue" style={{ backgroundColor: ROUTE_COLORS.lowAqi }}></span>
-              <span className="legend-label">🔵 Fastest Single Path (Direct Transit)</span>
+              <span className="legend-label">Fastest Direct Path</span>
             </div>
           ) : (
             <>
               <div className="legend-item">
                 <span className="legend-line line-red" style={{ backgroundColor: ROUTE_COLORS.highAqi }}></span>
-                <span className="legend-label">🔴 High AQI Corridor (Red)</span>
+                <span className="legend-label">Higher Exposure Corridor</span>
               </div>
               <div className="legend-item">
                 <span className="legend-line line-blue" style={{ backgroundColor: ROUTE_COLORS.lowAqi }}></span>
-                <span className="legend-label">🔵 Lower AQI Path (Blue)</span>
+                <span className="legend-label">Lower Exposure Path</span>
               </div>
             </>
           )}

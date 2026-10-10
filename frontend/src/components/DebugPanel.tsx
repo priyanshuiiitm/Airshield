@@ -24,7 +24,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({ recommendation }) => {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        <span>🛠️ Developer / Agent Telemetry</span>
+        <span>Telemetry & Verification Engine</span>
         <span>{isOpen ? "▲" : "▼"}</span>
       </button>
 

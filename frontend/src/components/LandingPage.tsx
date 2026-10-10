@@ -82,13 +82,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
           {/* Left Column: Headline & Value Prop */}
           <motion.div className="hero-left-column" variants={fadeInUp}>
             <motion.div className="hero-badge-pill" variants={fadeInUp}>
-              <span className="badge-pulse-dot" style={{ background: "var(--aurora-emerald-500)" }}></span>
-              <span style={{ color: "var(--aurora-teal-400)" }}>DETERMINISTIC ENVIRONMENTAL ROUTING ENGINE</span>
+              <span className="badge-pulse-dot" style={{ background: "#ffffff" }}></span>
+              <span style={{ color: "var(--text-secondary)" }}>DETERMINISTIC ENVIRONMENTAL ROUTING ENGINE</span>
             </motion.div>
 
             <motion.h1 className="hero-main-headline" variants={fadeInUp}>
               Pollution is dynamic. <br />
-              <span className="headline-gradient-sub" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>So should the route.</span>
+              <span className="headline-gradient-sub" style={{ color: "#ffffff", fontWeight: 700 }}>So should the route.</span>
             </motion.h1>
 
             <motion.p className="hero-description" variants={fadeInUp} style={{ color: "var(--text-secondary)" }}>
@@ -103,9 +103,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchSimulator }) =
                 className="btn-hero-primary"
                 onClick={onLaunchSimulator}
                 data-testid="btn-launch-hero"
-                whileHover={{ scale: 1.05, boxShadow: "var(--shadow-glow-violet)" }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={tapScale}
-                style={{ background: "var(--gradient-aurora-primary)" }}
+                style={{ background: "#ffffff", color: "#000000", fontWeight: 700, border: "none" }}
               >
                 <span>Launch route engine</span>
                 <ArrowRight size={16} />

@@ -114,7 +114,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
             <AlertTriangle size={24} className="text-amber" />
             <div className="mask-text-group">
               <strong className="mask-title">
-                {language === "hi" ? "😷 N95 मास्क पहनना अनिवार्य है" : "😷 N95 Respirator Strongly Advised"}
+                {language === "hi" ? "N95 मास्क परामर्श" : "N95 Respirator Strongly Advised"}
               </strong>
               <p className="mask-desc">
                 {language === "hi"
@@ -197,7 +197,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   <Sparkles size={24} />
                   <div className="btn-text-wrap">
                     <span className="btn-main-title">
-                      {language === "hi" ? "🟢 स्वच्छ मार्ग लें (Take Safer Route)" : "🟢 Take Cleaner Air Route"}
+                      {language === "hi" ? "स्वच्छ मार्ग लें (Take Safer Route)" : "Take Cleaner Air Route"}
                     </span>
                     <span className="btn-sub-note">
                       {saferRoute.duration_minutes}m • {saferRoute.average_pm25} µg/m³ PM2.5
@@ -213,7 +213,7 @@ export const RiderMode: React.FC<RiderModeProps> = ({
                   <Navigation size={22} />
                   <div className="btn-text-wrap">
                     <span className="btn-main-title">
-                      {language === "hi" ? "🔵 सबसे तेज़ मार्ग रखें (Keep Fastest)" : "🔵 Keep Fastest Direct Route"}
+                      {language === "hi" ? "सबसे तेज़ मार्ग रखें (Keep Fastest)" : "Keep Fastest Direct Route"}
                     </span>
                     <span className="btn-sub-note">
                       {fastestRoute.duration_minutes}m • {fastestRoute.average_pm25} µg/m³ PM2.5

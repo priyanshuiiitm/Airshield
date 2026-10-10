@@ -163,7 +163,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
 
           {/* N95 Respirator Advisory */}
           <div className="mask-advisory-pill">
-            <span className="mask-icon">😷</span>
+            <AlertTriangle size={13} style={{ flexShrink: 0 }} />
             <span>N95 Mask Advised: Ambient PM2.5 exceeds 100 µg/m³ across Delhi NCR.</span>
           </div>
 

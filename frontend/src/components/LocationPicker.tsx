@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { fadeInUp, tapScale } from "../animation/motion-config";
 import { Coordinate, LanguageCode } from "../api/types";
 import { DELHI_LOCATIONS } from "../utils/delhiData";
-import { MapPin, Navigation, ArrowUpDown, Clock, Crosshair, Sparkles, CheckCircle2 } from "lucide-react";
+import { MapPin, Navigation, ArrowUpDown, Clock, Crosshair, ArrowRight, CheckCircle2 } from "lucide-react";
 
 interface LocationPickerProps {
   pickup: Coordinate;
@@ -71,19 +71,12 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       variants={fadeInUp}
       initial="hidden"
       animate="visible"
-      style={{
-        background: "var(--bg-card)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        border: "1px solid rgba(255, 255, 255, 0.05)",
-        boxShadow: "var(--shadow-xl)"
-      }}
     >
       <div className="picker-header">
         <div className="picker-title-group">
           <div className="live-dot-pulse"></div>
           <h2 className="picker-title">
-            {language === "hi" ? "स्थान चुनें और मार्ग खोजें" : "Trip Route Planner"}
+            {language === "hi" ? "स्थान चुनें और मार्ग खोजें" : "Route Configuration"}
           </h2>
         </div>
         <button
@@ -102,11 +95,11 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             <div className="input-label-row">
               <span className="input-indicator pickup-indicator"></span>
               <label className="input-label">
-                {language === "hi" ? "पिकअप स्थान (प्रारंभिक बिंदु)" : "Pickup Origin"}
+                {language === "hi" ? "पिकअप स्थान (प्रारंभिक बिंदु)" : "Origin"}
               </label>
             </div>
             <div className="input-wrapper">
-              <MapPin className="input-icon text-blue" size={18} />
+              <MapPin className="input-icon text-muted" size={16} />
               <select
                 className="select-field"
                 value={
@@ -124,7 +117,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
                 }}
               >
                 <option value="custom" disabled>
-                  📍 {pickupName}
+                  {pickupName}
                 </option>
                 {DELHI_LOCATIONS.map((loc) => (
                   <option key={`p-${loc.id}`} value={loc.id}>
@@ -138,7 +131,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
                 title="Click on map to select Pickup location"
                 onClick={onToggleMapPickOrigin}
               >
-                <Crosshair size={16} />
+                <Crosshair size={15} />
               </button>
             </div>
           </div>
@@ -149,9 +142,9 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               type="button"
               className="quick-action-pill"
               onClick={onUseCurrentLocation}
-              title="Detect your device GPS location in Delhi NCR"
+              title="Detect device GPS location"
             >
-              <Navigation size={13} className="text-cyan" />
+              <Navigation size={12} />
               <span>{language === "hi" ? "मेरा GPS स्थान" : "Use GPS"}</span>
             </button>
 
@@ -160,11 +153,11 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               className="swap-btn"
               onClick={onSwapLocations}
               title="Swap Origin and Destination"
-              whileHover={{ rotate: 180, scale: 1.1 }}
+              whileHover={{ rotate: 180 }}
               whileTap={{ scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
             >
-              <ArrowUpDown size={15} />
+              <ArrowUpDown size={14} />
             </motion.button>
           </div>
 
@@ -173,11 +166,11 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             <div className="input-label-row">
               <span className="input-indicator drop-indicator"></span>
               <label className="input-label">
-                {language === "hi" ? "गंतव्य स्थान (ड्रॉप)" : "Destination (Drop-off)"}
+                {language === "hi" ? "गंतव्य स्थान (ड्रॉप)" : "Destination"}
               </label>
             </div>
             <div className="input-wrapper">
-              <MapPin className="input-icon text-red" size={18} />
+              <MapPin className="input-icon text-muted" size={16} />
               <select
                 className="select-field"
                 value={
@@ -195,7 +188,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
                 }}
               >
                 <option value="custom" disabled>
-                  🎯 {dropName}
+                  {dropName}
                 </option>
                 {DELHI_LOCATIONS.map((loc) => (
                   <option key={`d-${loc.id}`} value={loc.id}>
@@ -209,7 +202,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
                 title="Click on map to select Drop destination"
                 onClick={onToggleMapPickDestination}
               >
-                <Crosshair size={16} />
+                <Crosshair size={15} />
               </button>
             </div>
           </div>
@@ -218,7 +211,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         /* Custom Coordinates Form */
         <div className="custom-coords-grid">
           <div className="coord-field-block">
-            <span className="coord-title text-blue">📍 Pickup Lat / Lng</span>
+            <span className="coord-title">Pickup Coordinates</span>
             <div className="coord-inputs-row">
               <input
                 type="text"
@@ -238,7 +231,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           </div>
 
           <div className="coord-field-block">
-            <span className="coord-title text-red">🎯 Drop Lat / Lng</span>
+            <span className="coord-title">Destination Coordinates</span>
             <div className="coord-inputs-row">
               <input
                 type="text"
@@ -258,7 +251,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           </div>
 
           <button type="button" className="btn-apply-coords" onClick={handleCustomApply}>
-            <CheckCircle2 size={15} /> Apply Coordinates
+            <CheckCircle2 size={14} /> Apply Coordinates
           </button>
         </div>
       )}
@@ -266,11 +259,11 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       {/* Map Clicking Pin Status Notice */}
       {(isMapPickingOrigin || isMapPickingDestination) && (
         <div className="map-picking-banner">
-          <Crosshair size={16} className="animate-spin text-cyan" />
+          <Crosshair size={14} className="animate-spin" />
           <span>
             {isMapPickingOrigin
-              ? "🎯 Click anywhere on the map to set Origin (Pickup)"
-              : "🎯 Click anywhere on the map to set Destination (Drop)"}
+              ? "Click anywhere on the map to set Origin"
+              : "Click anywhere on the map to set Destination"}
           </span>
         </div>
       )}
@@ -279,8 +272,8 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       <div className="buffer-and-action-row">
         <div className="buffer-selector">
           <div className="buffer-label">
-            <Clock size={14} className="text-amber" />
-            <span>{language === "hi" ? "स्वीकार्य समय बफर:" : "Allowed Buffer:"}</span>
+            <Clock size={13} />
+            <span>{language === "hi" ? "स्वीकार्य समय बफर:" : "Max Delay Buffer:"}</span>
           </div>
           <div className="buffer-chips">
             {[2, 5, 8, 10].map((mins) => (
@@ -301,19 +294,28 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           className="btn-compute-routes"
           disabled={isLoading}
           onClick={onCalculateRoutes}
-          whileHover={!isLoading ? { scale: 1.02, boxShadow: "var(--shadow-glow-emerald)" } : {}}
+          whileHover={!isLoading ? { scale: 1.01 } : {}}
           whileTap={!isLoading ? tapScale : {}}
-          style={!isLoading ? { background: "var(--gradient-aurora-success)", color: "#000" } : {}}
+          style={{
+            background: "#ffffff",
+            color: "#000000",
+            fontWeight: 700,
+            border: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px"
+          }}
         >
-          <Sparkles size={17} className={!isLoading ? "" : "text-emerald"} />
-          <span style={!isLoading ? { fontWeight: "bold" } : {}}>{isLoading ? "Analyzing Air..." : "Compute Cleanest Routes"}</span>
+          <span>{isLoading ? "Analyzing..." : "Compute Routes"}</span>
+          <ArrowRight size={15} />
         </motion.button>
       </div>
 
       {/* Popular Corridor Presets */}
       <div className="preset-corridors">
         <span className="preset-label">
-          {language === "hi" ? "त्वरित हॉटस्पॉट परिदृश्य:" : "Popular Corridors:"}
+          {language === "hi" ? "त्वरित हॉटस्पॉट परिदृश्य:" : "Sample Corridors:"}
         </span>
         <div className="preset-chips-scroll">
           <button
@@ -326,7 +328,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
             }}
           >
-            🌿 Hauz Khas → Karol Bagh
+            Hauz Khas → Karol Bagh
           </button>
           <button
             type="button"
@@ -338,7 +340,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
             }}
           >
-            ⚡ CP → Lajpat Nagar
+            CP → Lajpat Nagar
           </button>
           <button
             type="button"
@@ -350,7 +352,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
             }}
           >
-            ✈️ Dwarka → IGI Airport
+            Dwarka → IGI Airport
           </button>
           <button
             type="button"
@@ -362,7 +364,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
             }}
           >
-            🏢 Cyber City → Saket
+            Cyber City → Saket
           </button>
         </div>
       </div>
