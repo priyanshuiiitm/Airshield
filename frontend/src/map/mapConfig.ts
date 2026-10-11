@@ -23,13 +23,13 @@ export const ROUTE_WIDTHS = {
 export const MAP_STYLE: any = {
   version: 8,
   sources: {
-    "carto-dark": {
+    "carto-light": {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://d.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5"
+        "https://a.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
+        "https://b.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
+        "https://c.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
+        "https://d.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5"
       ],
       tileSize: 256,
       attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
@@ -37,9 +37,9 @@ export const MAP_STYLE: any = {
   },
   layers: [
     {
-      id: "carto-dark-layer",
+      id: "carto-light-layer",
       type: "raster",
-      source: "carto-dark",
+      source: "carto-light",
       minzoom: 0,
       maxzoom: 19
     }
