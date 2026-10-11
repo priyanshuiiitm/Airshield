@@ -5,6 +5,7 @@
 
 [![Live App](https://img.shields.io/badge/Live_App-Cloudflare_Pages-blue?style=for-the-badge&logo=cloudflare)](https://6ba22107.airshield-6u9.pages.dev/)
 [![YouTube Demo](https://img.shields.io/badge/YouTube-3_Min_Demo_Video-red?style=for-the-badge&logo=youtube)](https://youtu.be/PVviQb0PQuI)
+[![AWS Builder Blog](https://img.shields.io/badge/AWS_Builder-Blog_Post-orange?style=for-the-badge&logo=amazon-aws)](https://builder.aws.com/post/3KYP4WhIOPHJEfhOZo6PtWyBI6B_p/airshield-how-we-built-an-exposure-aware-navigation-engine-on-aws-for-delhis-gig-fleets)
 [![AWS Architecture](https://img.shields.io/badge/AWS-Serverless_%26_Bedrock-orange?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
@@ -14,6 +15,7 @@
 
 * 🌐 **Live Deployed Prototype**: [https://6ba22107.airshield-6u9.pages.dev/](https://6ba22107.airshield-6u9.pages.dev/) *(Mirrored at [https://airshield-6u9.pages.dev/](https://airshield-6u9.pages.dev/))*
 * 🎥 **3-Minute YouTube Submission Demo**: [https://youtu.be/PVviQb0PQuI](https://youtu.be/PVviQb0PQuI)
+* 📝 **AWS Builder Blog Post**: [AirShield: How We Built an Exposure-Aware Navigation Engine on AWS for Delhi’s Gig Fleets](https://builder.aws.com/post/3KYP4WhIOPHJEfhOZo6PtWyBI6B_p/airshield-how-we-built-an-exposure-aware-navigation-engine-on-aws-for-delhis-gig-fleets)
 * 📦 **GitHub Repository**: [https://github.com/priyanshuiiitm/Airshield](https://github.com/priyanshuiiitm/Airshield)
 * 📑 **Comprehensive System Specification**: [`SYSTEM_SPECIFICATION.md`](./SYSTEM_SPECIFICATION.md)
 
@@ -209,5 +211,6 @@ python scripts/run_local_demo.py
 | :--- | :--- | :--- |
 | **3-Minute Demo Video** | [https://youtu.be/PVviQb0PQuI](https://youtu.be/PVviQb0PQuI) | ✅ Uploaded & Public |
 | **Live Web Application** | [https://6ba22107.airshield-6u9.pages.dev/](https://6ba22107.airshield-6u9.pages.dev/) | ✅ Deployed on Cloudflare Pages |
+| **AWS Builder Blog Post** | [https://builder.aws.com/post/3KYP4WhIOPHJEfhOZo6PtWyBI6B_p/airshield-how-we-built-an-exposure-aware-navigation-engine-on-aws-for-delhis-gig-fleets](https://builder.aws.com/post/3KYP4WhIOPHJEfhOZo6PtWyBI6B_p/airshield-how-we-built-an-exposure-aware-navigation-engine-on-aws-for-delhis-gig-fleets) | ✅ Published |
 | **Public GitHub Repo** | [https://github.com/priyanshuiiitm/Airshield](https://github.com/priyanshuiiitm/Airshield) | ✅ Clean & Production-Ready |
 | **Full Technical Specification** | [`SYSTEM_SPECIFICATION.md`](./SYSTEM_SPECIFICATION.md) | ✅ Complete Phases 1–7 Specs |
