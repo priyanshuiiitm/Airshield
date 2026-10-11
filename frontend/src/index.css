@@ -566,39 +566,43 @@ button {
 .custom-coords-grid {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: var(--bg-card-subtle);
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
+  gap: 6px;
+  background: rgba(255,255,255,0.02);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .coord-field-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .coord-title {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
 .coord-inputs-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 5px;
 }
 
 .text-input {
-  background: var(--bg-input);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 5px 7px;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 10px;
   font-family: var(--font-mono);
   outline: none;
+  width: 100%;
 }
 
 .text-input:focus {
@@ -609,27 +613,30 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: #2563eb;
-  color: #ffffff;
-  padding: 8px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
+  gap: 5px;
+  background: #ffffff;
+  color: #000000;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 10px;
   font-weight: 600;
+  border: none;
+  cursor: pointer;
+  width: 100%;
 }
 
 /* Map Picking Banner */
 .map-picking-banner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid var(--cyan-neon);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  color: var(--cyan-neon);
-  font-weight: 600;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 /* Buffer & Action Row */
@@ -791,9 +798,9 @@ button {
 }
 
 .card-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3418,14 +3425,14 @@ button {
 .mask-advisory-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fbbf24;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 8.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .mask-icon {
@@ -7645,4 +7652,36 @@ button {
   .transparency-section {
     display: none !important;
   }
+}
+
+/* ── Final Card Layout Overrides (Applied last) ── */
+.left-controls-column .card-header {
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.left-controls-column .card-icon-wrap {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.left-controls-column .card-title-group {
+  gap: 2px !important;
+  min-width: 0 !important;
+}
+
+.left-controls-column .card-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+/* Tighter card-avoidable / unavoidable color strips - monochrome only */
+.left-controls-column .card-avoidable,
+.left-controls-column .card-unavoidable,
+.left-controls-column .card-low {
+  border-color: rgba(255,255,255,0.07) !important;
+  box-shadow: none !important;
 }
