@@ -287,8 +287,14 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             <p className="advisory-desc" style={{ color: "var(--text-secondary)", fontSize: 12, lineHeight: 1.45, margin: "4px 0 0 0" }}>
               {language === "hi"
                 ? "सभी उपलब्ध गलियारों में प्रदूषण अधिक है। सबसे तेज़ मार्ग चुनें।"
-                : "Background PM2.5 is uniformly elevated. Follow the fastest route to minimize total time outdoors."}
+                : "Background PM2.5 is uniformly elevated across all paths. Follow the fastest route to minimize total outdoor transit time."}
             </p>
+            {recommendation.benefit?.eligible && (
+              <div style={{ marginTop: 6, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 4, fontSize: 11, color: "#ffffff" }}>
+                <Shield size={11} />
+                <span>₹{recommendation.benefit.amount_inr || 5} Mask / N95 Protective Allowance Triggered</span>
+              </div>
+            )}
           </motion.div>
 
           <AnimatePresence mode="wait">

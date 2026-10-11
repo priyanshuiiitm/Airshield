@@ -465,9 +465,9 @@ Implemented in `frontend/src/components/BatchAnalytics.tsx`, Phase 6 provides fl
   * IDW Interpolation: Verified against 10 statutory CAAQMS stations.
 
 ### 8.2 Fleet Aggregate Metrics & Municipal Insights
-* **Median Exposure Reduction**: Consistently demonstrates **$28\% - 35\%$ reduction** in cumulative particulate inhalation across the fleet.
+* **Median Exposure Reduction**: Consistently demonstrates **$28\% - 35\%$ reduction** in cumulative particulate exposure across the fleet.
 * **Marginal Time Cost**: Median added delivery time is strictly **$\le 3.5\text{ minutes}$**, well within the 5-minute operational SLA buffer.
-* **Avoided Particulate Mass**: Quantifies cumulative milligrams of toxic PM2.5 prevented from entering couriers' lungs.
+* **Avoided Ambient Exposure Units**: Quantifies cumulative exposure-time ($\mu\text{g}\cdot\text{min}/\text{m}^3$) prevented across delivery corridors, adhering strictly to atmospheric physics rather than unmeasured biological dosimetry claims.
 * **Municipal Hotspots**: Pinpoints the most severe arterial exposure zones (Anand Vihar, Punjabi Bagh, Wazirpur, Okhla) to inform municipal road-washing and anti-smog deployments.
 
 ### 8.3 Live Interactive UI & Telemetry

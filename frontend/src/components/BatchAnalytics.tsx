@@ -469,7 +469,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
               <span className="kpi-label">
                 {isHindi ? "मध्यक प्रदूषण कमी (Median Reduction)" : "Median Exposure Reduction"}
               </span>
-              <span className="kpi-sub">Typical PM2.5 intake avoided on clean paths</span>
+              <span className="kpi-sub">Typical PM2.5 exposure avoided on clean paths</span>
             </div>
           </div>
 
@@ -493,7 +493,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
             <div className="kpi-body">
               <span className="kpi-val">{activeStats.totalIntakeAvoided}</span>
               <span className="kpi-label">
-                {isHindi ? "कुल बचाई गई खुराक (µg·min/m³)" : "Total Particulate Intake Avoided"}
+                {isHindi ? "कुल बचाई गई एक्सपोज़र खुराक (µg·min/m³)" : "Total Particulate Exposure Avoided"}
               </span>
               <span className="kpi-sub">Cumulative across {activeStats.avoidableCount} avoidable trips</span>
             </div>

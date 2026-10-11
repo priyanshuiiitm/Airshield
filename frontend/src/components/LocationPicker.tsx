@@ -18,6 +18,7 @@ interface LocationPickerProps {
   language: LanguageCode;
   onSelectPickup: (coord: Coordinate, name: string) => void;
   onSelectDrop: (coord: Coordinate, name: string) => void;
+  onSelectCorridor?: (pCoord: Coordinate, pName: string, dCoord: Coordinate, dName: string) => void;
   onChangeBuffer: (mins: number) => void;
   onToggleMapPickOrigin: () => void;
   onToggleMapPickDestination: () => void;
@@ -38,6 +39,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   language,
   onSelectPickup,
   onSelectDrop,
+  onSelectCorridor,
   onChangeBuffer,
   onToggleMapPickOrigin,
   onToggleMapPickDestination,
@@ -322,7 +324,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       {/* Popular Corridor Presets */}
       <div className="preset-corridors">
         <span className="preset-label">
-          {language === "hi" ? "त्वरित हॉटस्पॉट परिदृश्य:" : "Sample Corridors:"}
+          {language === "hi" ? "त्वरित परिदृश्य (AVOIDABLE बनाम UNAVOIDABLE):" : "Sample Corridors (Compare Scenarios):"}
         </span>
         <div className="preset-chips-scroll">
           <button
@@ -331,23 +333,33 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             onClick={() => {
               const p = DELHI_LOCATIONS.find((l) => l.id === "hauz_khas")!;
               const d = DELHI_LOCATIONS.find((l) => l.id === "karol_bagh")!;
-              onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
-              onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              if (onSelectCorridor) {
+                onSelectCorridor({ lat: p.lat, lng: p.lng }, p.name, { lat: d.lat, lng: d.lng }, d.name);
+              } else {
+                onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
+                onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              }
             }}
           >
-            Hauz Khas → Karol Bagh
+            <span>Hauz Khas → Karol Bagh</span>
+            <span style={{ color: "#4ade80", marginLeft: 4, fontSize: 9 }}>[Avoidable: -24%]</span>
           </button>
           <button
             type="button"
             className="preset-chip"
             onClick={() => {
-              const p = DELHI_LOCATIONS.find((l) => l.id === "cp")!;
+              const p = DELHI_LOCATIONS.find((l) => l.id === "karol_bagh")!;
               const d = DELHI_LOCATIONS.find((l) => l.id === "lajpat_nagar")!;
-              onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
-              onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              if (onSelectCorridor) {
+                onSelectCorridor({ lat: p.lat, lng: p.lng }, p.name, { lat: d.lat, lng: d.lng }, d.name);
+              } else {
+                onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
+                onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              }
             }}
           >
-            CP → Lajpat Nagar
+            <span>Karol Bagh → Lajpat Nagar</span>
+            <span style={{ color: "#fbbf24", marginLeft: 4, fontSize: 9 }}>[Unavoidable: Smog Trap]</span>
           </button>
           <button
             type="button"
@@ -355,11 +367,16 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             onClick={() => {
               const p = DELHI_LOCATIONS.find((l) => l.id === "dwarka_sec10")!;
               const d = DELHI_LOCATIONS.find((l) => l.id === "igi_airport")!;
-              onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
-              onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              if (onSelectCorridor) {
+                onSelectCorridor({ lat: p.lat, lng: p.lng }, p.name, { lat: d.lat, lng: d.lng }, d.name);
+              } else {
+                onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
+                onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              }
             }}
           >
-            Dwarka → IGI Airport
+            <span>Dwarka → IGI Airport</span>
+            <span style={{ color: "#94a3b8", marginLeft: 4, fontSize: 9 }}>[-21% Buffer]</span>
           </button>
           <button
             type="button"
@@ -367,11 +384,16 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             onClick={() => {
               const p = DELHI_LOCATIONS.find((l) => l.id === "cyber_city")!;
               const d = DELHI_LOCATIONS.find((l) => l.id === "saket")!;
-              onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
-              onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              if (onSelectCorridor) {
+                onSelectCorridor({ lat: p.lat, lng: p.lng }, p.name, { lat: d.lat, lng: d.lng }, d.name);
+              } else {
+                onSelectPickup({ lat: p.lat, lng: p.lng }, p.name);
+                onSelectDrop({ lat: d.lat, lng: d.lng }, d.name);
+              }
             }}
           >
-            Cyber City → Saket
+            <span>Cyber City → Saket</span>
+            <span style={{ color: "#94a3b8", marginLeft: 4, fontSize: 9 }}>[Peripheral]</span>
           </button>
         </div>
       </div>

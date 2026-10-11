@@ -119,7 +119,7 @@ export const voiceScripts = {
   landingStory: (lang: LanguageCode) => {
     return lang === "hi"
       ? "एयरशील्ड दिल्ली एनसीआर के सरकारी स्टेशनों से प्रदूषण की निगरानी करता है। यह राइडर्स को भारी धुंध से बचाकर, समय सीमा के भीतर स्वच्छ हरित मार्ग प्रदान करता है।"
-      : "AirShield constantly monitors particulate pollution across Delhi NCR. Instead of routing delivery workers through severe arterial smog traps, it calculates cumulative inhalation and discovers cleaner canopy corridors within delivery time buffers.";
+      : "AirShield constantly monitors particulate pollution across Delhi NCR. Instead of routing delivery workers through severe arterial smog traps, it calculates cumulative particulate exposure and discovers cleaner canopy corridors within delivery time buffers.";
   },
 
   simulatorWelcome: (lang: LanguageCode) => {
@@ -132,8 +132,22 @@ export const voiceScripts = {
     fastestRoute: RouteDetail,
     saferRoute: RouteDetail,
     reductionPct: number,
-    lang: LanguageCode
+    lang: LanguageCode,
+    classification: string = "AVOIDABLE"
   ) => {
+    if (classification === "UNAVOIDABLE") {
+      if (lang === "hi") {
+        return `मार्गों का विश्लेषण पूरा हुआ। सभी उपलब्ध गलियारों में वायु प्रदूषण अत्यधिक और एकसमान है। निर्धारित डिलीवरी समय में कोई स्वच्छ मार्ग संभव नहीं है। हम सबसे तेज़ मार्ग पर आगे बढ़ने की सलाह देते हैं, ताकि खुले में बिताया जाने वाला कुल समय न्यूनतम रहे। एन95 मास्क सुरक्षा सक्रिय करें।`;
+      }
+      return `Routes evaluated. Background particulate smog is uniformly elevated across all corridors. No alternative route achieves the statutory 15 percent reduction within your delivery buffer. I recommend proceeding on the fastest route to minimize your total minutes outdoors. N95 respirator advisory active.`;
+    }
+    if (classification === "LOW") {
+      if (lang === "hi") {
+        return `मार्गों का विश्लेषण पूरा हुआ। वर्तमान में वायु गुणवत्ता सुरक्षित सीमा में है, पीएम 2.5 60 माइक्रोग्राम से कम है। सबसे तेज़ मार्ग पर आगे बढ़ें।`;
+      }
+      return `Routes evaluated. Ambient air quality is currently within safe statutory limits with PM2.5 below 60 micrograms. Proceed directly on the fastest route.`;
+    }
+
     const extraMin = Math.max(1, saferRoute.duration_minutes - fastestRoute.duration_minutes);
     if (lang === "hi") {
       return `मार्गों की गणना पूरी हो गई है। रूट 1 सबसे तेज सीधा मार्ग है जो ${fastestRoute.duration_minutes} मिनट और ${fastestRoute.average_pm25} माइक्रोग्राम पीएम 2.5 प्रदूषण लेता है। रूट 2 स्वच्छ हरित मार्ग है जो ${saferRoute.duration_minutes} मिनट और केवल ${saferRoute.average_pm25} माइक्रोग्राम प्रदूषण लेता है, जो सिर्फ ${extraMin} मिनट जोड़कर ${reductionPct} प्रतिशत प्रदूषण कम करता है। हम स्वच्छ मार्ग चुनने की सलाह देते हैं।`;
@@ -158,7 +172,7 @@ export const voiceScripts = {
       const cpStr = `1. ${checkpoints[0]}, 2. ${checkpoints[1]}, 3. ${checkpoints[2]}, और 4. ${checkpoints[3]}`;
       const safetyNote = isSafer
         ? "स्वास्थ्य सुरक्षा सक्रिय है।"
-        : "ध्यान दें: मुख्य सड़क पर वायु प्रदूषण अधिक है।";
+        : "ध्यान दें: मुख्य सड़क पर वायु प्रदूषण अधिक है। न्यूनतम समय रणनीति अपनाई गई है।";
 
       return `आपने ${routeType} चुना है, जो ${route.duration_minutes} मिनट लेता है। ${pName} से शुरू करके, आपका मार्ग 4 चेकपॉइंट्स से होकर गुजरेगा: ${cpStr}, और सुरक्षित रूप से ${dName} पहुंचेगा। ${safetyNote}`;
     }
@@ -166,8 +180,8 @@ export const voiceScripts = {
     const routeType = isSafer ? "cleaner green corridor" : "fastest direct arterial route";
     const cpStr = `1. ${checkpoints[0]}, 2. ${checkpoints[1]}, 3. ${checkpoints[2]}, and 4. ${checkpoints[3]}`;
     const safetyNote = isSafer
-      ? "Inhalation protection active."
-      : "Caution: arterial particulate smog is elevated.";
+      ? "Exposure minimization active."
+      : "Caution: arterial particulate smog is elevated. Direct transit time minimization applied.";
 
     return `You selected the ${routeType}, taking ${route.duration_minutes} minutes. Starting from ${pName}, your route proceeds via 4 intermediate checkpoints: ${cpStr}, arriving at ${dName}. ${safetyNote}`;
   },
@@ -185,10 +199,10 @@ export const voiceScripts = {
     const intake = stats?.totalIntakeAvoided ?? "1,840";
 
     if (lang === "hi") {
-      return `150-ट्रिप बैच प्रभाव विश्लेषण में आपका स्वागत है। इस सिमुलेशन का मुख्य उद्देश्य यह साबित करना है कि दिल्ली एनसीआर में डिलीवरी राइडर्स को स्वच्छ हवा चुनने के लिए डिलीवरी की गति का त्याग नहीं करना पड़ता। 150 वास्तविक वाणिज्यिक मार्गों पर, 5 मिनट के बफर में हमारे एल्गोरिदम ने मीडियन ${medRed} प्रतिशत जहरीले पीएम 2.5 धुएं की कमी हासिल की है, वह भी केवल ${medExtra} मिनट अतिरिक्त समय में, जिससे ${intake} माइक्रोग्राम प्रदूषण टाला गया। आप 'रन लाइव 150-ट्रिप बैच' बटन दबाकर 150 नए यादृच्छिक मार्गों पर लाइव परीक्षण कर सकते हैं और 2 से 10 मिनट के डिलीवरी बफर के प्रभाव को खुद परख सकते हैं।`;
+      return `150-ट्रिप बैच प्रभाव विश्लेषण में आपका स्वागत है। इस सिमुलेशन का मुख्य उद्देश्य यह साबित करना है कि दिल्ली एनसीआर में डिलीवरी राइडर्स को स्वच्छ हवा चुनने के लिए डिलीवरी की गति का त्याग नहीं करना पड़ता। 150 वास्तविक वाणिज्यिक मार्गों पर, 5 मिनट के बफर में हमारे एल्गोरिदम ने मीडियन ${medRed} प्रतिशत जहरीले पीएम 2.5 धुएं की कमी हासिल की है, वह भी केवल ${medExtra} मिनट अतिरिक्त समय में, जिससे ${intake} माइक्रोग्राम-मिनट प्रदूषण टाला गया। आप 'रन लाइव 150-ट्रिप बैच' बटन दबाकर 150 नए यादृच्छिक मार्गों पर लाइव परीक्षण कर सकते हैं और 2 से 10 मिनट के डिलीवरी बफर के प्रभाव को खुद परख सकते हैं।`;
     }
 
-    return `Welcome to 150-Trip Batch Impact Evidence. The purpose of this simulator is to scientifically prove that outdoor delivery workers in Delhi NCR can avoid toxic smog without losing delivery speed. Across 150 commercial delivery corridors under a 5-minute buffer, our model achieves a median ${medRed} percent reduction in hazardous PM2.5 inhalation with only ${medExtra} minutes of extra transit time, avoiding ${intake} micrograms of cumulative pollution. Click 'Run Live 150-Trip Batch' to simulate 150 fresh stochastic corridors and test delivery buffer tradeoffs for yourself.`;
+    return `Welcome to 150-Trip Batch Impact Evidence. The purpose of this simulator is to scientifically prove that outdoor delivery workers in Delhi NCR can avoid toxic smog without losing delivery speed. Across 150 commercial delivery corridors under a 5-minute buffer, our model achieves a median ${medRed} percent reduction in cumulative PM2.5 exposure with only ${medExtra} minutes of extra transit time, avoiding ${intake} microgram-minutes of exposure. Click 'Run Live 150-Trip Batch' to simulate 150 fresh stochastic corridors and test delivery buffer tradeoffs for yourself.`;
   },
 
   batchSimulationCompleted: (
@@ -204,9 +218,9 @@ export const voiceScripts = {
     const intake = stats?.totalIntakeAvoided ?? "1,840";
 
     if (lang === "hi") {
-      return `लाइव 150-ट्रिप सिमुलेशन पूरा हुआ। इस नए बैच में राइडर्स ने औसतन ${medRed} प्रतिशत प्रदूषण घटाया और सिर्फ ${medExtra} मिनट का अतिरिक्त समय लिया, कुल ${intake} माइक्रोग्राम प्रदूषण बचाया।`;
+      return `लाइव 150-ट्रिप सिमुलेशन पूरा हुआ। इस नए बैच में राइडर्स ने औसतन ${medRed} प्रतिशत प्रदूषण घटाया और सिर्फ ${medExtra} मिनट का अतिरिक्त समय लिया, कुल ${intake} माइक्रोग्राम-मिनट एक्सपोज़र बचाया।`;
     }
 
-    return `Live 150-trip simulation complete. In this fresh batch, couriers avoided ${medRed} percent of particulate smog with only ${medExtra} minutes of extra time, saving ${intake} micrograms of exposure.`;
+    return `Live 150-trip simulation complete. In this fresh batch, couriers avoided ${medRed} percent of particulate smog with only ${medExtra} minutes of extra time, saving ${intake} microgram-minutes of exposure.`;
   }
 };

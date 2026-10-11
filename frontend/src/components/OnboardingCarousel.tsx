@@ -16,7 +16,7 @@ const slides = [
   {
     id: 2,
     title: "Protect Your Health",
-    description: "Reduce respiratory exposure by up to 30% on every shift. Your lungs are your most valuable asset.",
+    description: "Reduce cumulative ambient exposure by up to 30% on every shift. Protect rider health during peak Delhi smog.",
     image: onboarding2,
     icon: <Shield size={24} />
   },

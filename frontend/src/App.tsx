@@ -92,7 +92,7 @@ const AppContent: React.FC = () => {
           localResult.routes[1] ||
           localResult.routes[0];
         const pct = localResult.recommendation.exposure_reduction_percent || 24;
-        speak(voiceScripts.routesEvaluated(fastest, safer, pct, language), "decision-card-wrapper");
+        speak(voiceScripts.routesEvaluated(fastest, safer, pct, language, localResult.classification), "decision-card-wrapper");
       }
 
       // Snap the visual routes to real streets using OSRM!
@@ -438,6 +438,13 @@ const AppContent: React.FC = () => {
                       setDrop(c);
                       setDropName(name);
                       handleCalculateRoutes(pickup, c, bufferMin, true);
+                    }}
+                    onSelectCorridor={(pCoord, pName, dCoord, dName) => {
+                      setPickup(pCoord);
+                      setPickupName(pName);
+                      setDrop(dCoord);
+                      setDropName(dName);
+                      handleCalculateRoutes(pCoord, dCoord, bufferMin, true);
                     }}
                     onChangeBuffer={(buf) => {
                       setBufferMin(buf);
