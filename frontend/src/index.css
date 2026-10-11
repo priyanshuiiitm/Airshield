@@ -7142,6 +7142,18 @@ button {
 /* FLOATING ISLAND UI OVERRIDES (Overrides content-split-layout) */
 /* ---------------------------------------------------- */
 
+/* ── Override solid CSS vars to transparent inside the simulator ── */
+.main-content,
+.content-split-layout,
+.left-controls-column {
+  --bg-card: rgba(255, 255, 255, 0.025);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  --bg-card-subtle: rgba(255, 255, 255, 0.015);
+  --bg-surface: rgba(255, 255, 255, 0.02);
+  --bg-elevated: rgba(255, 255, 255, 0.04);
+  --bg-input: rgba(255, 255, 255, 0.06);
+}
+
 .main-content {
   flex: 1;
   position: relative !important;

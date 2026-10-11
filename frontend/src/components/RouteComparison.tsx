@@ -286,7 +286,7 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
               )}
 
               {isFastest && isUnavoidable && (
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "var(--bg-card)", border: "1px solid var(--border-subtle)", fontSize: "var(--text-xs)", color: "var(--text-secondary)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", marginTop: "var(--space-3)", padding: "var(--space-2) var(--space-3)", borderRadius: "var(--radius-sm)", background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-subtle)", fontSize: "var(--text-xs)", color: "var(--text-secondary)" }}>
                   <Shield size={14} style={{ color: "var(--text-primary)", flexShrink: 0 }} />
                   <span>Dose Optimum: Fastest transit minimizes total outdoor inhalation.</span>
                 </div>
