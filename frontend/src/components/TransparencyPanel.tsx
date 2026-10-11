@@ -24,10 +24,10 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
   const { routes, recommendation: rec } = recommendation;
 
   const cardBase: React.CSSProperties = {
-    background: "rgba(255,255,255,0.02)",
+    background: "var(--bg-card, #13151c)",
     backdropFilter: "blur(16px)",
     WebkitBackdropFilter: "blur(16px)",
-    border: "1px solid rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.08)",
     borderRadius: "var(--radius-md)",
     overflow: "hidden",
   };
@@ -120,7 +120,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
                           const pmColor = st.pm25 < 100 ? "var(--aurora-emerald-400)" : st.pm25 < 180 ? "var(--aurora-amber-400)" : "var(--aurora-rose-400)";
                           const pmBg = st.pm25 < 100 ? "rgba(16,185,129,0.12)" : st.pm25 < 180 ? "rgba(245,158,11,0.12)" : "rgba(244,63,94,0.12)";
                           return (
-                            <motion.div key={st.station_id} variants={fadeInUp} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+                            <motion.div key={st.station_id} variants={fadeInUp} style={{ background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
                               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                                   <span style={{ fontSize: 9, fontWeight: 600, background: "rgba(20,184,166,0.15)", color: "var(--aurora-teal-400)", border: "1px solid rgba(20,184,166,0.3)", padding: "1px 5px", borderRadius: 4 }}>{st.operator}</span>
@@ -156,7 +156,7 @@ export const TransparencyPanel: React.FC<TransparencyPanelProps> = ({ recommenda
                         { step: "04", title: "Exposure Index", desc: "Total inhalation integrated over trip duration, normalized to fastest route = 100:", code: "EI_alt = 100 × (E_alt / E_fastest)\nReduction% = [(E_fastest − E_alt) / E_fastest] × 100" },
                         { step: "05", title: "Constrained Buffer Check", desc: "Recommendation only if alt_duration ≤ fastest + buffer AND robust across 3 sensitivity sweeps:", code: "Check: 0.5×, 1.0×, 1.5× modifier invariant" },
                       ].map((s) => (
-                        <motion.div key={s.step} variants={fadeInUp} style={{ display: "flex", gap: 14, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: 14 }}>
+                        <motion.div key={s.step} variants={fadeInUp} style={{ display: "flex", gap: 14, background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-sm)", padding: 14 }}>
                           <span style={{ fontSize: 11, fontWeight: 600, color: "var(--aurora-teal-400)", background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.3)", padding: "4px 8px", borderRadius: 6, height: "fit-content", whiteSpace: "nowrap" }}>Step {s.step}</span>
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                             <h4 style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>{s.title}</h4>

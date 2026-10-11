@@ -299,6 +299,25 @@ export const MapView: React.FC<MapViewProps> = ({
         
         const isRedRoute = sourceId === "source-routes-red";
         
+        // Add subtle high-contrast casing under the route line so it pops against any terrain
+        const casingId = `${layerId}-casing`;
+        if (!map.getLayer(casingId)) {
+          map.addLayer({
+            id: casingId,
+            type: "line",
+            source: sourceId,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round"
+            },
+            paint: {
+              "line-color": "#09090b",
+              "line-width": width + 3.5,
+              "line-opacity": 0.5
+            }
+          });
+        }
+
         map.addLayer({
           id: layerId,
           type: "line",

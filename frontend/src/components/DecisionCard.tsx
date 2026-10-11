@@ -94,7 +94,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         initial="hidden"
         animate="visible"
         style={{
-          background: "rgba(255,255,255,0.02)",
+          background: "var(--bg-card, #13151c)",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: "10px",
           padding: "9px",
@@ -117,7 +117,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
       initial="hidden"
       animate="visible"
       style={{
-        background: "rgba(255,255,255,0.02)",
+        background: "var(--bg-card, #13151c)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
         border: `1px solid ${colors.border}`,
@@ -147,14 +147,14 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
 
           {/* Metrics */}
           <motion.div className="metrics-grid" variants={staggerContainer}>
-            <motion.div className="metric-box" variants={fadeInUp} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <Clock size={15} style={{ color: "var(--text-secondary)", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 11 }}>{formatMinutes(rec.additional_minutes)}</span>
+                 <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 11 }}>{formatMinutes(rec.additional_minutes)}</span>
                 <span className="metric-lbl" style={{ fontSize: 8, fontWeight: 500 }}>{t.additionalTime}</span>
               </div>
             </motion.div>
-            <motion.div className="metric-box" variants={fadeInUp} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <TrendingDown size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
               <div className="metric-val-wrap">
                 <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 11 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
@@ -172,7 +172,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <motion.div
             className="reward-banner"
             variants={fadeInUp}
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
+            style={{ background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
           >
             <Shield size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
             <span style={{ fontSize: 9, color: "var(--text-secondary)", fontWeight: 400 }}>
@@ -276,7 +276,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <motion.div
             className="unavoidable-advisory-box"
             variants={fadeInUp}
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }}
+            style={{ background: "var(--bg-elevated, #1a1c26)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }}
           >
             <div className="advisory-top-row">
               <Shield size={15} style={{ color: "#ffffff" }} />

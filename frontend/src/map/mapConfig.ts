@@ -20,27 +20,27 @@ export const ROUTE_WIDTHS = {
   other: 3.5
 };
 
-// Primary: OpenFreeMap Positron Vector Style (Clean light theme matching CARTO Positron with zero API keys or watermarks)
-export const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+// Primary: OpenFreeMap Liberty Vector Style (Normal natural map with blue water, green parks, and clear roads)
+export const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
 
-// Fallback: ESRI World Light Gray Canvas Raster Style (Zero API keys, zero watermarks, 100% reliable global CDN)
+// Fallback: ESRI World Street Map (Normal natural street map raster tiles)
 export const RASTER_FALLBACK_STYLE: any = {
   version: 8,
   sources: {
-    "esri-light-gray": {
+    "esri-streets": {
       type: "raster",
       tiles: [
-        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
       ],
       tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; Esri"
+      attribution: "&copy; Esri &copy; OpenStreetMap contributors"
     }
   },
   layers: [
     {
-      id: "esri-light-gray-layer",
+      id: "esri-streets-layer",
       type: "raster",
-      source: "esri-light-gray",
+      source: "esri-streets",
       minzoom: 0,
       maxzoom: 19
     }
