@@ -740,27 +740,27 @@ button {
 
 .preset-chips-scroll {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 2px;
 }
 
 .preset-chip {
   white-space: nowrap;
   font-size: 11px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-card-subtle);
-  border: 1px solid var(--border-subtle);
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 4px 10px;
   border-radius: var(--radius-full);
   transition: all 0.15s;
+  cursor: pointer;
 }
 
 .preset-chip:hover {
-  background: #1e293b;
+  background: rgba(255, 255, 255, 0.09);
   color: #ffffff;
-  border-color: var(--border-medium);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* ---------------------------------------------------- */
@@ -7235,15 +7235,16 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 4px 6px 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px 4px 8px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 2px;
 }
 
 .sidebar-brand-mini {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #a1a1aa;
+  letter-spacing: 0.1em;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
@@ -7398,8 +7399,14 @@ button {
 }
 
 .preset-corridors {
-  gap: 3px !important;
+  gap: 4px !important;
   padding-top: 6px !important;
+}
+
+.preset-chips-scroll {
+  flex-wrap: wrap !important;
+  overflow-x: unset !important;
+  overflow: visible !important;
 }
 
 .preset-label {
@@ -7407,17 +7414,19 @@ button {
 }
 
 .preset-chip {
-  background: #1a1c26 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #c4c4c8 !important;
-  font-size: 8.5px !important;
-  padding: 2px 6px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  padding: 3px 7px !important;
+  white-space: nowrap !important;
 }
 
 .preset-chip:hover {
-  background: #232634 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 /* ── Decision Card Compact Proportions (Black Cell Layout) ── */
