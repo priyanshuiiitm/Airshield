@@ -14,7 +14,7 @@ import { RiderMode } from "./components/RiderMode";
 import { BatchAnalytics } from "./components/BatchAnalytics";
 import { SimpleDriverView } from "./components/SimpleDriverView";
 import { DELHI_LOCATIONS, generateDynamicRoutes } from "./utils/delhiData";
-import { Clock, Car, Shield } from "lucide-react";
+import { Clock, Car, Shield, ChevronsLeft, ChevronRight, Navigation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainer } from "./animation/motion-config";
 import { VoiceProvider, useVoice } from "./context/VoiceContext";
@@ -24,6 +24,7 @@ import { voiceScripts } from "./services/voiceScripts";
 const AppContent: React.FC = () => {
   const [viewMode, setViewMode] = useState<"onboarding" | "landing" | "simulator" | "rider" | "analytics" | "driver">("onboarding");
   const airshieldEnabled = true;
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
   // Voice context integration
   const { isVoiceEnabled, speak, activeHighlightId, language, setLanguage } = useVoice();
@@ -343,14 +344,42 @@ const AppContent: React.FC = () => {
       <main className="main-content">
         <div className={`content-split-layout ${viewMode === 'rider' ? 'rider-active-layout' : ''}`}>
           {/* Left Column: Location Controls & Decision */}
-          <motion.div 
-            className="left-controls-column"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
-          >
-            <AnimatePresence mode="popLayout">
+          {isSidebarCollapsed ? (
+            <motion.button
+              type="button"
+              className="sidebar-expand-pill"
+              onClick={() => setIsSidebarCollapsed(false)}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Expand route console"
+            >
+              <Navigation size={13} />
+              <span>Route Console</span>
+              <ChevronRight size={13} />
+            </motion.button>
+          ) : (
+            <motion.div 
+              className="left-controls-column"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              <div className="sidebar-top-bar">
+                <span className="sidebar-brand-mini">AIRSHIELD CONSOLE</span>
+                <button
+                  type="button"
+                  className="btn-sidebar-collapse"
+                  onClick={() => setIsSidebarCollapsed(true)}
+                  title="Collapse console to view full map"
+                >
+                  <ChevronsLeft size={13} />
+                  <span>Hide</span>
+                </button>
+              </div>
+
+              <AnimatePresence mode="popLayout">
             {viewMode === "rider" && currentRecommendation ? (
               <motion.div
                 key="rider-mode"
@@ -498,6 +527,7 @@ const AppContent: React.FC = () => {
             )}
             </AnimatePresence>
           </motion.div>
+          )}
 
           {/* Right Column: Dark Map Visualization */}
           <div

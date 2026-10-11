@@ -7167,35 +7167,100 @@ button {
   min-height: unset !important;
 }
 
-/* ── Unified Floating Command Sidebar ── */
+/* ── Unified Floating Command Sidebar (Slim 350px, Translucent Glass) ── */
 .left-controls-column {
   position: absolute !important;
-  top: 20px !important;
-  left: 20px !important;
-  bottom: 20px !important;
-  width: 420px !important;
-  max-width: calc(100vw - 40px) !important;
+  top: 16px !important;
+  left: 16px !important;
+  bottom: 16px !important;
+  width: 350px !important;
+  max-width: calc(100vw - 32px) !important;
   height: auto !important;
-  max-height: calc(100vh - 40px) !important;
+  max-height: calc(100vh - 32px) !important;
   z-index: 30 !important;
-  background: rgba(12, 14, 20, 0.9) !important;
-  backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  background: rgba(10, 12, 18, 0.72) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
-  padding: 16px !important;
+  gap: 10px !important;
+  padding: 12px !important;
   pointer-events: auto !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Sidebar Top Bar with Collapse Button */
+.sidebar-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 6px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-brand-mini {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #a1a1aa;
+  text-transform: uppercase;
+}
+
+.btn-sidebar-collapse {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e4e4e7;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-sidebar-collapse:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+/* Floating Expand Pill (When Sidebar is collapsed) */
+.sidebar-expand-pill {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 12, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.sidebar-expand-pill:hover {
+  background: rgba(20, 24, 34, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Slim elegant custom scrollbar */
 .left-controls-column::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 .left-controls-column::-webkit-scrollbar-track {
   background: transparent;
@@ -7208,58 +7273,107 @@ button {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ── Polished Internal Card Surfaces ── */
+/* ── Compact, Dynamic, Proportional Card Surfaces ── */
 .location-picker-card {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 14px !important;
-  padding: 16px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  gap: 10px !important;
   box-shadow: none !important;
 }
 
-.decision-card {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 14px !important;
-  padding: 16px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+.picker-header {
+  padding-bottom: 2px;
 }
 
-.route-comparison-container {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
+.picker-title {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
 }
 
-.route-card {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
-  padding: 14px !important;
-  transition: all 0.2s ease !important;
+.custom-coords-toggle {
+  font-size: 9.5px !important;
+  padding: 2px 6px !important;
 }
 
-.route-card.focused {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+.input-group {
+  gap: 3px !important;
 }
 
-.shift-dosimetry-card {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
+.input-label {
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em !important;
+}
+
+.input-wrapper {
+  height: 34px !important;
+  padding: 0 8px !important;
+  border-radius: 8px !important;
+  gap: 6px !important;
+}
+
+.select-field {
+  font-size: 11.5px !important;
+}
+
+.icon-action-btn {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.picker-middle-actions {
+  padding: 1px 2px !important;
+}
+
+.quick-action-pill {
+  font-size: 10px !important;
+  padding: 2px 7px !important;
+}
+
+.swap-btn {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.buffer-and-action-row {
+  gap: 8px !important;
+  padding-top: 2px !important;
+}
+
+.buffer-label {
+  font-size: 10.5px !important;
+}
+
+.buffer-chip {
+  font-size: 10px !important;
+  padding: 2px 7px !important;
+  border-radius: 5px !important;
+}
+
+.btn-compute-routes {
+  height: 34px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.preset-corridors {
+  gap: 4px !important;
+  padding-top: 8px !important;
+}
+
+.preset-label {
+  font-size: 9.5px !important;
 }
 
 .preset-chip {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #e4e4e7 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #d4d4d8 !important;
+  font-size: 9.5px !important;
+  padding: 2px 7px !important;
 }
 
 .preset-chip:hover {
@@ -7268,20 +7382,165 @@ button {
   border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
-/* ── Floating Map Legend (Sits clear to the right of sidebar) ── */
+/* ── Decision Card Compact Proportions ── */
+.decision-card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+.decision-card .card-title {
+  font-size: 13px !important;
+}
+
+.decision-card .card-subtitle {
+  font-size: 10.5px !important;
+  line-height: 1.35 !important;
+}
+
+.decision-card .classification-pill {
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+}
+
+.decision-card .metrics-grid {
+  gap: 6px !important;
+  margin: 6px 0 !important;
+}
+
+.decision-card .metric-box {
+  padding: 6px 8px !important;
+  border-radius: 8px !important;
+}
+
+.decision-card .metric-val {
+  font-size: 12.5px !important;
+}
+
+.decision-card .metric-lbl {
+  font-size: 9px !important;
+}
+
+.decision-card .reward-banner,
+.decision-card .mask-advisory-pill {
+  font-size: 10px !important;
+  padding: 5px 8px !important;
+  border-radius: 6px !important;
+}
+
+.decision-card .btn-safer,
+.decision-card .btn-fastest,
+.decision-card .btn-switch-choice {
+  height: 32px !important;
+  font-size: 11px !important;
+  padding: 0 10px !important;
+}
+
+/* ── Route Comparison Compact Cards ── */
+.route-comparison-container {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.section-title-wrap h3 {
+  font-size: 12px !important;
+}
+
+.route-card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+  transition: all 0.15s ease !important;
+}
+
+.route-card.focused {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+}
+
+.route-name-group span {
+  font-size: 11.5px !important;
+}
+
+.route-metrics-row {
+  gap: 5px !important;
+}
+
+.route-metrics-row > div {
+  padding: 4px 6px !important;
+  border-radius: 6px !important;
+}
+
+.route-metrics-row span {
+  font-size: 9px !important;
+}
+
+.route-metrics-row div > div > span:first-child {
+  font-size: 12.5px !important;
+}
+
+/* ── Shift Dosimetry Compact ── */
+.shift-dosimetry-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+}
+
+.dosimetry-title {
+  font-size: 11px !important;
+}
+
+.dosimetry-tag {
+  font-size: 8.5px !important;
+}
+
+.dosimetry-grid {
+  gap: 5px !important;
+  margin-top: 6px !important;
+}
+
+.dosimetry-item {
+  padding: 5px 4px !important;
+  border-radius: 6px !important;
+}
+
+.dosimetry-val {
+  font-size: 12px !important;
+}
+
+.dosimetry-lbl {
+  font-size: 8px !important;
+}
+
+/* ── Floating Map Legend (Sits cleanly next to the 350px sidebar) ── */
 .map-legend {
   position: absolute !important;
-  left: 456px !important;
-  bottom: 20px !important;
+  left: 380px !important;
+  bottom: 16px !important;
   z-index: 25 !important;
-  background: rgba(12, 14, 20, 0.88) !important;
+  background: rgba(10, 12, 18, 0.72) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 12px !important;
-  padding: 10px 14px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
   pointer-events: auto !important;
+}
+
+.legend-label {
+  font-size: 10px !important;
 }
 
 /* ── Floating Header Pill ── */
@@ -7290,46 +7549,46 @@ button {
   max-width: fit-content !important;
   margin: 0 !important;
   border-radius: 999px !important;
-  padding: 8px 20px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+  padding: 6px 16px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
   position: fixed !important;
-  top: 16px !important;
+  top: 14px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  background-color: rgba(12, 14, 20, 0.88) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(10, 12, 18, 0.72) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   z-index: 50 !important;
 }
 
 /* ── Floating Transparency Section (Positioned above Voice Pill) ── */
 .transparency-section {
   position: absolute !important;
-  bottom: 74px !important;
-  right: 20px !important;
-  width: 380px !important;
-  max-width: calc(100vw - 480px) !important;
+  bottom: 68px !important;
+  right: 16px !important;
+  width: 340px !important;
+  max-width: calc(100vw - 420px) !important;
   z-index: 25 !important;
   pointer-events: auto !important;
-  max-height: calc(100vh - 160px) !important;
+  max-height: calc(100vh - 140px) !important;
   overflow-y: auto !important;
 }
 
 .transparency-container {
-  background: rgba(12, 14, 20, 0.88) !important;
+  background: rgba(10, 12, 18, 0.75) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* ── Voice Assistant Floating Capsule ── */
 .voice-floating-capsule-container {
   position: fixed !important;
-  bottom: 20px !important;
-  right: 20px !important;
+  bottom: 16px !important;
+  right: 16px !important;
   z-index: 35 !important;
 }
 
@@ -7357,13 +7616,13 @@ button {
     width: 100% !important;
     max-width: 100% !important;
     max-height: 55vh !important;
-    border-radius: 20px 20px 0 0 !important;
+    border-radius: 18px 18px 0 0 !important;
     border-bottom: none !important;
   }
 
   .map-legend {
-    left: 16px !important;
-    top: 76px !important;
+    left: 14px !important;
+    top: 70px !important;
     bottom: auto !important;
   }
 
