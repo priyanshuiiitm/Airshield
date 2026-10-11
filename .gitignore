@@ -12,3 +12,7 @@ dist/
 data/cache/
 .aws-sam/
 reference-uber/
+.wrangler/
+.kiro/
+.agents
+.plan
