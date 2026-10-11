@@ -102,13 +102,19 @@ const AppContent: React.FC = () => {
             if (data.routes && data.routes.length >= 2) {
                 const geom1 = data.routes[0].geometry.coordinates.map((c: any) => ({lng: c[0], lat: c[1]}));
                 const geom2 = data.routes[1].geometry.coordinates.map((c: any) => ({lng: c[0], lat: c[1]}));
-                const geom3 = data.routes[2] ? data.routes[2].geometry.coordinates.map((c: any) => ({lng: c[0], lat: c[1]})) : geom2;
+                const hasRoute3 = !!data.routes[2];
+                const geom3 = hasRoute3 ? data.routes[2].geometry.coordinates.map((c: any) => ({lng: c[0], lat: c[1]})) : null;
                 
                 setCurrentRecommendation(prev => {
+                    if (!prev) return prev;
                     const newRes = JSON.parse(JSON.stringify(prev));
-                    if(newRes.routes[0]) newRes.routes[0].geometry = geom1;
-                    if(newRes.routes[1]) newRes.routes[1].geometry = geom2;
-                    if(newRes.routes[2]) newRes.routes[2].geometry = geom3;
+                    if (newRes.routes[0]) newRes.routes[0].geometry = geom1;
+                    if (newRes.routes[1]) newRes.routes[1].geometry = geom2;
+                    if (hasRoute3 && geom3 && newRes.routes[2]) {
+                        newRes.routes[2].geometry = geom3;
+                    } else if (newRes.routes.length > 2) {
+                        newRes.routes = newRes.routes.slice(0, 2);
+                    }
                     return newRes;
                 });
             }

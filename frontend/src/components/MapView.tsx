@@ -545,7 +545,7 @@ export const MapView: React.FC<MapViewProps> = ({
           onClick={() => setShowStations(!showStations)}
           title="Toggle live DPCC/CPCB monitoring stations overlay"
         >
-          <Radio size={13} style={{ color: "#ffffff" }} />
+          <Radio size={13} style={{ color: showStations ? "#34d399" : "#ffffff" }} />
           <span>Live Sensors</span>
         </button>
 
@@ -557,7 +557,7 @@ export const MapView: React.FC<MapViewProps> = ({
             title="View alternative routes"
           >
             <Eye size={13} style={{ color: "#ffffff" }} />
-            <span>Show Both Routes</span>
+            <span>{routes.length > 2 ? "Show All Routes" : "Show Both Routes"}</span>
           </button>
         )}
       </div>
