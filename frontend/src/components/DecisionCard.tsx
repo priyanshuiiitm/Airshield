@@ -96,8 +96,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         style={{
           background: "var(--bg-card)",
           border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: "var(--radius-md)",
-          padding: "var(--space-5)",
+          borderRadius: "10px",
+          padding: "9px",
           textAlign: "center"
         }}
       >
@@ -122,8 +122,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
         WebkitBackdropFilter: "blur(16px)",
         border: `1px solid ${colors.border}`,
         boxShadow: colors.glow,
-        borderRadius: "var(--radius-md)",
-        padding: "var(--space-5)",
+        borderRadius: "10px",
+        padding: "9px",
       }}
     >
       {/* ─── AVOIDABLE ─────────────────────────────────── */}
@@ -138,8 +138,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
               <div className="classification-pill" style={{ background: colors.pillBg, color: colors.pillColor, border: `1px solid ${colors.pillBorder}` }}>
                 <span>{language === "hi" ? "स्वच्छ मार्ग उपलब्ध" : "Safer Route Available"}</span>
               </div>
-              <h2 className="card-title" style={{ fontSize: 15, fontWeight: 600 }}>{t.titleAvoidable}</h2>
-              <p className="card-subtitle" style={{ fontSize: 12, color: "var(--text-secondary)", fontWeight: 400 }}>
+              <h2 className="card-title" style={{ fontSize: 11, fontWeight: 600 }}>{t.titleAvoidable}</h2>
+              <p className="card-subtitle" style={{ fontSize: 9, color: "var(--text-secondary)", fontWeight: 400 }}>
                 {language === "hi" ? "स्वच्छ मार्ग उपलब्ध है" : "Ridge/Green corridor reduces particulate exposure."}
               </p>
             </div>
@@ -150,15 +150,15 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <Clock size={15} style={{ color: "var(--text-secondary)", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 14 }}>{formatMinutes(rec.additional_minutes)}</span>
-                <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.additionalTime}</span>
+                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 11 }}>{formatMinutes(rec.additional_minutes)}</span>
+                <span className="metric-lbl" style={{ fontSize: 8, fontWeight: 500 }}>{t.additionalTime}</span>
               </div>
             </motion.div>
             <motion.div className="metric-box" variants={fadeInUp} style={{ background: "var(--bg-elevated)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <TrendingDown size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
               <div className="metric-val-wrap">
-                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 14 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
-                <span className="metric-lbl" style={{ fontSize: 10, fontWeight: 500 }}>{t.exposureReduction}</span>
+                <span className="metric-val" style={{ color: "#ffffff", fontWeight: 600, fontSize: 11 }}>{formatPercentage(rec.exposure_reduction_percent)}</span>
+                <span className="metric-lbl" style={{ fontSize: 8, fontWeight: 500 }}>{t.exposureReduction}</span>
               </div>
             </motion.div>
           </motion.div>
@@ -175,13 +175,13 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "8px 12px", display: "flex", alignItems: "center", gap: 8 }}
           >
             <Shield size={15} style={{ color: "#ffffff", flexShrink: 0 }} />
-            <span style={{ fontSize: 11, color: "var(--text-secondary)", fontWeight: 400 }}>
+            <span style={{ fontSize: 9, color: "var(--text-secondary)", fontWeight: 400 }}>
               Protection: <strong style={{ color: "#ffffff", fontWeight: 600 }}>↓ {rec.exposure_reduction_percent}% lower inhalation</strong>
             </span>
           </motion.div>
 
           {/* N95 Respirator Advisory */}
-          <div className="mask-advisory-pill" style={{ padding: "6px 10px", fontSize: 11, fontWeight: 400 }}>
+          <div className="mask-advisory-pill" style={{ padding: "4px 7px", fontSize: 9, fontWeight: 400 }}>
             <AlertTriangle size={12} style={{ flexShrink: 0 }} />
             <span>N95 respirator advised (high ambient PM2.5)</span>
           </div>
@@ -195,7 +195,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
                   className="choice-confirmation"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }}
                   role="status"
                 >
                   <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
@@ -276,7 +276,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <motion.div
             className="unavoidable-advisory-box"
             variants={fadeInUp}
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }}
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }}
           >
             <div className="advisory-top-row">
               <Shield size={15} style={{ color: "#ffffff" }} />
@@ -294,7 +294,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }} role="status">
                 <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
@@ -330,7 +330,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }} role="status">
                 <CheckCircle2 size={18} style={{ color: "#ffffff" }} />
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
@@ -366,7 +366,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({
           <AnimatePresence mode="wait">
             {choiceSubmitted ? (
               <motion.div key="confirmed" className="choice-confirmation" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "var(--space-3) var(--space-4)" }} role="status">
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: "var(--radius-sm)", padding: "4px 8px" }} role="status">
                 <span>{t.choiceConfirmedFastest}</span>
               </motion.div>
             ) : (
