@@ -1,8 +1,8 @@
 import React from "react";
 import { LanguageCode } from "../api/types";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ArrowLeft, Smartphone, BarChart2 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { slideInLeft, fadeIn, hoverScale, tapScale, durations } from "../animation/motion-config";
+import { fadeIn, hoverScale, tapScale, durations } from "../animation/motion-config";
 
 interface HeaderProps {
   onOpenDriverView?: () => void;
@@ -46,25 +46,11 @@ export const Header: React.FC<HeaderProps> = ({
       transition={{ duration: durations.normal }}
     >
       <motion.div 
-        className="header-brand" 
-        onClick={onBackToLanding} 
-        style={{ cursor: onBackToLanding ? "pointer" : "default" }}
-        variants={slideInLeft}
-        initial="hidden"
-        animate="visible"
-      >
-        <div>
-          <h1 className="brand-name" style={{ backgroundImage: "var(--gradient-aurora-primary)", WebkitBackgroundClip: "text", color: "transparent" }}>AirShield</h1>
-        </div>
-      </motion.div>
-
-      <motion.div 
         className="header-actions"
-        style={{ margin: "0 auto" }}
         variants={fadeIn}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.1 }}
       >
         {onBackToLanding && (
           <motion.button
@@ -74,9 +60,9 @@ export const Header: React.FC<HeaderProps> = ({
             title="Return to AirShield intro & methodology story"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "6px" }}
           >
-            <span>← Story & Overview</span>
+            <ArrowLeft size={13} />
+            <span>Story & Overview</span>
           </motion.button>
         )}
 
@@ -88,12 +74,11 @@ export const Header: React.FC<HeaderProps> = ({
             title="Simple Driver View"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px", background: "#10b981", color: "#000", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 600, border: "none", cursor: "pointer" }}
           >
+            <Smartphone size={12} />
             <span>Mobile App</span>
           </motion.button>
         )}
-
 
         {onOpenAnalytics && (
           <motion.button
@@ -103,15 +88,14 @@ export const Header: React.FC<HeaderProps> = ({
             title="View 150-Trip Batch Impact Evidence & Municipal Hotspots"
             whileHover={hoverScale}
             whileTap={tapScale}
-            style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-secondary)", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, border: "1px solid var(--border-subtle)", background: "transparent", cursor: "pointer" }}
           >
+            <BarChart2 size={12} />
             <span>Batch Impact</span>
           </motion.button>
         )}
 
-
         {/* Language Switcher */}
-        <div className="lang-switcher-group" role="group" aria-label="Language selection" style={{ background: "var(--bg-input)" }}>
+        <div className="lang-switcher-group" role="group" aria-label="Language selection">
           <motion.button
             type="button"
             className={`lang-btn ${language === "en" ? "active" : ""}`}
@@ -140,9 +124,8 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label="Refresh Data"
           whileHover={hoverScale}
           whileTap={tapScale}
-          style={{ background: "var(--bg-elevated)", color: "var(--text-primary)" }}
         >
-          <RefreshCw size={17} className={isLoading ? "animate-spin text-cyan" : ""} />
+          <RefreshCw size={12} className={isLoading ? "animate-spin" : ""} />
         </motion.button>
       </motion.div>
     </motion.header>
