@@ -6,7 +6,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { RecommendationResponse, LanguageCode } from "../api/types";
 import { formatCurrency } from "../utils/formatting";
-import { Wind, TrendingDown, Shield, Car, Check } from "lucide-react";
+import { Wind, TrendingDown, Shield, Car } from "lucide-react";
 import { fadeInUp, staggerContainer } from "../animation/motion-config";
 import { uberIcons } from "../constants/uberAssets";
 
@@ -122,39 +122,39 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
           const extraMins = fastestRoute ? Math.max(0, route.duration_minutes - fastestRoute.duration_minutes) : 0;
 
           // Monochrome Badge config
-          let badgeLabel = "Alternative";
+          let badgeLabel = "ALTERNATIVE";
           let badgeBg = "rgba(255, 255, 255, 0.05)";
           let badgeColor = "#a1a1aa";
           let badgeBorder = "rgba(255, 255, 255, 0.1)";
 
           if (isFastest && isRecommended) {
-            badgeLabel = "Fastest & Recommended";
-            badgeBg = "rgba(255, 255, 255, 0.14)";
+            badgeLabel = "RECOMMENDED";
+            badgeBg = "rgba(255, 255, 255, 0.16)";
             badgeColor = "#ffffff";
-            badgeBorder = "rgba(255, 255, 255, 0.25)";
+            badgeBorder = "rgba(255, 255, 255, 0.3)";
           } else if (isFastest) {
-            badgeLabel = "Fastest Route";
+            badgeLabel = "FASTEST";
             badgeBg = "rgba(255, 255, 255, 0.08)";
             badgeColor = "#ffffff";
-            badgeBorder = "rgba(255, 255, 255, 0.16)";
+            badgeBorder = "rgba(255, 255, 255, 0.18)";
           } else if (isRecommended && isAvoidable) {
-            badgeLabel = "Safer Route ✓";
-            badgeBg = "rgba(255, 255, 255, 0.14)";
+            badgeLabel = "SAFER ROUTE";
+            badgeBg = "rgba(255, 255, 255, 0.16)";
             badgeColor = "#ffffff";
-            badgeBorder = "rgba(255, 255, 255, 0.25)";
+            badgeBorder = "rgba(255, 255, 255, 0.3)";
           } else if (reductionPct > 10) {
-            badgeLabel = "Clean Corridor";
+            badgeLabel = "CLEAN AIR";
             badgeBg = "rgba(255, 255, 255, 0.08)";
             badgeColor = "#e4e4e7";
-            badgeBorder = "rgba(255, 255, 255, 0.16)";
+            badgeBorder = "rgba(255, 255, 255, 0.18)";
           }
 
-          const focusedBorder = isFocused
-            ? "rgba(255, 255, 255, 0.35)"
-            : "rgba(255, 255, 255, 0.08)";
+          const cardBorder = isFocused
+            ? "1px solid rgba(255, 255, 255, 0.32)"
+            : "1px solid rgba(255, 255, 255, 0.07)";
 
-          const focusedShadow = isFocused
-            ? "0 8px 24px rgba(0, 0, 0, 0.6)"
+          const cardShadow = isFocused
+            ? "0 8px 28px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12)"
             : "none";
 
           return (
@@ -168,72 +168,73 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 }
                 onSelectRoute(route.route_id);
               }}
-              whileHover={{ scale: 1.015, borderColor: "rgba(255, 255, 255, 0.3)" }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.012, borderColor: "rgba(255, 255, 255, 0.3)" }}
+              whileTap={{ scale: 0.985 }}
               style={{
-                background: isFocused ? "rgba(20, 21, 27, 0.95)" : "rgba(12, 13, 17, 0.9)",
-                backdropFilter: "blur(12px)",
-                border: `1px solid ${focusedBorder}`,
-                boxShadow: focusedShadow,
-                borderRadius: "var(--radius-md)",
-                padding: "var(--space-4)",
+                background: isFocused
+                  ? "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)"
+                  : "rgba(255, 255, 255, 0.025)",
+                backdropFilter: "blur(16px)",
+                border: cardBorder,
+                boxShadow: cardShadow,
+                borderRadius: 12,
+                padding: "12px 14px",
                 cursor: "pointer",
-                transition: "border-color 0.2s, box-shadow 0.2s",
+                transition: "border-color 0.2s, box-shadow 0.2s, background 0.2s",
               }}
             >
-              {/* Uber-style Card Header */}
-              <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
-                <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Card Header */}
+              <div className="route-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <div className="route-name-group" style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                   <div style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 8,
-                    background: isFocused ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.05)",
+                    width: 32,
+                    height: 32,
+                    borderRadius: 9,
+                    background: isFocused ? "rgba(255, 255, 255, 0.14)" : "rgba(255, 255, 255, 0.05)",
                     border: "1px solid rgba(255, 255, 255, 0.12)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "#ffffff"
+                    color: "#ffffff",
+                    flexShrink: 0
                   }}>
-                    <Car size={15} />
+                    <Car size={16} />
                   </div>
-                  <div>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", display: "block" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", display: "block", letterSpacing: "-0.01em" }}>
                       {routeLabels[idx] || `Route ${String.fromCharCode(65 + idx)}`}
                     </span>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: "#a1a1aa", marginTop: 2 }}>
-                      <span style={{ color: "#f59e0b" }}>★</span>
-                      <span>{isRecommended ? "4.9 Clean" : "4.7 Direct"}</span>
+                    <span style={{ fontSize: 10.5, color: isRecommended ? "#e4e4e7" : "#a1a1aa", marginTop: 2, display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {isRecommended ? (isAvoidable ? "Lowest Exposure · Shielded" : "Optimal Transit Path") : (isFastest ? "Fastest Travel Time" : "Alternate Corridor")}
                     </span>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  {isFocused && (
-                    <div style={{
-                      width: 18,
-                      height: 18,
-                      borderRadius: "50%",
-                      background: "#ffffff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#000000"
-                    }}>
-                      <Check size={11} strokeWidth={3} />
-                    </div>
-                  )}
-                  <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: "var(--radius-full)", textTransform: "uppercase", letterSpacing: "0.04em", background: badgeBg, color: badgeColor, border: `1px solid ${badgeBorder}` }}>
+                <div style={{ flexShrink: 0, marginLeft: 8 }}>
+                  <span style={{
+                    fontSize: 9.5,
+                    fontWeight: 600,
+                    padding: "3px 8px",
+                    borderRadius: 999,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    background: badgeBg,
+                    color: badgeColor,
+                    border: `1px solid ${badgeBorder}`,
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    lineHeight: 1.2
+                  }}>
                     {badgeLabel}
                   </span>
                 </div>
               </div>
 
               {/* Metrics Row */}
-              <div className="route-metrics-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "var(--space-2)" }}>
+              <div className="route-metrics-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
                 {/* Exposure Index */}
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Exposure</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "7px 9px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 9.5, fontWeight: 500, color: "#858592", textTransform: "uppercase", letterSpacing: "0.05em" }}>Exposure</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
                     <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>
                       {route.exposure_index}
@@ -241,17 +242,17 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                     <span style={{ fontSize: 10, color: "#71717a" }}>/100</span>
                   </div>
                   {reductionPct > 0 ? (
-                    <span style={{ fontSize: 10, color: "#a1a1aa", display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
+                    <span style={{ fontSize: 9.5, color: "#d4d4d8", display: "flex", alignItems: "center", gap: 2, marginTop: 2 }}>
                       <TrendingDown size={10} /> {reductionPct}% cleaner
                     </span>
                   ) : (
-                    <span style={{ fontSize: 10, color: "#71717a", marginTop: 2 }}>Baseline</span>
+                    <span style={{ fontSize: 9.5, color: "#71717a", marginTop: 2 }}>Baseline</span>
                   )}
                 </div>
 
                 {/* PM2.5 */}
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg PM2.5</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "7px 9px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 9.5, fontWeight: 500, color: "#858592", textTransform: "uppercase", letterSpacing: "0.05em" }}>Avg PM2.5</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
                     <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>{route.average_pm25}</span>
                     <span style={{ fontSize: 10, color: "#71717a" }}>µg/m³</span>
@@ -260,13 +261,13 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                 </div>
 
                 {/* Duration */}
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-sm)", padding: "6px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "#71717a", textTransform: "uppercase", letterSpacing: "0.04em" }}>Trip Time</span>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "7px 9px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 9.5, fontWeight: 500, color: "#858592", textTransform: "uppercase", letterSpacing: "0.05em" }}>Trip Time</span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginTop: 2 }}>
                     <span style={{ fontSize: 14, fontWeight: 600, fontFamily: "var(--font-mono)", color: "#ffffff" }}>{route.duration_minutes}</span>
                     <span style={{ fontSize: 10, color: "#71717a" }}>min</span>
                   </div>
-                  <span style={{ fontSize: 10, color: "#a1a1aa", marginTop: 2, display: "block" }}>
+                  <span style={{ fontSize: 9.5, color: "#a1a1aa", marginTop: 2, display: "block", whiteSpace: "nowrap" }}>
                     {extraMins > 0 ? `+${extraMins}m detour` : "Fastest"} · {route.distance_km}km
                   </span>
                 </div>

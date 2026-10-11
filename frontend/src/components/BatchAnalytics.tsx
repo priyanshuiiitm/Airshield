@@ -378,7 +378,7 @@ export const BatchAnalytics: React.FC<BatchAnalyticsProps> = ({
         <div className="analytics-title-group">
           <button type="button" className="btn-back-sim" onClick={onBackToSimulator}>
             <ArrowLeft size={18} />
-            <span>{isHindi ? "← सिमुलेटर पर वापस जाएं" : "← Back to Live Simulator"}</span>
+            <span>{isHindi ? "सिमुलेटर पर वापस जाएं" : "Back to Simulator"}</span>
           </button>
           <div>
             <h1 className="analytics-heading">
