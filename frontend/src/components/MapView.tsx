@@ -9,7 +9,7 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { RouteDetail, Coordinate } from "../api/types";
-import { MAP_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
+import { MAP_STYLE, RASTER_FALLBACK_STYLE, DEFAULT_CENTER, ROUTE_COLORS, ROUTE_WIDTHS } from "../map/mapConfig";
 import { calculateBounds } from "../map/routeUtils";
 import { STATUTORY_AQI_STATIONS } from "../utils/delhiData";
 import { Radio, Check, Eye, Map, X } from "lucide-react";
@@ -122,6 +122,9 @@ export const MapView: React.FC<MapViewProps> = ({
       map.on("load", () => {
         setIsMapLoaded(true);
       });
+      map.on("styledata", () => {
+        setIsMapLoaded(true);
+      });
 
       map.on("click", (e) => {
         if (onMapClick) {
@@ -129,8 +132,18 @@ export const MapView: React.FC<MapViewProps> = ({
         }
       });
 
+      let hasFallenBack = false;
       map.on("error", (e) => {
         console.warn("MapLibre internal error:", e);
+        if (!hasFallenBack && !isMapLoaded && (e as any)?.error) {
+          hasFallenBack = true;
+          try {
+            console.info("Switching to reliable raster fallback style...");
+            map.setStyle(RASTER_FALLBACK_STYLE as any);
+          } catch (fallbackErr) {
+            console.error("Failed to apply raster fallback style:", fallbackErr);
+          }
+        }
       });
 
       mapRef.current = map;

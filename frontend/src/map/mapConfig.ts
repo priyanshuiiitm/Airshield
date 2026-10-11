@@ -20,26 +20,27 @@ export const ROUTE_WIDTHS = {
   other: 3.5
 };
 
-export const MAP_STYLE: any = {
+// Primary: OpenFreeMap Positron Vector Style (Clean light theme matching CARTO Positron with zero API keys or watermarks)
+export const MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
+
+// Fallback: ESRI World Light Gray Canvas Raster Style (Zero API keys, zero watermarks, 100% reliable global CDN)
+export const RASTER_FALLBACK_STYLE: any = {
   version: 8,
   sources: {
-    "carto-light": {
+    "esri-light-gray": {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://b.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://c.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5",
-        "https://d.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=cb1_4gry_1_7ba46081bdb145ab2acbe5f5"
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
       ],
       tileSize: 256,
-      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
+      attribution: "&copy; OpenStreetMap contributors &copy; Esri"
     }
   },
   layers: [
     {
-      id: "carto-light-layer",
+      id: "esri-light-gray-layer",
       type: "raster",
-      source: "carto-light",
+      source: "esri-light-gray",
       minzoom: 0,
       maxzoom: 19
     }
